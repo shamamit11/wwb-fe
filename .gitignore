@@ -18,9 +18,14 @@
 /public/fonts-manifest.dev.json
 /public/hot
 /public/storage
+/bootstrap/cache/*.php
+/bootstrap/cache/*.json
 /storage/*.key
 /storage/pail
 /vendor
+/.DS_Store
+/agent-macos-arm64
+/wwb-fe.code-workspace
 _ide_helper.php
 Homestead.json
 Homestead.yaml
