@@ -16,3 +16,4 @@ Only record stable, verified facts here.
 - Shared resource content for the resources page is centralized in `app/Support/ResourceCatalog.php`.
 - The About page is a dedicated marketing route at `/about`, not a homepage anchor section.
 - The Contact page is a dedicated marketing route at `/contact` and intentionally exposes only a form flow, without address, map, phone, or direct email details.
+- Privacy Policy and Terms pages are dedicated simple legal routes at `/privacy-policy` and `/terms-and-conditions`, rendered through the shared marketing layout.

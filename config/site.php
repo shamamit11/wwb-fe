@@ -28,8 +28,8 @@ return [
         'company' => [
             ['label' => 'About Us', 'href' => '/about'],
             ['label' => 'Editorial Guidelines', 'href' => '/about'],
-            ['label' => 'Privacy Policy', 'href' => '#'],
-            ['label' => 'Terms of Service', 'href' => '#'],
+            ['label' => 'Privacy Policy', 'href' => '/privacy-policy'],
+            ['label' => 'Terms of Service', 'href' => '/terms-and-conditions'],
             ['label' => 'Contact Us', 'href' => '/contact'],
         ],
     ],
