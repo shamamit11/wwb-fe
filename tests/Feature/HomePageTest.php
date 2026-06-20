@@ -422,4 +422,28 @@ class HomePageTest extends TestCase
         $response->assertSee('<meta property="og:title" content="Wide Web Blog | Premium Digital Editorial &amp; Creator Guides">', false);
         $response->assertDontSee('cdn.tailwindcss.com');
     }
+
+    public function test_the_home_page_outputs_google_site_verification_when_configured(): void
+    {
+        config(['services.wideweb_blog.homepage_path' => 'public/home']);
+        config(['site.google_site_verification' => 'google-verification-token-123']);
+
+        $this->app->instance(BlogApiClient::class, new class implements BlogApiClient
+        {
+            public function get(string $path, array $query = []): array
+            {
+                return ['data' => []];
+            }
+
+            public function post(string $path, array $body = []): array
+            {
+                return ['data' => []];
+            }
+        });
+
+        $response = $this->get('/');
+
+        $response->assertOk();
+        $response->assertSee('<meta name="google-site-verification" content="google-verification-token-123">', false);
+    }
 }

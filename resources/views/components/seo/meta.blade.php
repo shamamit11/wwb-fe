@@ -12,6 +12,10 @@
 <meta name="description" content="{{ $description }}">
 <meta name="robots" content="{{ $robots }}">
 
+@if (filled(config('site.google_site_verification')))
+    <meta name="google-site-verification" content="{{ config('site.google_site_verification') }}">
+@endif
+
 @if ($canonical)
     <link rel="canonical" href="{{ $canonical }}">
 @endif

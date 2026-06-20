@@ -6,6 +6,7 @@ return [
     'name' => 'Wide Web Blog',
     'tagline' => 'Premium Digital Editorial & Creator Guides',
     'description' => 'Authority-led insights and practical tutorials on AI, SEO, blogging, and digital growth for modern digital creators.',
+    'google_site_verification' => env('GOOGLE_SITE_VERIFICATION'),
     'navigation' => [
         ['label' => 'Home', 'href' => '/', 'key' => 'home'],
         ['label' => 'All Articles', 'href' => '/articles', 'key' => 'articles'],

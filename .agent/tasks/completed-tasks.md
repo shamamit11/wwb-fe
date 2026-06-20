@@ -20,3 +20,4 @@
 | 2026-06-20 | Restore homepage public payload alignment | Verified the current `/api/v1/public/home` contract remained intact and added regression coverage for the managed homepage payload shape. |
 | 2026-06-20 | Enhance Explore Core Topics carousel | Converted the homepage topic section into a single-row horizontal carousel with working arrow controls, larger icons, and preserved static frontend icon mapping for the fixed category set. |
 | 2026-06-20 | Align article detail page with public post payload | Aligned article detail rendering with the current public post payload, including normalized media and SEO images, richer markdown support, slug-based hashtag tags, and sidebar related articles beneath tags. |
+| 2026-06-20 | Add Google site verification meta tag | Added a shared env-backed Google site verification meta tag through site config and the shared SEO partial, with homepage feature coverage. |
