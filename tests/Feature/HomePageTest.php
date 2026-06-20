@@ -36,6 +36,8 @@ class HomePageTest extends TestCase
         $response->assertSee('Contact Us');
         $response->assertDontSee('Editorial Guidelines');
         $response->assertSee('AI Agents');
+        $response->assertSee('aria-label="Scroll topics left"', false);
+        $response->assertSee('aria-label="Scroll topics right"', false);
     }
 
     public function test_the_home_page_resolves_managed_homepage_post_and_category_ids_from_public_data(): void
@@ -206,6 +208,8 @@ class HomePageTest extends TestCase
         $response->assertSee('How AI Agent Memory Works');
         $response->assertDontSee('Convergence of Generative AI and Design Systems');
         $response->assertSee('Developer AI');
+        $response->assertSee('aria-label="Scroll topics left"', false);
+        $response->assertSee('aria-label="Scroll topics right"', false);
         $response->assertSee('src="https://service.widewebblog.com/seed/media/ai-agent-memory-cover.webp"', false);
         $response->assertSee('href="/articles/how-ai-agent-memory-works"', false);
         $response->assertSee('<meta property="og:title" content="Wide Web Blog">', false);
@@ -383,6 +387,10 @@ class HomePageTest extends TestCase
         $response->assertSee('8 min read');
         $response->assertSee('AI Agents');
         $response->assertSee('Productivity &amp; Automation', false);
+        $response->assertSee('aria-label="Scroll topics left"', false);
+        $response->assertSee('aria-label="Scroll topics right"', false);
+        $response->assertSee('min-w-[220px]', false);
+        $response->assertSee('text-6xl', false);
         $response->assertSee('src="https://service.widewebblog.com/seed/media/ai-agent-memory-cover.webp"', false);
         $response->assertSee('src="https://media.widewebblog.com/current-home-hero.webp"', false);
         $response->assertSee('<meta property="og:title" content="Wide Web Blog">', false);

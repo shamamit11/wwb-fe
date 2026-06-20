@@ -18,3 +18,4 @@
 | 2026-06-20 | Remove local post fallback content | Replaced local article fallback usage with service-backed public posts/search endpoints for archive, detail, related articles, and search, then verified feature/unit coverage. |
 | 2026-06-20 | Align Public Homepage With Homepage Admin Payload | Updated the homepage to render against the managed service homepage payload, preserved safe fallback content, and verified homepage/service tests. |
 | 2026-06-20 | Restore homepage public payload alignment | Verified the current `/api/v1/public/home` contract remained intact and added regression coverage for the managed homepage payload shape. |
+| 2026-06-20 | Enhance Explore Core Topics carousel | Converted the homepage topic section into a single-row horizontal carousel with working arrow controls, larger icons, and preserved static frontend icon mapping for the fixed category set. |
