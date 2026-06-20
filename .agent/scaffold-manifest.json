@@ -1,0 +1,112 @@
+{
+  "version": "2.0.0",
+  "generatedAt": "2026-06-20T11:44:40.403Z",
+  "stack": "laravel",
+  "variant": "web",
+  "projectName": "fe",
+  "destinationDir": "/Users/amitsharma/Herd/widewebblog/fe",
+  "detection": {
+    "detectedStack": "laravel",
+    "detectedVariant": "fullstack",
+    "candidates": [
+      {
+        "stack": "laravel",
+        "score": 9,
+        "reasons": [
+          "composer.json present",
+          "artisan present",
+          "routes directory present"
+        ]
+      },
+      {
+        "stack": "nextjs",
+        "score": 1,
+        "reasons": [
+          "Next route directory present"
+        ]
+      },
+      {
+        "stack": "rails",
+        "score": 1,
+        "reasons": [
+          "Rails-style directories present"
+        ]
+      }
+    ]
+  },
+  "generatedFiles": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    ".agent/README.md",
+    ".agent/INDEX.md",
+    ".agent/MEMORY.md",
+    ".agent/PROJECT-CONTEXT.md",
+    ".agent/SOURCE-OF-TRUTH.md",
+    ".agent/ARCHITECTURE.md",
+    ".agent/DECISIONS.md",
+    ".agent/GLOSSARY.md",
+    ".agent/MODULE-MAP.md",
+    ".agent/API-CONTRACT.md",
+    ".agent/CODING-RULES.md",
+    ".agent/FOLDER-STRUCTURE.md",
+    ".agent/COMMANDS.md",
+    ".agent/ENVIRONMENT.md",
+    ".agent/TESTING.md",
+    ".agent/ERROR-HANDLING.md",
+    ".agent/TOKEN-OPTIMIZATION.md",
+    ".agent/TASK-WORKFLOW.md",
+    ".agent/AGENT-HANDOFF.md",
+    ".agent/CODE-REVIEW-CHECKLIST.md",
+    ".agent/DO-NOT-TOUCH.md",
+    ".agent/PROMPTS.md",
+    ".agent/SPEC-WORKFLOW.md",
+    ".agent/SPEC-TRACEABILITY.md",
+    ".agent/SPEC-REVIEW-CHECKLIST.md",
+    ".agent/CHANGE-PROPOSALS.md",
+    ".agent/SECURITY.md",
+    ".agent/DEPENDENCY-POLICY.md",
+    ".agent/DEPLOYMENT.md",
+    ".agent/OBSERVABILITY.md",
+    ".agent/PERFORMANCE.md",
+    ".agent/DB-SCHEMA-NOTES.md",
+    ".agent/scaffold-manifest.json",
+    ".agent/agents/SHARED-INSTRUCTIONS.md",
+    ".agent/tasks/README.md",
+    ".agent/tasks/current-task.md",
+    ".agent/tasks/task-template.md",
+    ".agent/tasks/completed-tasks.md",
+    ".agent/specs/README.md",
+    ".agent/specs/INDEX.md",
+    ".agent/specs/proposed/.gitkeep",
+    ".agent/specs/active/.gitkeep",
+    ".agent/specs/accepted/.gitkeep",
+    ".agent/specs/archived/.gitkeep",
+    ".agent/specs/templates/feature-spec.md",
+    ".agent/specs/templates/technical-design.md",
+    ".agent/specs/templates/api-change-spec.md",
+    ".agent/specs/templates/migration-spec.md",
+    ".agent/specs/templates/refactor-spec.md",
+    ".agent/specs/templates/acceptance-criteria-template.md",
+    ".agent/skills/README.md",
+    ".agent/skills/skill-project-navigation.md",
+    ".agent/skills/skill-api-integration.md",
+    ".agent/skills/skill-module-implementation.md",
+    ".agent/skills/skill-controller.md",
+    ".agent/skills/skill-service.md",
+    ".agent/skills/skill-dto-validation.md",
+    ".agent/skills/skill-auth-authorization.md",
+    ".agent/skills/skill-database-repository.md",
+    ".agent/skills/skill-events-workers.md",
+    ".agent/skills/skill-error-handling.md",
+    ".agent/skills/skill-testing.md",
+    ".agent/skills/skill-code-review.md",
+    ".agent/skills/skill-deployment.md",
+    ".agent/skills/skill-debugging.md",
+    ".agent/skills/skill-refactor-safely.md",
+    ".agent/agents/CLAUDE.md",
+    ".agent/agents/CODEX.md",
+    ".agent/agents/CURSOR.md",
+    ".agent/agents/COPILOT.md",
+    ".agent/agents/GEMINI.md"
+  ]
+}
