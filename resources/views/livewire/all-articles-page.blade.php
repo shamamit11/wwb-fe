@@ -34,12 +34,16 @@
                 <article class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
                     <div class="grid xl:grid-cols-[1.4fr_0.9fr]">
                         <div class="min-h-[320px] overflow-hidden">
-                            <img src="{{ $leadArticle['image'] }}" alt="{{ $leadArticle['title'] }}" class="h-full w-full object-cover">
+                            <a href="{{ route('articles.show', $leadArticle['slug']) }}">
+                                <img src="{{ $leadArticle['image'] }}" alt="{{ $leadArticle['title'] }}" class="h-full w-full object-cover">
+                            </a>
                         </div>
                         <div class="flex flex-col p-8">
                             <span class="text-xs font-semibold uppercase tracking-[0.22em] text-[#c2410c]">{{ $leadArticle['category'] }}</span>
                             <h2 class="mt-4 text-3xl font-bold leading-tight tracking-tight text-slate-950">
-                                {{ $leadArticle['title'] }}
+                                <a href="{{ route('articles.show', $leadArticle['slug']) }}" class="transition-colors hover:text-[#c2410c]">
+                                    {{ $leadArticle['title'] }}
+                                </a>
                             </h2>
                             <p class="mt-4 text-base leading-7 text-slate-600">
                                 {{ $leadArticle['excerpt'] }}
@@ -60,12 +64,16 @@
                 @if ($spotlightArticle)
                     <article class="group flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
                         <div class="h-64 overflow-hidden">
-                            <img src="{{ $spotlightArticle['image'] }}" alt="{{ $spotlightArticle['title'] }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
+                            <a href="{{ route('articles.show', $spotlightArticle['slug']) }}">
+                                <img src="{{ $spotlightArticle['image'] }}" alt="{{ $spotlightArticle['title'] }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
+                            </a>
                         </div>
                         <div class="flex flex-1 flex-col p-6">
                             <span class="text-xs font-semibold uppercase tracking-[0.22em] text-[#c2410c]">{{ $spotlightArticle['category'] }}</span>
                             <h3 class="mt-4 text-3xl font-bold leading-tight tracking-tight text-slate-950">
-                                {{ $spotlightArticle['title'] }}
+                                <a href="{{ route('articles.show', $spotlightArticle['slug']) }}" class="transition-colors hover:text-[#c2410c]">
+                                    {{ $spotlightArticle['title'] }}
+                                </a>
                             </h3>
                             <p class="mt-4 text-base leading-7 text-slate-600">
                                 {{ $spotlightArticle['excerpt'] }}
@@ -84,12 +92,16 @@
             @foreach ($gridArticles as $article)
                 <article class="group flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
                     <div class="h-60 overflow-hidden">
-                        <img src="{{ $article['image'] }}" alt="{{ $article['title'] }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <a href="{{ route('articles.show', $article['slug']) }}">
+                            <img src="{{ $article['image'] }}" alt="{{ $article['title'] }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        </a>
                     </div>
                     <div class="flex flex-1 flex-col p-6">
                         <span class="text-xs font-semibold uppercase tracking-[0.22em] text-[#c2410c]">{{ $article['category'] }}</span>
                         <h2 class="mt-4 text-2xl font-bold leading-tight tracking-tight text-slate-950">
-                            {{ $article['title'] }}
+                            <a href="{{ route('articles.show', $article['slug']) }}" class="transition-colors hover:text-[#c2410c]">
+                                {{ $article['title'] }}
+                            </a>
                         </h2>
                         <p class="mt-4 text-base leading-7 text-slate-600">
                             {{ $article['excerpt'] }}
