@@ -17,3 +17,5 @@ Only record stable, verified facts here.
 - The About page is a dedicated marketing route at `/about`, not a homepage anchor section.
 - The Contact page is a dedicated marketing route at `/contact` and intentionally exposes only a form flow, without address, map, phone, or direct email details.
 - Privacy Policy and Terms pages are dedicated simple legal routes at `/privacy-policy` and `/terms-and-conditions`, rendered through the shared marketing layout.
+- Footer categories are hydrated from the public categories endpoint through `BlogContentService` with cached fallback config, and category links target `/articles/category/{slug}`.
+- The frontend publishes a cached RSS feed at `/rss.xml`, sourced from the service application's public RSS endpoint, and the footer RSS link targets that route.

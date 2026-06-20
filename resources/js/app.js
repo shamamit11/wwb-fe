@@ -1,3 +1,5 @@
+import { Livewire } from '../../vendor/livewire/livewire/dist/livewire.esm';
+
 const syncStickyHeader = () => {
     const header = document.querySelector('[data-site-header]');
 
@@ -38,3 +40,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('scroll', syncStickyHeader, { passive: true });
 });
+
+Livewire.start();

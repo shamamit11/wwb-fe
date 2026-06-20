@@ -16,6 +16,10 @@ class HomePageTest extends TestCase
         $response->assertSee('Learn AI, SEO, Blogging, and Digital Growth, One Practical Guide at a Time.');
         $response->assertSee('Featured Editorial');
         $response->assertSee('Practical Wisdom for Builders');
+        $response->assertSee('All Articles');
+        $response->assertSee('Contact Us');
+        $response->assertDontSee('Editorial Guidelines');
+        $response->assertSee('AI Agents');
     }
 
     public function test_the_home_page_outputs_reusable_seo_metadata_without_cdn_tailwind(): void

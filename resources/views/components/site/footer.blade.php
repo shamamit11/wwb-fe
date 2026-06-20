@@ -1,5 +1,5 @@
 @props([
-    'categories' => data_get(config('site.footer'), 'categories', []),
+    'categories' => [],
     'company' => data_get(config('site.footer'), 'company', []),
     'social' => config('site.social', []),
 ])
@@ -53,7 +53,7 @@
         <div class="flex flex-col items-start justify-between gap-4 border-t border-slate-200 pt-8 text-sm text-slate-500 md:flex-row md:items-center">
             <p>© {{ now()->year }} {{ config('site.name', config('app.name')) }}. Precision in digital editorial.</p>
             <div class="flex gap-8">
-                <a href="#" class="uppercase tracking-[0.2em] transition-colors hover:text-[#c2410c]">RSS Feed</a>
+                <a href="{{ route('rss.feed') }}" class="uppercase tracking-[0.2em] transition-colors hover:text-[#c2410c]">RSS Feed</a>
                 <a href="#" class="uppercase tracking-[0.2em] transition-colors hover:text-[#c2410c]">Archive</a>
             </div>
         </div>

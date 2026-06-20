@@ -44,6 +44,9 @@ return [
         'retry_sleep_ms' => (int) env('WIDEWEB_BLOG_API_RETRY_SLEEP_MS', 150),
         'cache_ttl' => (int) env('WIDEWEB_BLOG_API_CACHE_TTL', 900),
         'homepage_path' => env('WIDEWEB_BLOG_API_HOMEPAGE_PATH', 'homepage'),
+        'categories_path' => env('WIDEWEB_BLOG_API_CATEGORIES_PATH', 'public/categories'),
+        'posts_path' => env('WIDEWEB_BLOG_API_POSTS_PATH', 'public/posts'),
+        'rss_path' => env('WIDEWEB_BLOG_API_RSS_PATH', 'public/rss'),
     ],
 
 ];

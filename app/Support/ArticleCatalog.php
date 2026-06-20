@@ -14,12 +14,24 @@ class ArticleCatalog
         return [
             ['slug' => 'all', 'label' => 'All Content'],
             ['slug' => 'ai-tools', 'label' => 'AI Tools'],
-            ['slug' => 'blogging', 'label' => 'Blogging'],
-            ['slug' => 'seo-strategy', 'label' => 'SEO Strategy'],
-            ['slug' => 'web-dev', 'label' => 'Web Dev'],
-            ['slug' => 'case-studies', 'label' => 'Case Studies'],
-            ['slug' => 'news', 'label' => 'News'],
+            ['slug' => 'ai-agents', 'label' => 'AI Agents'],
+            ['slug' => 'seo', 'label' => 'SEO'],
+            ['slug' => 'content-marketing', 'label' => 'Content Marketing'],
+            ['slug' => 'productivity-automation', 'label' => 'Productivity & Automation'],
+            ['slug' => 'developer-ai', 'label' => 'Developer AI'],
+            ['slug' => 'news-trends', 'label' => 'News & Trends'],
         ];
+    }
+
+    public static function filterLabel(string $slug): ?string
+    {
+        foreach (self::filters() as $filter) {
+            if ($filter['slug'] === $slug) {
+                return $filter['label'];
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -30,7 +42,7 @@ class ArticleCatalog
         return [
             [
                 'slug' => 'convergence-of-generative-ai-and-design-systems',
-                'category' => 'Design Systems',
+                'category' => 'AI Tools',
                 'category_slug' => 'ai-tools',
                 'title' => 'The Convergence of Generative AI and Design Systems',
                 'excerpt' => 'How AI-assisted design systems are moving teams from static component libraries to adaptive content and interface engines.',
@@ -90,7 +102,7 @@ class ArticleCatalog
             ],
             [
                 'slug' => 'future-of-generative-models-in-enterprise-seo',
-                'category' => 'Artificial Intelligence',
+                'category' => 'AI Tools',
                 'category_slug' => 'ai-tools',
                 'title' => 'The Future of Generative Models in Enterprise SEO',
                 'excerpt' => 'How large language models are reshaping the way we think about content density and keyword architecture for modern search surfaces.',
@@ -103,8 +115,8 @@ class ArticleCatalog
             ],
             [
                 'slug' => 'mastering-the-art-of-editorial-consistency',
-                'category' => 'Blogging',
-                'category_slug' => 'blogging',
+                'category' => 'Content Marketing',
+                'category_slug' => 'content-marketing',
                 'title' => 'Mastering the Art of Editorial Consistency',
                 'excerpt' => 'Developing a brand voice that resonates across diverse digital platforms without flattening your point of view.',
                 'author' => 'David Cohen',
@@ -116,8 +128,8 @@ class ArticleCatalog
             ],
             [
                 'slug' => 'post-update-recovery-a-step-by-step-guide',
-                'category' => 'SEO Strategy',
-                'category_slug' => 'seo-strategy',
+                'category' => 'SEO',
+                'category_slug' => 'seo',
                 'title' => 'Post-Update Recovery: A Step-by-Step Guide',
                 'excerpt' => 'Navigating the aftermath of the latest search algorithm core updates with data-driven diagnostics and calmer prioritization.',
                 'author' => 'Marcus Thorne',
@@ -129,8 +141,8 @@ class ArticleCatalog
             ],
             [
                 'slug' => 'headless-cms-architectures-for-content-heavy-blogs',
-                'category' => 'Web Dev',
-                'category_slug' => 'web-dev',
+                'category' => 'Developer AI',
+                'category_slug' => 'developer-ai',
                 'title' => 'Headless CMS Architectures for Content Heavy Blogs',
                 'excerpt' => 'Why decoupling your front-end from your content store is the ultimate performance play for editorial scale.',
                 'author' => 'Leo Vang',
@@ -142,8 +154,8 @@ class ArticleCatalog
             ],
             [
                 'slug' => 'how-streamline-scaled-their-content-to-1m-visitors',
-                'category' => 'Case Studies',
-                'category_slug' => 'case-studies',
+                'category' => 'Productivity & Automation',
+                'category_slug' => 'productivity-automation',
                 'title' => 'How \'Streamline\' Scaled Their Content to 1M Visitors',
                 'excerpt' => 'A deep dive into the operational shifts and content strategies that fueled exponential editorial growth.',
                 'author' => 'Sarah Jenkins',
@@ -155,8 +167,8 @@ class ArticleCatalog
             ],
             [
                 'slug' => 'the-decentralization-of-online-publishing',
-                'category' => 'News',
-                'category_slug' => 'news',
+                'category' => 'News & Trends',
+                'category_slug' => 'news-trends',
                 'title' => 'The Decentralization of Online Publishing',
                 'excerpt' => 'Exploring how independent writers are reclaiming ownership through newsletters, communities, and platform-light publishing.',
                 'author' => 'David Cohen',
@@ -168,8 +180,8 @@ class ArticleCatalog
             ],
             [
                 'slug' => 'planning-your-2025-content-calendar-today',
-                'category' => 'Blogging',
-                'category_slug' => 'blogging',
+                'category' => 'Content Marketing',
+                'category_slug' => 'content-marketing',
                 'title' => 'Planning Your 2025 Content Calendar Today',
                 'excerpt' => 'The long-game approach to topic clustering and seasonal relevance for authority sites that publish with intent.',
                 'author' => 'Marcus Thorne',
@@ -181,8 +193,8 @@ class ArticleCatalog
             ],
             [
                 'slug' => 'building-small-ai-utilities-that-actually-stick',
-                'category' => 'Artificial Intelligence',
-                'category_slug' => 'ai-tools',
+                'category' => 'AI Agents',
+                'category_slug' => 'ai-agents',
                 'title' => 'Building Small AI Utilities That Actually Stick',
                 'excerpt' => 'A practical framework for creating narrowly useful AI tools that solve one problem well and compound editorial leverage.',
                 'author' => 'Priya Solanki',
@@ -194,8 +206,8 @@ class ArticleCatalog
             ],
             [
                 'slug' => 'securing-the-modern-web-stack',
-                'category' => 'Development',
-                'category_slug' => 'web-dev',
+                'category' => 'Developer AI',
+                'category_slug' => 'developer-ai',
                 'title' => 'Securing the Modern Web Stack',
                 'excerpt' => 'The security layers modern editorial products need when content tooling, APIs, and teams scale together.',
                 'author' => 'Jade Lin',
@@ -207,8 +219,8 @@ class ArticleCatalog
             ],
             [
                 'slug' => 'building-remote-first-design-teams',
-                'category' => 'Culture',
-                'category_slug' => 'case-studies',
+                'category' => 'Productivity & Automation',
+                'category_slug' => 'productivity-automation',
                 'title' => 'Building Remote-First Design Teams',
                 'excerpt' => 'Systems, rituals, and documentation patterns that let distributed design teams move with confidence.',
                 'author' => 'Alyssa Moore',
@@ -220,7 +232,7 @@ class ArticleCatalog
             ],
             [
                 'slug' => 'why-your-project-needs-a-design-token-strategy',
-                'category' => 'Systems',
+                'category' => 'AI Tools',
                 'category_slug' => 'ai-tools',
                 'title' => 'Why Your Project Needs a Design Token Strategy',
                 'excerpt' => 'Treating design tokens as product infrastructure rather than visual bookkeeping changes how teams ship.',

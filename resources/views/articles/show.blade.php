@@ -26,7 +26,7 @@
     :canonical="url()->current()"
     :image="$article['image']"
     :schema="$schema"
-    active-nav=""
+    active-nav="articles"
 >
     <livewire:article-detail-page :slug="$slug" />
 </x-layouts.marketing>

@@ -17,7 +17,7 @@
     :description="$description"
     :canonical="url()->current()"
     :schema="$schema"
-    active-nav=""
+    active-nav="contact"
 >
     <livewire:contact-page />
 </x-layouts.marketing>

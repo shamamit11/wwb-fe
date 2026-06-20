@@ -1,53 +1,53 @@
 <main class="px-6 py-10 lg:px-8 lg:py-14">
     <article class="mx-auto max-w-7xl">
-        <div class="grid gap-12 xl:grid-cols-[minmax(0,1fr)_280px]">
-            <div>
-                <nav class="mb-8 flex flex-wrap items-center gap-2 text-sm text-slate-500">
-                    <a href="{{ route('home') }}" class="transition-colors hover:text-[#c2410c]">Home</a>
-                    <span>•</span>
-                    <a href="{{ route('articles.index') }}" class="transition-colors hover:text-[#c2410c]">Articles</a>
-                    <span>•</span>
-                    <span>{{ $article['category'] }}</span>
-                </nav>
+        <nav class="mb-8 flex flex-wrap items-center gap-2 text-sm text-slate-500">
+            <a href="{{ route('home') }}" class="transition-colors hover:text-[#c2410c]">Home</a>
+            <span>•</span>
+            <a href="{{ route('articles.index') }}" class="transition-colors hover:text-[#c2410c]">Articles</a>
+            <span>•</span>
+            <span>{{ $article['category'] }}</span>
+        </nav>
 
-                <header class="max-w-3xl">
-                    <h1 class="text-4xl font-extrabold leading-tight tracking-tight text-slate-950 md:text-6xl">
-                        {{ $article['title'] }}
-                    </h1>
+        <header class="max-w-5xl">
+            <h1 class="text-4xl font-extrabold leading-tight tracking-tight text-slate-950 md:text-6xl">
+                {{ $article['title'] }}
+            </h1>
 
-                    <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-5 text-sm text-slate-500">
-                        <div class="flex items-center gap-3">
-                            <span class="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 text-sm font-bold text-[#c2410c]">
-                                {{ collect(explode(' ', $article['author']))->map(fn (string $part): string => strtoupper(substr($part, 0, 1)))->implode('') }}
-                            </span>
-                            <div>
-                                <div class="font-semibold text-slate-900">{{ $article['author'] }}</div>
-                                <div class="uppercase tracking-[0.14em]">{{ $article['author_role'] ?? 'Editorial Team' }}</div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="uppercase tracking-[0.14em]">Published</div>
-                            <div class="mt-1 text-slate-700">{{ $article['date'] }}</div>
-                        </div>
-
-                        <div>
-                            <div class="uppercase tracking-[0.14em]">Read time</div>
-                            <div class="mt-1 text-slate-700">{{ $article['read_time'] }}</div>
-                        </div>
-
-                        <div class="flex items-center gap-3 text-slate-400">
-                            <button type="button" aria-label="Save article" class="rounded-full border border-slate-200 p-2 transition-colors hover:border-orange-200 hover:text-[#c2410c]">
-                                <x-site.icon name="bookmark" />
-                            </button>
-                            <button type="button" aria-label="Share article" class="rounded-full border border-slate-200 p-2 transition-colors hover:border-orange-200 hover:text-[#c2410c]">
-                                <x-site.icon name="share" />
-                            </button>
-                        </div>
+            <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-5 text-sm text-slate-500">
+                <div class="flex items-center gap-3">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 text-sm font-bold text-[#c2410c]">
+                        {{ collect(explode(' ', $article['author']))->map(fn (string $part): string => strtoupper(substr($part, 0, 1)))->implode('') }}
+                    </span>
+                    <div>
+                        <div class="font-semibold text-slate-900">{{ $article['author'] }}</div>
+                        <div class="uppercase tracking-[0.14em]">{{ $article['author_role'] ?? 'Editorial Team' }}</div>
                     </div>
-                </header>
+                </div>
 
-                <div class="mt-10 max-w-3xl space-y-8 text-lg leading-9 text-slate-700">
+                <div>
+                    <div class="uppercase tracking-[0.14em]">Published</div>
+                    <div class="mt-1 text-slate-700">{{ $article['date'] }}</div>
+                </div>
+
+                <div>
+                    <div class="uppercase tracking-[0.14em]">Read time</div>
+                    <div class="mt-1 text-slate-700">{{ $article['read_time'] }}</div>
+                </div>
+
+                <div class="flex items-center gap-3 text-slate-400">
+                    <button type="button" aria-label="Save article" class="rounded-full border border-slate-200 p-2 transition-colors hover:border-orange-200 hover:text-[#c2410c]">
+                        <x-site.icon name="bookmark" />
+                    </button>
+                    <button type="button" aria-label="Share article" class="rounded-full border border-slate-200 p-2 transition-colors hover:border-orange-200 hover:text-[#c2410c]">
+                        <x-site.icon name="share" />
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="mt-10 grid gap-12 xl:grid-cols-[minmax(0,1fr)_280px] xl:items-start">
+            <div class="min-w-0">
+                <div class="max-w-3xl space-y-8 text-lg leading-9 text-slate-700">
                     @foreach ($article['intro'] ?? [] as $paragraph)
                         <p>{{ $paragraph }}</p>
                     @endforeach
@@ -62,66 +62,9 @@
                         {{ $article['caption'] }}
                     </figcaption>
                 @endif
-
-                <div class="mt-12 max-w-3xl space-y-10">
-                    @foreach ($article['sections'] ?? [] as $section)
-                        <section>
-                            @if (! empty($section['heading']))
-                                <h2 class="text-4xl font-bold tracking-tight text-slate-950">
-                                    {{ $section['heading'] }}
-                                </h2>
-                            @endif
-
-                            @if (! empty($section['body']))
-                                <div class="mt-5 space-y-5 text-lg leading-9 text-slate-700">
-                                    @foreach ($section['body'] as $paragraph)
-                                        <p>{{ $paragraph }}</p>
-                                    @endforeach
-                                </div>
-                            @endif
-
-                            @if (! empty($section['quote']))
-                                <blockquote class="mt-6 border-l-4 border-[#c2410c] bg-orange-50/50 px-6 py-4 text-2xl italic leading-9 text-[#c2410c]">
-                                    “{{ $section['quote'] }}”
-                                </blockquote>
-                            @endif
-
-                            @if (! empty($section['cta']))
-                                <div class="mt-8 rounded-xl bg-slate-100 p-8 shadow-sm">
-                                    <span class="inline-flex rounded-full bg-[#c2410c] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white">
-                                        {{ $section['cta']['eyebrow'] }}
-                                    </span>
-                                    <h3 class="mt-4 text-3xl font-bold tracking-tight text-slate-950">
-                                        {{ $section['cta']['title'] }}
-                                    </h3>
-                                    <p class="mt-3 max-w-2xl text-base leading-7 text-slate-600">
-                                        {{ $section['cta']['copy'] }}
-                                    </p>
-                                    <form class="mt-6 flex flex-col gap-3 md:flex-row" wire:submit.prevent>
-                                        <input
-                                            type="email"
-                                            placeholder="{{ $section['cta']['placeholder'] }}"
-                                            class="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-5 py-3 text-base text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-[#c2410c] focus:ring-4 focus:ring-orange-100">
-                                        <button type="submit" class="rounded-xl bg-[#141b2b] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#c2410c]">
-                                            {{ $section['cta']['button'] }}
-                                        </button>
-                                    </form>
-                                </div>
-                            @endif
-                        </section>
-                    @endforeach
-                </div>
-
-                <div class="mt-10 flex flex-wrap gap-3">
-                    @foreach ($article['tags'] ?? [] as $tag)
-                        <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-600">
-                            {{ $tag }}
-                        </span>
-                    @endforeach
-                </div>
             </div>
 
-            <aside class="xl:pt-16">
+            <aside class="xl:sticky xl:top-28">
                 <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
                     <h2 class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Trending Topics</h2>
                     <div class="mt-6 space-y-5">
@@ -138,6 +81,63 @@
                     </div>
                 </div>
             </aside>
+        </div>
+
+        <div class="mt-12 max-w-3xl space-y-10">
+            @foreach ($article['sections'] ?? [] as $section)
+                <section>
+                    @if (! empty($section['heading']))
+                        <h2 class="text-4xl font-bold tracking-tight text-slate-950">
+                            {{ $section['heading'] }}
+                        </h2>
+                    @endif
+
+                    @if (! empty($section['body']))
+                        <div class="mt-5 space-y-5 text-lg leading-9 text-slate-700">
+                            @foreach ($section['body'] as $paragraph)
+                                <p>{{ $paragraph }}</p>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    @if (! empty($section['quote']))
+                        <blockquote class="mt-6 border-l-4 border-[#c2410c] bg-orange-50/50 px-6 py-4 text-2xl italic leading-9 text-[#c2410c]">
+                            “{{ $section['quote'] }}”
+                        </blockquote>
+                    @endif
+
+                    @if (! empty($section['cta']))
+                        <div class="mt-8 rounded-xl bg-slate-100 p-8 shadow-sm">
+                            <span class="inline-flex rounded-full bg-[#c2410c] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white">
+                                {{ $section['cta']['eyebrow'] }}
+                            </span>
+                            <h3 class="mt-4 text-3xl font-bold tracking-tight text-slate-950">
+                                {{ $section['cta']['title'] }}
+                            </h3>
+                            <p class="mt-3 max-w-2xl text-base leading-7 text-slate-600">
+                                {{ $section['cta']['copy'] }}
+                            </p>
+                            <form class="mt-6 flex flex-col gap-3 md:flex-row" wire:submit.prevent>
+                                <input
+                                    type="email"
+                                    placeholder="{{ $section['cta']['placeholder'] }}"
+                                    class="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-5 py-3 text-base text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-[#c2410c] focus:ring-4 focus:ring-orange-100">
+                                <button type="submit" class="rounded-xl bg-[#141b2b] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#c2410c]">
+                                    {{ $section['cta']['button'] }}
+                                </button>
+                            </form>
+                        </div>
+                    @endif
+                </section>
+            @endforeach
+        </div>
+
+        <div class="mt-10 flex flex-wrap gap-3">
+            @foreach ($article['tags'] ?? [] as $tag)
+                <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-600">
+                    {{ $tag }}
+                </span>
+            @endforeach
         </div>
 
         @if ($relatedArticles !== [])

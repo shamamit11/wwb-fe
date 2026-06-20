@@ -2,9 +2,13 @@
     <section class="mx-auto max-w-7xl">
         <div class="flex flex-col gap-6 border-b border-slate-200 pb-10 lg:flex-row lg:items-end lg:justify-between">
             <div class="max-w-2xl">
-                <h1 class="text-4xl font-extrabold tracking-tight text-slate-950 md:text-6xl">All Articles</h1>
+                <h1 @class([
+                    'font-extrabold tracking-tight text-slate-950',
+                    'text-4xl md:text-6xl' => $activeCategory === 'all',
+                    'text-4xl md:text-5xl lg:text-[3.25rem]' => $activeCategory !== 'all',
+                ])>{{ $pageTitle }}</h1>
                 <p class="mt-4 text-lg leading-8 text-slate-600">
-                    A curated collection of professional insights on AI, productivity, and the evolving tech landscape.
+                    {{ $pageDescription }}
                 </p>
             </div>
 
@@ -16,16 +20,16 @@
 
         <div class="mt-8 flex flex-wrap gap-3">
             @foreach ($filters as $filter)
-                <button
-                    type="button"
-                    wire:click="setCategory('{{ $filter['slug'] }}')"
+                <a
+                    href="{{ $filter['slug'] === 'all' ? route('articles.index') : route('articles.category', ['category' => $filter['slug']]) }}"
+                    wire:navigate
                     @class([
                         'rounded-full border px-4 py-2 text-sm font-semibold transition-colors',
                         'border-[#c2410c] bg-[#c2410c] text-white shadow-sm' => $activeCategory === $filter['slug'],
                         'border-slate-200 bg-white text-slate-600 hover:border-orange-200 hover:text-[#c2410c]' => $activeCategory !== $filter['slug'],
                     ])>
                     {{ $filter['label'] }}
-                </button>
+                </a>
             @endforeach
         </div>
 

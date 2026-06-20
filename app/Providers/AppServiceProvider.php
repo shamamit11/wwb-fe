@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Contracts\BlogApiClient;
+use App\Services\BlogContentService;
 use App\Services\GuzzleBlogApiClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use Illuminate\View\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -38,6 +40,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \Illuminate\Support\Facades\View::composer('components.site.footer', function (View $view): void {
+            $fallbackCategories = data_get(config('site.footer'), 'categories', []);
+
+            if (app()->runningUnitTests()) {
+                $view->with('categories', $fallbackCategories);
+
+                return;
+            }
+
+            try {
+                /** @var BlogContentService $content */
+                $content = app(BlogContentService::class);
+                $view->with('categories', $content->categories());
+            } catch (\Throwable) {
+                $view->with('categories', $fallbackCategories);
+            }
+        });
     }
 }
