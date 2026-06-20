@@ -15,3 +15,4 @@ Only record stable, verified facts here.
 - Shared article content for listing and detail pages is centralized in `app/Support/ArticleCatalog.php`.
 - Shared resource content for the resources page is centralized in `app/Support/ResourceCatalog.php`.
 - The About page is a dedicated marketing route at `/about`, not a homepage anchor section.
+- The Contact page is a dedicated marketing route at `/contact` and intentionally exposes only a form flow, without address, map, phone, or direct email details.

@@ -30,7 +30,7 @@ return [
             ['label' => 'Editorial Guidelines', 'href' => '/about'],
             ['label' => 'Privacy Policy', 'href' => '#'],
             ['label' => 'Terms of Service', 'href' => '#'],
-            ['label' => 'Contact Us', 'href' => '#newsletter'],
+            ['label' => 'Contact Us', 'href' => '/contact'],
         ],
     ],
     'social' => [
