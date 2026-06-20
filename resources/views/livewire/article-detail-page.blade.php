@@ -81,29 +81,46 @@
                 @endif
             </div>
 
-            @if ($sidebarTopics !== [])
+            @if ($sidebarTopics !== [] || $relatedArticles !== [])
                 <aside class="xl:sticky xl:top-28">
-                    <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-                        <h2 class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Trending Topics</h2>
-                        <div class="mt-6 space-y-5">
-                            @foreach ($sidebarTopics as $index => $topic)
-                                <div class="border-b border-slate-100 pb-4 last:border-b-0 last:pb-0">
-                                    <div class="text-xs font-semibold tracking-[0.2em] text-[#c2410c]">
-                                        {{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}
-                                    </div>
-                                    <div class="mt-2 text-base font-semibold leading-6 text-slate-900">
-                                        {{ $topic }}
-                                    </div>
+                    <div class="space-y-6">
+                        @if ($sidebarTopics !== [])
+                            <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                                <h2 class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Tags</h2>
+                                <div class="mt-6 flex flex-wrap gap-3">
+                                    @foreach ($sidebarTopics as $topic)
+                                        <span class="rounded-full bg-orange-50 px-4 py-2 text-sm font-medium text-[#c2410c] ring-1 ring-orange-100">
+                                            {{ $topic }}
+                                        </span>
+                                    @endforeach
                                 </div>
-                            @endforeach
-                        </div>
+                            </div>
+                        @endif
+
+                        @if ($relatedArticles !== [])
+                            <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                                <h2 class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Related Articles</h2>
+                                <div class="mt-6 space-y-4">
+                                    @foreach ($relatedArticles as $related)
+                                        <a href="{{ route('articles.show', $related['slug']) }}" class="group block rounded-lg border border-slate-100 p-4 transition-colors hover:border-orange-200 hover:bg-orange-50/50">
+                                            <div class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                                                {{ $related['category'] }} • {{ $related['read_time'] }}
+                                            </div>
+                                            <div class="mt-2 text-base font-semibold leading-6 text-slate-900 group-hover:text-[#c2410c]">
+                                                {{ $related['title'] }}
+                                            </div>
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </aside>
             @endif
         </div>
 
         @if ($relatedArticles !== [])
-            <section class="mt-20">
+            <section class="mt-20 xl:hidden">
                 <div class="flex flex-col gap-3 border-t border-slate-200 pt-10 md:flex-row md:items-end md:justify-between">
                     <div>
                         <h2 class="text-3xl font-bold tracking-tight text-slate-950">Related Articles</h2>

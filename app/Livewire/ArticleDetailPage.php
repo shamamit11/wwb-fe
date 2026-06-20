@@ -60,11 +60,13 @@ class ArticleDetailPage extends Component
             'author_role' => (string) data_get($post, 'template.name', 'Editorial Team'),
             'date' => $this->formatDate((string) data_get($post, 'published_at', '')),
             'read_time' => (string) (data_get($post, 'read_time') ?: '5 min read'),
-            'image' => (string) (data_get($post, 'featured_image') ?: data_get($featuredMedia, 'url') ?: ''),
+            'image' => $this->normalizeMediaUrl((string) (data_get($post, 'featured_image') ?: data_get($featuredMedia, 'url') ?: '')),
             'image_alt' => (string) (data_get($featuredMedia, 'alt_text') ?: data_get($post, 'title', '')),
             'caption' => (string) data_get($featuredMedia, 'caption', ''),
             'tags' => array_values(array_map(
-                static fn (array $tag): string => '#'.$tag['name'],
+                static fn (array $tag): string => '#'.Str::of((string) (data_get($tag, 'slug') ?: data_get($tag, 'name', '')))
+                    ->lower()
+                    ->slug('-'),
                 array_filter(
                     data_get($post, 'tags', []),
                     static fn (mixed $tag): bool => is_array($tag) && filled(data_get($tag, 'name')),
@@ -90,7 +92,7 @@ class ArticleDetailPage extends Component
                 'title' => (string) data_get($item, 'title', 'Untitled article'),
                 'category' => (string) data_get($item, 'category.name', 'Article'),
                 'read_time' => (string) (data_get($item, 'read_time') ?: '5 min read'),
-                'image' => (string) (data_get($item, 'featured_image') ?: data_get($item, 'featured_media.url') ?: ''),
+                'image' => $this->normalizeMediaUrl((string) (data_get($item, 'featured_image') ?: data_get($item, 'featured_media.url') ?: '')),
             ],
             array_filter($items, static fn (mixed $item): bool => is_array($item) && filled(data_get($item, 'slug'))),
         ));
@@ -103,7 +105,9 @@ class ArticleDetailPage extends Component
     private function extractSidebarTopics(array $post): array
     {
         $tags = array_values(array_map(
-            static fn (array $tag): string => (string) $tag['name'],
+            static fn (array $tag): string => '#'.Str::of((string) (data_get($tag, 'slug') ?: data_get($tag, 'name', '')))
+                ->lower()
+                ->slug('-'),
             array_filter(
                 data_get($post, 'tags', []),
                 static fn (mixed $tag): bool => is_array($tag) && filled(data_get($tag, 'name')),
@@ -134,5 +138,30 @@ class ArticleDetailPage extends Component
         } catch (\Throwable) {
             return $value;
         }
+    }
+
+    private function normalizeMediaUrl(string $url): string
+    {
+        if ($url === '' || Str::startsWith($url, ['http://', 'https://', 'data:'])) {
+            return $url;
+        }
+
+        if (! Str::startsWith($url, '/')) {
+            return $url;
+        }
+
+        $baseUrl = (string) config('services.wideweb_blog.base_url', '');
+        $origin = $baseUrl !== '' ? (parse_url($baseUrl, PHP_URL_SCHEME) ?: 'https').'://'.parse_url($baseUrl, PHP_URL_HOST) : '';
+        $port = parse_url($baseUrl, PHP_URL_PORT);
+
+        if ($origin === '' || Str::endsWith($origin, '://')) {
+            return $url;
+        }
+
+        if ($port !== null) {
+            $origin .= ':'.$port;
+        }
+
+        return rtrim($origin, '/').$url;
     }
 }
