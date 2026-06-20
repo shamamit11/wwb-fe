@@ -17,3 +17,4 @@
 | 2026-06-20 | Contact page public payload alignment | Hydrated the Contact page from `/api/v1/public/contact`, submitted the form to `/api/v1/public/contact/submit`, and kept managed success/error handling with local fallbacks. |
 | 2026-06-20 | Remove local post fallback content | Replaced local article fallback usage with service-backed public posts/search endpoints for archive, detail, related articles, and search, then verified feature/unit coverage. |
 | 2026-06-20 | Align Public Homepage With Homepage Admin Payload | Updated the homepage to render against the managed service homepage payload, preserved safe fallback content, and verified homepage/service tests. |
+| 2026-06-20 | Restore homepage public payload alignment | Verified the current `/api/v1/public/home` contract remained intact and added regression coverage for the managed homepage payload shape. |
