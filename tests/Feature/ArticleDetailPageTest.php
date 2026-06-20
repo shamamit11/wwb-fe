@@ -14,6 +14,7 @@ class ArticleDetailPageTest extends TestCase
         parent::setUp();
 
         config(['services.wideweb_blog.base_url' => 'https://service.widewebblog.com/api/v1']);
+        config(['app.url' => 'https://widewebblog.com']);
 
         $this->app->instance(BlogApiClient::class, new class implements BlogApiClient
         {
@@ -26,7 +27,7 @@ class ArticleDetailPageTest extends TestCase
                             'title' => 'How AI Agent Memory Works',
                             'slug' => 'how-ai-agent-memory-works',
                             'excerpt' => 'A practical look at short-term memory, long-term memory, retrieval patterns, and why most agent memory systems fail in production.',
-                            'canonical_url' => 'https://widewebblog.test/posts/how-ai-agent-memory-works/',
+                            'canonical_url' => 'https://service.widewebblog.com/posts/how-ai-agent-memory-works/',
                             'published_at' => '2026-06-14T10:00:00.000000Z',
                             'updated_at' => '2026-06-20T08:30:00.000000Z',
                             'reading_time_minutes' => 8,
@@ -59,7 +60,7 @@ class ArticleDetailPageTest extends TestCase
                             'seo' => [
                                 'meta_title' => 'How AI Agent Memory Works',
                                 'meta_description' => 'Understand short-term memory, long-term memory, and retrieval patterns for AI agents in production.',
-                                'canonical_url' => 'https://widewebblog.test/posts/how-ai-agent-memory-works/',
+                                'canonical_url' => 'https://service.widewebblog.com/posts/how-ai-agent-memory-works/',
                                 'robots_index' => true,
                                 'robots_follow' => true,
                                 'og_title' => 'How AI Agent Memory Works',
@@ -82,7 +83,7 @@ class ArticleDetailPageTest extends TestCase
                                     'title' => 'Agent Context Windows Explained',
                                     'slug' => 'agent-context-windows-explained',
                                     'excerpt' => 'Why larger context windows help less than most teams expect.',
-                                    'canonical_url' => 'https://widewebblog.test/posts/agent-context-windows-explained/',
+                                    'canonical_url' => 'https://service.widewebblog.com/posts/agent-context-windows-explained/',
                                     'published_at' => '2026-06-13T09:00:00.000000Z',
                                     'updated_at' => '2026-06-18T10:15:00.000000Z',
                                     'reading_time_minutes' => 5,
@@ -115,6 +116,12 @@ class ArticleDetailPageTest extends TestCase
                                 '@context' => 'https://schema.org',
                                 '@type' => 'TechArticle',
                                 'headline' => 'How AI Agent Memory Works',
+                                'url' => 'https://service.widewebblog.com/posts/how-ai-agent-memory-works/',
+                                'mainEntityOfPage' => 'https://service.widewebblog.com/posts/how-ai-agent-memory-works/',
+                                'publisher' => [
+                                    '@type' => 'Organization',
+                                    'url' => 'https://service.widewebblog.com/',
+                                ],
                             ],
                             'blocks' => [
                                 [
@@ -178,7 +185,8 @@ class ArticleDetailPageTest extends TestCase
         $response->assertOk();
         $response->assertSee('How AI Agent Memory Works');
         $response->assertSee('<title>How AI Agent Memory Works</title>', false);
-        $response->assertSee('<link rel="canonical" href="https://widewebblog.test/posts/how-ai-agent-memory-works/">', false);
+        $response->assertSee('<link rel="canonical" href="https://widewebblog.com/posts/how-ai-agent-memory-works/">', false);
+        $response->assertSee('<meta property="og:url" content="https://widewebblog.com/posts/how-ai-agent-memory-works/">', false);
         $response->assertSee('<meta property="og:image" content="https://media.widewebblog.com/media/posts/ai-agent-memory-hero.jpg">', false);
         $response->assertSee('Amit Sharma');
         $response->assertSee('Tutorial');
@@ -194,6 +202,10 @@ class ArticleDetailPageTest extends TestCase
         $response->assertSee('<div class="article-block article-block--callout article-block--callout-warning">', false);
         $response->assertSee('<div class="article-block article-block--code">', false);
         $response->assertSee('src="https://media.widewebblog.com/media/posts/ai-agent-memory-hero.jpg"', false);
+        $response->assertSee('"url": "https://widewebblog.com/posts/how-ai-agent-memory-works/"', false);
+        $response->assertSee('"mainEntityOfPage": "https://widewebblog.com/posts/how-ai-agent-memory-works/"', false);
+        $response->assertSee('"url": "https://widewebblog.com/"', false);
+        $response->assertDontSee('https://service.widewebblog.com/posts/how-ai-agent-memory-works/', false);
         $response->assertSee('Frequently Asked Questions');
         $response->assertSee('<details class="article-faq', false);
         $response->assertSee('How should I structure agent memory?');

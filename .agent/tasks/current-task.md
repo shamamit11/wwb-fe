@@ -1,7 +1,7 @@
-# Task: Rebuild article detail around structured content blocks
+# Task: Rewrite service-host SEO URLs to the public site origin
 
 ## Scope
-Use article `blocks` as the primary rendering source for the detail page, clean malformed markdown such as `## ##`, and apply intentional UI treatment per supported block type (`heading`, `paragraph`, `faq`).
+Prevent article SEO metadata and JSON-LD from exposing `service.widewebblog.com` by rewriting service-host URLs to the frontend site origin before rendering.
 
 ## Spec Reference
 - Spec Path: `.agent/specs/active/public-posts-api.md`
@@ -17,14 +17,12 @@ Use article `blocks` as the primary rendering source for the detail page, clean 
 - [x] Update docs or manifest if stable conventions changed
 
 ## Plan
-- Normalize the service payload block content before rendering, including malformed repeated markdown heading markers.
-- Build editorial sections from `heading` + `paragraph` blocks and render `faq` blocks separately as expandable panels.
-- Refresh the article detail Blade/CSS so structured blocks present as designed sections instead of one flat markdown column.
+- Add one helper that rewrites URLs from the configured service host to the frontend/public site origin.
+- Apply it to article canonical URLs and recursively through article schema payloads before they are sent to the SEO component.
+- Add focused feature coverage proving service-host schema/canonical URLs are normalized in the rendered page.
 
 ## Verification Evidence
-- Command: `php -l app/Livewire/ArticleDetailPage.php`
+- Command: `php -l app/Support/PublicSiteUrl.php`
 - Result: Passed, no syntax errors detected
 - Command: `php artisan test tests/Feature/ArticleDetailPageTest.php`
-- Result: Passed, 3 tests / 30 assertions
-- Command: `npm run build`
-- Result: Build completed successfully and emitted assets; Vite warned that the local Node version is `22.1.0` while it prefers `20.19+` or `22.12+`.
+- Result: Passed, 3 tests / 35 assertions
