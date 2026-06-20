@@ -25,3 +25,4 @@ Only record stable, verified facts here.
 - Article archive, article detail, related articles, and public search results are hydrated from the service application's `public/posts` and `public/search` endpoints instead of local article fallback content.
 - The homepage route resolves service content through `BlogContentService`, with `WIDEWEB_BLOG_API_HOMEPAGE_PATH` defaulting to `public/home` and the page falling back to embedded defaults when upstream homepage data is unavailable.
 - Shared head SEO metadata can include a Google site verification meta tag sourced from `GOOGLE_SITE_VERIFICATION` through `config/site.php`.
+- Homepage and resources newsletter forms post to the public `public/newsletter/subscribe` endpoint through `BlogContentService`, using validated email input plus route-specific source metadata and auto-dismissing toast feedback.

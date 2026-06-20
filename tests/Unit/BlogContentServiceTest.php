@@ -169,6 +169,49 @@ class BlogContentServiceTest extends TestCase
         $this->assertSame('submitted', $response['data']['status']);
     }
 
+    public function test_newsletter_subscription_is_forwarded_to_the_public_subscribe_endpoint(): void
+    {
+        config(['services.wideweb_blog.newsletter_subscribe_path' => 'public/newsletter/subscribe']);
+
+        $client = new class implements BlogApiClient
+        {
+            public string $path = '';
+
+            /** @var array<string, mixed> */
+            public array $body = [];
+
+            public function get(string $path, array $query = []): array
+            {
+                return ['data' => []];
+            }
+
+            public function post(string $path, array $body = []): array
+            {
+                $this->path = $path;
+                $this->body = $body;
+
+                return [
+                    'data' => [
+                        'status' => 'subscribed',
+                        'message' => 'Thank you for subscribing.',
+                    ],
+                ];
+            }
+        };
+
+        $service = new BlogContentService($client, new Repository(new ArrayStore));
+
+        $response = $service->subscribeToNewsletter([
+            'email' => 'alex@example.com',
+            'source' => 'homepage',
+            'metadata' => ['source:fe', 'route:home'],
+        ]);
+
+        $this->assertSame('public/newsletter/subscribe', $client->path);
+        $this->assertSame('alex@example.com', $client->body['email']);
+        $this->assertSame('subscribed', $response['data']['status']);
+    }
+
     public function test_about_payload_is_cached_between_calls(): void
     {
         config(['services.wideweb_blog.cache_ttl' => 900]);

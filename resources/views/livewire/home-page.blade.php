@@ -245,14 +245,33 @@
                     {{ $newsletterSection['title'] }}</h2>
                 <p class="mt-5 text-lg leading-8 text-slate-600">{{ $newsletterSection['description'] }}</p>
 
-                <form class="mt-10 flex flex-col gap-4 md:flex-row" wire:submit.prevent>
-                    <input type="email" placeholder="{{ $newsletterSection['placeholder'] }}"
+                @if ($newsletterToastVisible)
+                    <div
+                        x-data="{ show: true }"
+                        x-init="setTimeout(() => show = false, 3200)"
+                        x-show="show"
+                        x-transition
+                        @class([
+                            'mx-auto mt-8 max-w-xl rounded-2xl border px-5 py-4 text-left text-sm shadow-sm',
+                            'border-emerald-200 bg-emerald-50 text-emerald-900' => $newsletterToastType === 'success',
+                            'border-red-200 bg-red-50 text-red-900' => $newsletterToastType !== 'success',
+                        ])>
+                        {{ $newsletterToastMessage }}
+                    </div>
+                @endif
+
+                <form class="mt-10 flex flex-col gap-4 md:flex-row" wire:submit="subscribe">
+                    <input
+                        type="email"
+                        wire:model.blur="newsletterEmail"
+                        placeholder="{{ $newsletterSection['placeholder'] }}"
                         class="min-w-0 flex-1 rounded-2xl border-2 border-slate-200 bg-white px-6 py-4 text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-[#c2410c] focus:ring-4 focus:ring-orange-100">
                     <button type="submit"
                         class="rounded-2xl bg-[#141b2b] px-10 py-4 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-[#c2410c]">
                         {{ $newsletterSection['button'] }}
                     </button>
                 </form>
+                @error('newsletterEmail') <p class="mt-3 text-sm text-red-600">{{ $message }}</p> @enderror
 
                 <p class="mt-6 text-sm italic text-slate-500">{{ $newsletterSection['note'] }}</p>
             </div>

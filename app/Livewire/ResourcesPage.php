@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use App\Services\BlogContentService;
 use App\Support\ResourceCatalog;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Throwable;
 
 class ResourcesPage extends Component
 {
@@ -22,6 +25,15 @@ class ResourcesPage extends Component
 
     public string $sort = 'newest';
 
+    #[Validate('required|email|max:255')]
+    public string $newsletterEmail = '';
+
+    public bool $newsletterToastVisible = false;
+
+    public string $newsletterToastType = 'success';
+
+    public string $newsletterToastMessage = 'Thank you for subscribing.';
+
     public function mount(): void
     {
         $this->filters = ResourceCatalog::filters();
@@ -32,6 +44,39 @@ class ResourcesPage extends Component
     public function setCategory(string $slug): void
     {
         $this->activeCategory = $slug;
+    }
+
+    public function subscribe(BlogContentService $content): void
+    {
+        $this->validateOnly('newsletterEmail');
+        $this->resetErrorBag('newsletterEmail');
+        $this->newsletterToastVisible = false;
+
+        try {
+            $response = $content->subscribeToNewsletter([
+                'email' => $this->newsletterEmail,
+                'source' => 'resources',
+                'metadata' => [
+                    'source:fe',
+                    'route:resources',
+                ],
+            ]);
+        } catch (Throwable) {
+            $this->newsletterToastType = 'error';
+            $this->newsletterToastMessage = 'We could not subscribe you right now. Please try again shortly.';
+            $this->newsletterToastVisible = true;
+
+            return;
+        }
+
+        $message = data_get($response, 'data.message');
+
+        $this->newsletterToastType = 'success';
+        $this->newsletterToastMessage = is_string($message) && trim($message) !== ''
+            ? trim($message)
+            : 'Thank you for subscribing.';
+        $this->newsletterToastVisible = true;
+        $this->newsletterEmail = '';
     }
 
     /**

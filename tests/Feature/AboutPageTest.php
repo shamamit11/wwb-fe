@@ -113,4 +113,12 @@ class AboutPageTest extends TestCase
         $response->assertOk();
         $response->assertSee('href="/about"', false);
     }
+
+    public function test_the_shared_subscribe_cta_points_to_the_home_newsletter_section(): void
+    {
+        $response = $this->get('/about');
+
+        $response->assertOk();
+        $response->assertSee('href="http://fe.test#newsletter"', false);
+    }
 }

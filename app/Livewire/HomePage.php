@@ -7,6 +7,7 @@ namespace App\Livewire;
 use App\Services\BlogContentService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Throwable;
 
@@ -29,6 +30,15 @@ class HomePage extends Component
 
     /** @var array<string, mixed> */
     public array $newsletterSection = [];
+
+    #[Validate('required|email|max:255')]
+    public string $newsletterEmail = '';
+
+    public bool $newsletterToastVisible = false;
+
+    public string $newsletterToastType = 'success';
+
+    public string $newsletterToastMessage = 'Thank you for subscribing.';
 
     public function mount(BlogContentService $content, array $homepagePayload = []): void
     {
@@ -673,6 +683,39 @@ class HomePage extends Component
             'button' => 'Subscribe',
             'note' => 'High-quality insights. No spam. Unsubscribe anytime.',
         ];
+    }
+
+    public function subscribe(BlogContentService $content): void
+    {
+        $this->validateOnly('newsletterEmail');
+        $this->resetErrorBag('newsletterEmail');
+        $this->newsletterToastVisible = false;
+
+        try {
+            $response = $content->subscribeToNewsletter([
+                'email' => $this->newsletterEmail,
+                'source' => 'homepage',
+                'metadata' => [
+                    'source:fe',
+                    'route:home',
+                ],
+            ]);
+        } catch (Throwable) {
+            $this->newsletterToastType = 'error';
+            $this->newsletterToastMessage = 'We could not subscribe you right now. Please try again shortly.';
+            $this->newsletterToastVisible = true;
+
+            return;
+        }
+
+        $message = data_get($response, 'data.message');
+
+        $this->newsletterToastType = 'success';
+        $this->newsletterToastMessage = is_string($message) && trim($message) !== ''
+            ? trim($message)
+            : 'Thank you for subscribing.';
+        $this->newsletterToastVisible = true;
+        $this->newsletterEmail = '';
     }
 
     public function render()

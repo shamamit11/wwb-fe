@@ -47,6 +47,7 @@ return [
         'about_path' => env('WIDEWEB_BLOG_API_ABOUT_PATH', 'public/about'),
         'contact_path' => env('WIDEWEB_BLOG_API_CONTACT_PATH', 'public/contact'),
         'contact_submit_path' => env('WIDEWEB_BLOG_API_CONTACT_SUBMIT_PATH', 'public/contact/submit'),
+        'newsletter_subscribe_path' => env('WIDEWEB_BLOG_API_NEWSLETTER_SUBSCRIBE_PATH', 'public/newsletter/subscribe'),
         'pages_path' => env('WIDEWEB_BLOG_API_PAGES_PATH', 'public/pages'),
         'site_settings_path' => env('WIDEWEB_BLOG_API_SITE_SETTINGS_PATH', 'public/site-settings'),
         'categories_path' => env('WIDEWEB_BLOG_API_CATEGORIES_PATH', 'public/categories'),

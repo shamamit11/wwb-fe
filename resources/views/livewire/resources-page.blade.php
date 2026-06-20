@@ -95,15 +95,31 @@
             <p class="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600">
                 Join 25,000+ creators who receive our bi-weekly update on new digital assets, design tools, and technical guides.
             </p>
-            <form class="mx-auto mt-8 flex max-w-xl flex-col gap-3 md:flex-row" wire:submit.prevent>
+            @if ($newsletterToastVisible)
+                <div
+                    x-data="{ show: true }"
+                    x-init="setTimeout(() => show = false, 3200)"
+                    x-show="show"
+                    x-transition
+                    @class([
+                        'mx-auto mt-8 max-w-xl rounded-2xl border px-5 py-4 text-left text-sm shadow-sm',
+                        'border-emerald-200 bg-emerald-50 text-emerald-900' => $newsletterToastType === 'success',
+                        'border-red-200 bg-red-50 text-red-900' => $newsletterToastType !== 'success',
+                    ])>
+                    {{ $newsletterToastMessage }}
+                </div>
+            @endif
+            <form class="mx-auto mt-8 flex max-w-xl flex-col gap-3 md:flex-row" wire:submit="subscribe">
                 <input
                     type="email"
+                    wire:model.blur="newsletterEmail"
                     placeholder="Enter your email address"
                     class="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-5 py-3 text-base text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-[#c2410c] focus:ring-4 focus:ring-orange-100">
                 <button type="submit" class="rounded-xl bg-[#141b2b] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#c2410c]">
                     Join Newsletter
                 </button>
             </form>
+            @error('newsletterEmail') <p class="mx-auto mt-3 max-w-xl text-left text-sm text-red-600">{{ $message }}</p> @enderror
             <p class="mt-4 text-sm text-slate-500">No spam. Only high-signal content. Unsubscribe anytime.</p>
         </section>
     </section>

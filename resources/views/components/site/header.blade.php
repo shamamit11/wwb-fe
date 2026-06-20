@@ -24,7 +24,7 @@
             <button type="button" data-search-open aria-label="Search" class="rounded-full p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-[#c2410c]">
                 <x-site.icon name="search" class="align-middle" />
             </button>
-            <a href="#newsletter" class="hidden rounded-xl bg-[#141b2b] px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#c2410c] md:inline-flex">
+            <a href="{{ route('home') }}#newsletter" class="hidden rounded-xl bg-[#141b2b] px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#c2410c] md:inline-flex">
                 Subscribe
             </a>
             <button

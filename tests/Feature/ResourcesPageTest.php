@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Livewire\ResourcesPage;
+use App\Contracts\BlogApiClient;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -44,5 +45,34 @@ class ResourcesPageTest extends TestCase
                 'Content Strategy Notion Template',
                 'Minimalist Dashboard Kit',
             ]);
+    }
+
+    public function test_the_resources_page_newsletter_form_subscribes_successfully(): void
+    {
+        $this->app->instance(BlogApiClient::class, new class implements BlogApiClient
+        {
+            public function get(string $path, array $query = []): array
+            {
+                return ['data' => []];
+            }
+
+            public function post(string $path, array $body = []): array
+            {
+                return [
+                    'data' => [
+                        'status' => 'subscribed',
+                        'message' => 'Thank you for subscribing.',
+                    ],
+                ];
+            }
+        });
+
+        Livewire::test(ResourcesPage::class)
+            ->set('newsletterEmail', 'reader@example.com')
+            ->call('subscribe')
+            ->assertSet('newsletterToastVisible', true)
+            ->assertSet('newsletterToastType', 'success')
+            ->assertSet('newsletterToastMessage', 'Thank you for subscribing.')
+            ->assertSet('newsletterEmail', '');
     }
 }

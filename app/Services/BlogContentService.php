@@ -118,6 +118,17 @@ class BlogContentService
     }
 
     /**
+     * @param  array<string, mixed>  $payload
+     * @return array<string, mixed>
+     */
+    public function subscribeToNewsletter(array $payload): array
+    {
+        $path = (string) config('services.wideweb_blog.newsletter_subscribe_path', 'public/newsletter/subscribe');
+
+        return $this->client->post($path, $payload);
+    }
+
+    /**
      * @return array<int, array{label: string, href: string}>
      */
     public function categories(): array

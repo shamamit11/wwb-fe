@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Livewire\HomePage;
 use App\Contracts\BlogApiClient;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 class HomePageTest extends TestCase
@@ -446,6 +448,56 @@ class HomePageTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('<meta name="google-site-verification" content="google-verification-token-123">', false);
+    }
+
+    public function test_the_home_page_newsletter_form_subscribes_successfully(): void
+    {
+        $this->app->instance(BlogApiClient::class, new class implements BlogApiClient
+        {
+            public function get(string $path, array $query = []): array
+            {
+                return ['data' => []];
+            }
+
+            public function post(string $path, array $body = []): array
+            {
+                return [
+                    'data' => [
+                        'status' => 'subscribed',
+                        'message' => 'Thank you for subscribing.',
+                    ],
+                ];
+            }
+        });
+
+        Livewire::test(HomePage::class)
+            ->set('newsletterEmail', 'reader@example.com')
+            ->call('subscribe')
+            ->assertSet('newsletterToastVisible', true)
+            ->assertSet('newsletterToastType', 'success')
+            ->assertSet('newsletterToastMessage', 'Thank you for subscribing.')
+            ->assertSet('newsletterEmail', '');
+    }
+
+    public function test_the_home_page_newsletter_form_validates_email(): void
+    {
+        $this->app->instance(BlogApiClient::class, new class implements BlogApiClient
+        {
+            public function get(string $path, array $query = []): array
+            {
+                return ['data' => []];
+            }
+
+            public function post(string $path, array $body = []): array
+            {
+                return ['data' => []];
+            }
+        });
+
+        Livewire::test(HomePage::class)
+            ->set('newsletterEmail', 'not-an-email')
+            ->call('subscribe')
+            ->assertHasErrors(['newsletterEmail' => 'email']);
     }
 
     public function test_the_footer_uses_public_site_settings_for_brand_description_social_and_legal_links(): void
