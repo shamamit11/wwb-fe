@@ -70,6 +70,25 @@ class BlogContentService
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    public function page(string $slug): array
+    {
+        $ttl = (int) config('services.wideweb_blog.cache_ttl', 900);
+        $basePath = trim((string) config('services.wideweb_blog.pages_path', 'public/pages'), '/');
+        $path = $basePath.'/'.$slug;
+
+        /** @var array<string, mixed> $payload */
+        $payload = $this->cache->remember(
+            'wideweb-blog.page.'.$slug,
+            now()->addSeconds($ttl),
+            fn (): array => $this->client->get($path),
+        );
+
+        return $payload;
+    }
+
+    /**
      * @param  array<string, mixed>  $payload
      * @return array<string, mixed>
      */

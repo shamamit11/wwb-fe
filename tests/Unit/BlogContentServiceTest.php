@@ -130,6 +130,7 @@ class BlogContentServiceTest extends TestCase
         $this->assertSame('Alex Rivera', $client->body['name']);
         $this->assertSame('submitted', $response['data']['status']);
     }
+
     public function test_about_payload_is_cached_between_calls(): void
     {
         config(['services.wideweb_blog.cache_ttl' => 900]);
@@ -166,5 +167,53 @@ class BlogContentServiceTest extends TestCase
         $this->assertSame('Cached about title', $first['data']['hero']['title']);
         $this->assertSame($first, $second);
         $this->assertSame(1, $client->requests);
+    }
+
+    public function test_public_page_payload_is_cached_by_slug_between_calls(): void
+    {
+        config(['services.wideweb_blog.cache_ttl' => 900]);
+        config(['services.wideweb_blog.pages_path' => 'public/pages']);
+
+        $client = new class implements BlogApiClient
+        {
+            public int $requests = 0;
+
+            /** @var array<int, string> */
+            public array $paths = [];
+
+            public function get(string $path, array $query = []): array
+            {
+                $this->requests++;
+                $this->paths[] = $path;
+
+                return [
+                    'data' => [
+                        'title' => $path === 'public/pages/privacy-policy'
+                            ? 'Privacy Policy'
+                            : 'Terms and Conditions',
+                    ],
+                ];
+            }
+
+            public function post(string $path, array $body = []): array
+            {
+                return ['data' => []];
+            }
+        };
+
+        $service = new BlogContentService($client, new Repository(new ArrayStore));
+
+        $privacyFirst = $service->page('privacy-policy');
+        $privacySecond = $service->page('privacy-policy');
+        $terms = $service->page('terms-and-conditions');
+
+        $this->assertSame('Privacy Policy', $privacyFirst['data']['title']);
+        $this->assertSame($privacyFirst, $privacySecond);
+        $this->assertSame('Terms and Conditions', $terms['data']['title']);
+        $this->assertSame(
+            ['public/pages/privacy-policy', 'public/pages/terms-and-conditions'],
+            $client->paths,
+        );
+        $this->assertSame(2, $client->requests);
     }
 }
