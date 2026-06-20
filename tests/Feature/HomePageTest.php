@@ -4,36 +4,28 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Services\BlogContentService;
-use Mockery;
 use Tests\TestCase;
 
 class HomePageTest extends TestCase
 {
-    public function test_the_home_page_renders_cached_content_shell(): void
+    public function test_the_home_page_renders_the_livewire_marketing_homepage(): void
     {
-        $service = Mockery::mock(BlogContentService::class);
-        $service->shouldReceive('homepage')
-            ->once()
-            ->andReturn([
-                'hero' => [
-                    'title' => 'Fresh from the API',
-                    'summary' => 'Curated posts for readers.',
-                ],
-                'featured' => [
-                    [
-                        'title' => 'Cached launch article',
-                        'excerpt' => 'This content came from the mocked service layer.',
-                    ],
-                ],
-            ]);
-
-        $this->app->instance(BlogContentService::class, $service);
-
         $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertSee('Fresh from the API');
-        $response->assertSee('Cached launch article');
+        $response->assertSee('Learn AI, SEO, Blogging, and Digital Growth, One Practical Guide at a Time.');
+        $response->assertSee('Featured Editorial');
+        $response->assertSee('Practical Wisdom for Builders');
+    }
+
+    public function test_the_home_page_outputs_reusable_seo_metadata_without_cdn_tailwind(): void
+    {
+        $response = $this->get('/');
+
+        $response->assertOk();
+        $response->assertSee('<meta name="description" content="Learn AI, SEO, blogging, and digital growth through practical editorial guides, creator playbooks, and technical walkthroughs.">', false);
+        $response->assertSee('<link rel="canonical" href="http://fe.test">', false);
+        $response->assertSee('<meta property="og:title" content="Wide Web Blog | Premium Digital Editorial &amp; Creator Guides">', false);
+        $response->assertDontSee('cdn.tailwindcss.com');
     }
 }

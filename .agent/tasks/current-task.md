@@ -1,19 +1,20 @@
-# Task: Initial Scaffold Review
+# Task: [Title]
 
 ## Scope
-Review the generated scaffold for fe and align it with the real repository.
+[Describe the requested change]
 
 ## Spec Reference
-- Spec Path: [Add path if this work is driven by a spec]
-- Requirement IDs: [Add IDs]
-- Acceptance Criteria IDs: [Add IDs]
+- Spec Path:
+- Requirement IDs:
+- Acceptance Criteria IDs:
 
 ## Checklist
-- [ ] Review detected stack and variant
-- [ ] Review spec workflow and spec templates
-- [ ] Update architecture and folder structure notes
-- [ ] Confirm command and testing sections against the real repo
-- [ ] Capture any stable conventions in MEMORY.md
+- [ ] Confirm spec or draft one if required
+- [ ] Research the minimal file set
+- [ ] Record implementation plan
+- [ ] Implement focused changes
+- [ ] Run verification
+- [ ] Update docs or manifest if stable conventions changed
 
 ## Verification Evidence
 - Command:

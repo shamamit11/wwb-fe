@@ -1,16 +1,30 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ config('app.name') }}</title>
-        @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-            @vite(['resources/css/app.css', 'resources/js/app.js'])
-        @endif
-        @livewireStyles
-    </head>
-    <body class="min-h-screen bg-stone-950 text-stone-50 antialiased">
-        <livewire:home-page />
-        @livewireScriptConfig
-    </body>
-</html>
+@php
+    $title = 'Wide Web Blog | Premium Digital Editorial & Creator Guides';
+    $description = 'Learn AI, SEO, blogging, and digital growth through practical editorial guides, creator playbooks, and technical walkthroughs.';
+    $schema = [
+        [
+            '@context' => 'https://schema.org',
+            '@type' => 'WebSite',
+            'name' => config('site.name', config('app.name')),
+            'url' => url('/'),
+            'description' => $description,
+        ],
+        [
+            '@context' => 'https://schema.org',
+            '@type' => 'Organization',
+            'name' => config('site.name', config('app.name')),
+            'url' => url('/'),
+            'description' => config('site.description'),
+        ],
+    ];
+@endphp
+
+<x-layouts.marketing
+    :title="$title"
+    :description="$description"
+    :canonical="url()->current()"
+    :schema="$schema"
+    active-nav="home"
+>
+    <livewire:home-page />
+</x-layouts.marketing>

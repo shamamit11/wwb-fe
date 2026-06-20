@@ -10,3 +10,5 @@ Only record stable, verified facts here.
 
 ## Stable Facts
 - [Add stable conventions here]
+- Marketing/editorial pages can use the shared Blade layout at `resources/views/components/layouts/marketing.blade.php`.
+- Shared site chrome and navigation metadata are centralized in `config/site.php`.
