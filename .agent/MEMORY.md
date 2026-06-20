@@ -22,3 +22,4 @@ Only record stable, verified facts here.
 - The frontend publishes a cached RSS feed at `/rss.xml`, sourced from the service application's public RSS endpoint, and the footer RSS link targets that route.
 - The frontend search experience uses a dedicated `/search` results page with a header-triggered search dialog and article-detail links.
 - Article archive, article detail, related articles, and public search results are hydrated from the service application's `public/posts` and `public/search` endpoints instead of local article fallback content.
+- The homepage route resolves service content through `BlogContentService`, with `WIDEWEB_BLOG_API_HOMEPAGE_PATH` defaulting to `public/home` and the page falling back to embedded defaults when upstream homepage data is unavailable.

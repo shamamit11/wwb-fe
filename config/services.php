@@ -43,7 +43,7 @@ return [
         'retry_times' => (int) env('WIDEWEB_BLOG_API_RETRY_TIMES', 2),
         'retry_sleep_ms' => (int) env('WIDEWEB_BLOG_API_RETRY_SLEEP_MS', 150),
         'cache_ttl' => (int) env('WIDEWEB_BLOG_API_CACHE_TTL', 900),
-        'homepage_path' => env('WIDEWEB_BLOG_API_HOMEPAGE_PATH', 'homepage'),
+        'homepage_path' => env('WIDEWEB_BLOG_API_HOMEPAGE_PATH', 'public/home'),
         'about_path' => env('WIDEWEB_BLOG_API_ABOUT_PATH', 'public/about'),
         'contact_path' => env('WIDEWEB_BLOG_API_CONTACT_PATH', 'public/contact'),
         'contact_submit_path' => env('WIDEWEB_BLOG_API_CONTACT_SUBMIT_PATH', 'public/contact/submit'),
