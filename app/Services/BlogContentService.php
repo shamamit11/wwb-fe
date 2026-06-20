@@ -72,6 +72,24 @@ class BlogContentService
     /**
      * @return array<string, mixed>
      */
+    public function siteSettings(): array
+    {
+        $ttl = (int) config('services.wideweb_blog.cache_ttl', 900);
+        $path = (string) config('services.wideweb_blog.site_settings_path', 'public/site-settings');
+
+        /** @var array<string, mixed> $payload */
+        $payload = $this->cache->remember(
+            'wideweb-blog.site-settings',
+            now()->addSeconds($ttl),
+            fn (): array => $this->client->get($path),
+        );
+
+        return $payload;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
     public function page(string $slug): array
     {
         $ttl = (int) config('services.wideweb_blog.cache_ttl', 900);

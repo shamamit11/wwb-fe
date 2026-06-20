@@ -19,6 +19,7 @@ Only record stable, verified facts here.
 - The Contact page can hydrate hero, form, reasons, and SEO content from the public `/api/v1/public/contact` payload and submits form entries to `/api/v1/public/contact/submit`.
 - Privacy Policy and Terms pages are dedicated simple legal routes at `/privacy-policy` and `/terms-and-conditions`, rendered through the shared marketing layout and hydrated from the public `public/pages/{slug}` endpoint.
 - Footer categories are hydrated from the public categories endpoint through `BlogContentService` with cached fallback config, and category links target `/articles/category/{slug}`.
+- Shared footer brand name, description, social links, and legal links are hydrated from the public `site-settings` singleton, while footer categories remain sourced from the public categories endpoint.
 - The frontend publishes a cached RSS feed at `/rss.xml`, sourced from the service application's public RSS endpoint, and the footer RSS link targets that route.
 - The frontend search experience uses a dedicated `/search` results page with a header-triggered search dialog and article-detail links.
 - Article archive, article detail, related articles, and public search results are hydrated from the service application's `public/posts` and `public/search` endpoints instead of local article fallback content.

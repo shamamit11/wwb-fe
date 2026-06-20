@@ -15,6 +15,17 @@ return [
         ['label' => 'Contact Us', 'href' => '/contact', 'key' => 'contact'],
     ],
     'footer' => [
+        'brand_name' => 'Wide Web Blog',
+        'description' => 'An authoritative digital editorial focused on technical SEO, AI implementation, and content architecture for the modern web.',
+        'social_links' => [
+            ['label' => 'Share', 'url' => '#', 'icon' => 'share'],
+            ['label' => 'Public', 'url' => '#', 'icon' => 'public'],
+            ['label' => 'Email', 'url' => '#newsletter', 'icon' => 'alternate_email'],
+        ],
+        'legal_links' => [
+            ['label' => 'Privacy Policy', 'slug' => 'privacy-policy', 'url' => null],
+            ['label' => 'Terms and Conditions', 'slug' => 'terms-and-conditions', 'url' => null],
+        ],
         'categories' => [
             ['label' => 'AI Tools', 'href' => '/articles/category/ai-tools'],
             ['label' => 'AI Agents', 'href' => '/articles/category/ai-agents'],
@@ -24,16 +35,5 @@ return [
             ['label' => 'Developer AI', 'href' => '/articles/category/developer-ai'],
             ['label' => 'News & Trends', 'href' => '/articles/category/news-trends'],
         ],
-        'company' => [
-            ['label' => 'About Us', 'href' => '/about'],
-            ['label' => 'Privacy Policy', 'href' => '/privacy-policy'],
-            ['label' => 'Terms and Conditions', 'href' => '/terms-and-conditions'],
-            ['label' => 'Contact Us', 'href' => '/contact'],
-        ],
-    ],
-    'social' => [
-        ['label' => 'Share', 'icon' => 'share', 'href' => '#'],
-        ['label' => 'Public', 'icon' => 'public', 'href' => '#'],
-        ['label' => 'Email', 'icon' => 'alternate_email', 'href' => '#newsletter'],
     ],
 ];

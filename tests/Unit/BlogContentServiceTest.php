@@ -48,6 +48,44 @@ class BlogContentServiceTest extends TestCase
         $this->assertSame(1, $client->requests);
     }
 
+    public function test_site_settings_payload_is_cached_between_calls(): void
+    {
+        config(['services.wideweb_blog.cache_ttl' => 900]);
+        config(['services.wideweb_blog.site_settings_path' => 'public/site-settings']);
+
+        $client = new class implements BlogApiClient
+        {
+            public int $requests = 0;
+
+            public function get(string $path, array $query = []): array
+            {
+                $this->requests++;
+
+                return [
+                    'data' => [
+                        'footer' => [
+                            'brand_name' => 'Wide Web Blog',
+                        ],
+                    ],
+                ];
+            }
+
+            public function post(string $path, array $body = []): array
+            {
+                return ['data' => []];
+            }
+        };
+
+        $service = new BlogContentService($client, new Repository(new ArrayStore));
+
+        $first = $service->siteSettings();
+        $second = $service->siteSettings();
+
+        $this->assertSame('Wide Web Blog', $first['data']['footer']['brand_name']);
+        $this->assertSame($first, $second);
+        $this->assertSame(1, $client->requests);
+    }
+
     public function test_contact_payload_is_cached_between_calls(): void
     {
         config(['services.wideweb_blog.cache_ttl' => 900]);

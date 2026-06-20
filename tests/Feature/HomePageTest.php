@@ -446,4 +446,57 @@ class HomePageTest extends TestCase
         $response->assertOk();
         $response->assertSee('<meta name="google-site-verification" content="google-verification-token-123">', false);
     }
+
+    public function test_the_footer_uses_public_site_settings_for_brand_description_social_and_legal_links(): void
+    {
+        config(['services.wideweb_blog.homepage_path' => 'public/home']);
+
+        $this->app->instance(BlogApiClient::class, new class implements BlogApiClient
+        {
+            public function get(string $path, array $query = []): array
+            {
+                return match ($path) {
+                    'public/home' => ['data' => []],
+                    'public/site-settings' => [
+                        'data' => [
+                            'footer' => [
+                                'brand_name' => 'Wide Web Blog Settings',
+                                'description' => 'Footer description from site settings.',
+                                'social_links' => [
+                                    ['label' => 'Share', 'url' => 'https://widewebblog.test/share', 'icon' => 'share'],
+                                    ['label' => 'Email', 'url' => 'mailto:hello@widewebblog.test', 'icon' => 'email'],
+                                ],
+                                'legal_links' => [
+                                    ['label' => 'Privacy Policy', 'slug' => 'privacy-policy', 'url' => null],
+                                    ['label' => 'Terms', 'slug' => null, 'url' => 'https://widewebblog.test/terms'],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'public/categories' => [
+                        'data' => [
+                            ['id' => 1, 'name' => 'AI Tools', 'slug' => 'ai-tools'],
+                        ],
+                    ],
+                    default => ['data' => []],
+                };
+            }
+
+            public function post(string $path, array $body = []): array
+            {
+                return ['data' => []];
+            }
+        });
+
+        $response = $this->get('/');
+
+        $response->assertOk();
+        $response->assertSee('Wide Web Blog Settings');
+        $response->assertSee('Footer description from site settings.');
+        $response->assertSee('href="https://widewebblog.test/share"', false);
+        $response->assertSee('href="mailto:hello@widewebblog.test"', false);
+        $response->assertSee('href="http://fe.test/privacy-policy"', false);
+        $response->assertSee('href="https://widewebblog.test/terms"', false);
+        $response->assertSee('AI Tools');
+    }
 }

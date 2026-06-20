@@ -129,12 +129,4 @@ class ContactPageTest extends TestCase
             ->assertSet('submitted', true)
             ->assertSee('Custom API success message.');
     }
-
-    public function test_footer_contact_link_points_to_the_dedicated_contact_route(): void
-    {
-        $response = $this->get('/');
-
-        $response->assertOk();
-        $response->assertSee('href="/contact"', false);
-    }
 }

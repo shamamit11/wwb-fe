@@ -83,10 +83,41 @@ class LegalPagesTest extends TestCase
 
     public function test_footer_legal_links_point_to_dedicated_routes(): void
     {
+        $this->app->instance(BlogApiClient::class, new class implements BlogApiClient
+        {
+            public function get(string $path, array $query = []): array
+            {
+                return match ($path) {
+                    'public/site-settings' => [
+                        'data' => [
+                            'footer' => [
+                                'brand_name' => 'Wide Web Blog',
+                                'description' => 'Footer description.',
+                                'social_links' => [],
+                                'legal_links' => [
+                                    ['label' => 'Privacy Policy', 'slug' => 'privacy-policy', 'url' => null],
+                                    ['label' => 'Terms', 'slug' => null, 'url' => 'https://widewebblog.test/terms'],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'public/categories' => [
+                        'data' => [],
+                    ],
+                    default => ['data' => []],
+                };
+            }
+
+            public function post(string $path, array $body = []): array
+            {
+                return ['data' => []];
+            }
+        });
+
         $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertSee('href="/privacy-policy"', false);
-        $response->assertSee('href="/terms-and-conditions"', false);
+        $response->assertSee('href="http://fe.test/privacy-policy"', false);
+        $response->assertSee('href="https://widewebblog.test/terms"', false);
     }
 }
