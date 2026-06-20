@@ -1,12 +1,12 @@
-# Task: Improve article detail heading hierarchy
+# Task: Fix RSS feed URL rendering
 
 ## Scope
-Refine the article detail page semantics so the structured content follows a cleaner heading hierarchy with `h1`, `h2`, and `h3` tags.
+Make the frontend RSS feed and its footer link render against the current request host instead of the configured production app URL.
 
 ## Spec Reference
-- Spec Path: `.agent/specs/active/public-posts-api.md`
-- Requirement IDs: `PP-2`
-- Acceptance Criteria IDs: `AC-3`
+- Spec Path: none
+- Requirement IDs: none
+- Acceptance Criteria IDs: none
 
 ## Checklist
 - [x] Confirm spec or draft one if required
@@ -14,13 +14,16 @@ Refine the article detail page semantics so the structured content follows a cle
 - [x] Record implementation plan
 - [x] Implement focused changes
 - [x] Run verification
-- [x] Update docs or manifest if stable conventions changed
+- [ ] Update docs or manifest if stable conventions changed
 
 ## Plan
-- Render structured section titles with their mapped heading level.
-- Promote FAQ question labels to semantic `h3` headings inside the accordion summary.
-- Run the focused article detail feature test after the markup change.
+- Remove the RSS Blade rendering path and return XML directly from the controller.
+- Normalize item links from the service host onto the public site host.
+- Update the footer RSS link to use the same request-aware route.
+- Run the focused RSS feature test and record the result.
 
 ## Verification Evidence
-- Command: `php artisan test tests/Feature/ArticleDetailPageTest.php`
-- Result: Passed, 3 tests / 36 assertions
+- Command: `php artisan test tests/Feature/RssFeedTest.php`
+- Result: Passed, 2 tests / 15 assertions
+- Command: `php artisan test tests/Feature/HomePageTest.php --filter=footer`
+- Result: Passed, 1 test / 8 assertions

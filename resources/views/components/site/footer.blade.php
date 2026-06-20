@@ -56,9 +56,21 @@
         </div>
 
         <div class="flex flex-col items-start justify-between gap-4 border-t border-slate-200 pt-8 text-sm text-slate-500 md:flex-row md:items-center">
+            @php
+                $currentUrl = url()->current();
+                $currentPath = request()->getPathInfo();
+
+                if ($currentPath === '/') {
+                    $siteUrl = rtrim($currentUrl, '/');
+                } else {
+                    $siteUrl = explode($currentPath, $currentUrl, 2)[0] ?? '';
+                }
+
+                $siteUrl = $siteUrl !== '' ? $siteUrl : $currentUrl;
+            @endphp
             <p>© {{ now()->year }} {{ data_get($footerData, 'brand_name', config('site.name', config('app.name'))) }}.</p>
             <div class="flex gap-8">
-                <a href="{{ route('rss.feed') }}" class="uppercase tracking-[0.2em] transition-colors hover:text-[#c2410c]">RSS Feed</a>
+                <a href="{{ $siteUrl.route('rss.feed', [], false) }}" class="uppercase tracking-[0.2em] transition-colors hover:text-[#c2410c]">RSS Feed</a>
             </div>
         </div>
     </div>
