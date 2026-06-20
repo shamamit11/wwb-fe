@@ -64,9 +64,121 @@
                         {{ $article['caption'] }}
                     </figcaption>
                 @endif
-                @if ($article['body_html'] !== '')
-                    <div class="prose prose-slate mt-12 max-w-3xl prose-headings:font-bold prose-headings:tracking-tight prose-h1:text-slate-950 prose-h2:text-slate-950 prose-h3:text-slate-950 prose-p:text-slate-700 prose-li:text-slate-700 prose-a:text-[#c2410c]">
+                @if (($article['has_content_sections'] ?? false) === true)
+                    <div class="article-sections mt-12 max-w-4xl space-y-8">
+                        @foreach ($article['sections'] as $section)
+                            @if (($section['type'] ?? null) === 'section')
+                                <section @class([
+                                    'article-section',
+                                    'article-section--summary' => ($section['variant'] ?? 'standard') === 'summary',
+                                    'article-section--checklist' => ($section['variant'] ?? 'standard') === 'checklist',
+                                    'article-section--recommendations' => ($section['variant'] ?? 'standard') === 'recommendations',
+                                ])>
+                                    @if (($section['title'] ?? '') !== '')
+                                        <div class="article-section__header">
+                                            @if (($section['variant'] ?? 'standard') === 'summary')
+                                                <span class="article-section__eyebrow">Quick Take</span>
+                                            @elseif (($section['variant'] ?? 'standard') === 'checklist')
+                                                <span class="article-section__eyebrow">Execution Plan</span>
+                                            @elseif (($section['variant'] ?? 'standard') === 'recommendations')
+                                                <span class="article-section__eyebrow">Shortlist</span>
+                                            @endif
+
+                                            <h2 class="article-section__title">{{ $section['title'] }}</h2>
+                                        </div>
+                                    @endif
+
+                                    <div class="article-section__body">
+                                        @foreach (($section['blocks'] ?? []) as $block)
+                                            @if (in_array(($block['type'] ?? null), ['paragraph', 'list'], true))
+                                                <div class="article-block article-block--{{ $block['type'] }} article-richtext">
+                                                    {!! $block['html'] !!}
+                                                </div>
+                                            @endif
+
+                                            @if (($block['type'] ?? null) === 'quote')
+                                                <div class="article-block article-block--quote">
+                                                    <div class="article-richtext">
+                                                        {!! $block['html'] !!}
+                                                    </div>
+                                                    @if (($block['citation'] ?? '') !== '')
+                                                        <div class="article-block__citation">{{ $block['citation'] }}</div>
+                                                    @endif
+                                                </div>
+                                            @endif
+
+                                            @if (($block['type'] ?? null) === 'callout')
+                                                <div class="article-block article-block--callout article-block--callout-{{ $block['tone'] ?? 'insight' }}">
+                                                    <div class="article-block__callout-title">{{ $block['title'] }}</div>
+                                                    <div class="article-richtext">
+                                                        {!! $block['html'] !!}
+                                                    </div>
+                                                </div>
+                                            @endif
+
+                                            @if (($block['type'] ?? null) === 'code')
+                                                <div class="article-block article-block--code">
+                                                    @if (($block['label'] ?? '') !== '' || ($block['language'] ?? '') !== '')
+                                                        <div class="article-block__code-meta">
+                                                            @if (($block['label'] ?? '') !== '')
+                                                                <span>{{ $block['label'] }}</span>
+                                                            @endif
+                                                            @if (($block['language'] ?? '') !== '')
+                                                                <span>{{ strtoupper($block['language']) }}</span>
+                                                            @endif
+                                                        </div>
+                                                    @endif
+                                                    <pre><code>{{ $block['code'] }}</code></pre>
+                                                </div>
+                                            @endif
+
+                                            @if (($block['type'] ?? null) === 'image')
+                                                <figure class="article-block article-block--image">
+                                                    <img src="{{ $block['src'] }}" alt="{{ $block['alt'] }}">
+                                                    @if (($block['caption'] ?? '') !== '')
+                                                        <figcaption>{{ $block['caption'] }}</figcaption>
+                                                    @endif
+                                                </figure>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                </section>
+                            @endif
+
+                        @endforeach
+                    </div>
+                @elseif ($article['body_html'] !== '')
+                    <div class="article-richtext mt-12 max-w-3xl">
                         {!! $article['body_html'] !!}
+                    </div>
+                @endif
+
+                @if (($article['sections'] ?? []) !== [])
+                    <div class="mt-14 max-w-4xl space-y-5">
+                        @foreach ($article['sections'] as $section)
+                            @if (($section['type'] ?? null) === 'faq')
+                                <section class="space-y-5">
+                                    <div class="article-section__header">
+                                        <span class="article-section__eyebrow">FAQ</span>
+                                        <h2 class="article-section__title">{{ $section['title'] }}</h2>
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        @foreach (($section['items'] ?? []) as $item)
+                                            <details class="article-faq rounded-2xl border border-slate-200 bg-white p-0 shadow-sm" @if($item['open'] ?? false) open @endif>
+                                                <summary class="article-faq__summary list-none cursor-pointer px-6 py-5 text-lg font-semibold text-slate-950">
+                                                    <span>{{ $item['question'] }}</span>
+                                                    <span class="article-faq__icon" aria-hidden="true">+</span>
+                                                </summary>
+                                                <div class="article-faq__body article-richtext border-t border-slate-100 px-6 py-5">
+                                                    {!! $item['answer_html'] !!}
+                                                </div>
+                                            </details>
+                                        @endforeach
+                                    </div>
+                                </section>
+                            @endif
+                        @endforeach
                     </div>
                 @endif
 

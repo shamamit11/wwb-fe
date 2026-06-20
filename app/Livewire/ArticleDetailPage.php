@@ -73,7 +73,259 @@ class ArticleDetailPage extends Component
                     static fn (mixed $tag): bool => is_array($tag) && filled(data_get($tag, 'name')),
                 ),
             )),
-            'body_html' => $contentMarkdown !== '' ? Str::markdown($contentMarkdown) : '',
+            'body_html' => $this->renderMarkdown($contentMarkdown),
+            'sections' => $sections = $this->buildSections(data_get($post, 'blocks', [])),
+            'has_content_sections' => collect($sections)->contains(static fn (array $section): bool => ($section['type'] ?? null) === 'section'),
+        ];
+    }
+
+    /**
+     * @param  mixed  $blocks
+     * @return array<int, array<string, mixed>>
+     */
+    private function buildSections(mixed $blocks): array
+    {
+        if (! is_array($blocks)) {
+            return [];
+        }
+
+        $mappedSections = [];
+        $currentSection = null;
+
+        foreach ($blocks as $block) {
+            if (! is_array($block)) {
+                continue;
+            }
+
+            $blockType = Str::lower(trim((string) (data_get($block, 'block_type') ?: data_get($block, 'type') ?: '')));
+
+            if ($blockType === 'heading') {
+                if ($currentSection !== null && $currentSection['blocks'] !== []) {
+                    $mappedSections[] = $currentSection;
+                }
+
+                $title = $this->extractHeadingText((string) data_get($block, 'content_markdown', ''));
+
+                $currentSection = [
+                    'type' => 'section',
+                    'title' => $title,
+                    'level' => max(2, (int) data_get($block, 'settings.level', 2)),
+                    'blocks' => [],
+                    'variant' => $this->sectionVariant($title),
+                ];
+
+                continue;
+            }
+
+            if ($blockType !== 'faq') {
+                $mappedBlock = $this->mapSectionBlock($blockType, $block);
+
+                if ($mappedBlock === null) {
+                    continue;
+                }
+
+                if ($currentSection === null) {
+                    $currentSection = [
+                        'type' => 'section',
+                        'title' => '',
+                        'level' => 2,
+                        'blocks' => [],
+                        'variant' => 'standard',
+                    ];
+                }
+
+                $currentSection['blocks'][] = $mappedBlock;
+                continue;
+            }
+
+            if ($currentSection !== null && $currentSection['blocks'] !== []) {
+                $mappedSections[] = $currentSection;
+                $currentSection = null;
+            }
+
+            $items = data_get($block, 'settings.items')
+                ?: data_get($block, 'data.items')
+                ?: data_get($block, 'content.items')
+                ?: data_get($block, 'faqs');
+
+            if (! is_array($items)) {
+                continue;
+            }
+
+            $mappedItems = array_map(function (mixed $item, int $index): ?array {
+                if (! is_array($item)) {
+                    return null;
+                }
+
+                $question = $this->cleanQuestion((string) (data_get($item, 'question') ?: data_get($item, 'title') ?: data_get($item, 'label') ?: ''));
+                $answer = (string) (data_get($item, 'answer_markdown')
+                    ?: data_get($item, 'answer')
+                    ?: data_get($item, 'content_markdown')
+                    ?: data_get($item, 'content')
+                    ?: data_get($item, 'body')
+                    ?: data_get($item, 'description')
+                    ?: '');
+
+                if ($question === '' || trim($answer) === '') {
+                    return null;
+                }
+
+                return [
+                    'question' => $question,
+                    'answer_html' => $this->renderMarkdown($answer),
+                    'open' => $index === 0,
+                ];
+            }, $items, array_keys($items));
+
+            $mappedItems = array_values(array_filter(
+                $mappedItems,
+                static fn (?array $item): bool => is_array($item) && $item['answer_html'] !== '',
+            ));
+
+            if ($mappedItems === []) {
+                continue;
+            }
+
+            $mappedSections[] = [
+                'type' => 'faq',
+                'title' => $this->extractHeadingText((string) (data_get($block, 'title') ?: data_get($block, 'heading') ?: 'Frequently Asked Questions')),
+                'items' => $mappedItems,
+            ];
+        }
+
+        if ($currentSection !== null && $currentSection['blocks'] !== []) {
+            $mappedSections[] = $currentSection;
+        }
+
+        return $mappedSections;
+    }
+
+    /**
+     * @param  array<string, mixed>  $block
+     * @return array<string, mixed>|null
+     */
+    private function mapSectionBlock(string $blockType, array $block): ?array
+    {
+        $content = (string) (data_get($block, 'content_markdown') ?: data_get($block, 'content') ?: '');
+
+        return match ($blockType) {
+            'paragraph' => $this->mapHtmlBlock('paragraph', $content),
+            'list' => $this->mapHtmlBlock('list', $content),
+            'quote' => $this->mapQuoteBlock($block, $content),
+            'callout' => $this->mapCalloutBlock($block, $content),
+            'code' => $this->mapCodeBlock($block, $content),
+            'image' => $this->mapImageBlock($block),
+            default => null,
+        };
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function mapHtmlBlock(string $type, string $content): ?array
+    {
+        $html = $this->renderMarkdown($content);
+
+        if ($html === '') {
+            return null;
+        }
+
+        return [
+            'type' => $type,
+            'html' => $html,
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $block
+     * @return array<string, mixed>|null
+     */
+    private function mapQuoteBlock(array $block, string $content): ?array
+    {
+        $html = $this->renderMarkdown($content);
+
+        if ($html === '') {
+            return null;
+        }
+
+        return [
+            'type' => 'quote',
+            'html' => $html,
+            'citation' => trim((string) (data_get($block, 'settings.citation') ?: data_get($block, 'settings.attribution') ?: '')),
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $block
+     * @return array<string, mixed>|null
+     */
+    private function mapCalloutBlock(array $block, string $content): ?array
+    {
+        $html = $this->renderMarkdown($content);
+
+        if ($html === '') {
+            return null;
+        }
+
+        return [
+            'type' => 'callout',
+            'html' => $html,
+            'title' => trim((string) (data_get($block, 'settings.title') ?: data_get($block, 'settings.heading') ?: 'Key Insight')),
+            'tone' => Str::lower(trim((string) (data_get($block, 'settings.tone') ?: data_get($block, 'settings.variant') ?: 'insight'))),
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $block
+     * @return array<string, mixed>|null
+     */
+    private function mapCodeBlock(array $block, string $content): ?array
+    {
+        $language = trim((string) data_get($block, 'settings.language', ''));
+        $code = trim($content);
+
+        if (preg_match('/^```([a-zA-Z0-9_-]+)?\n(?P<code>.*)\n```$/s', $code, $matches) === 1) {
+            $language = $language !== '' ? $language : trim((string) ($matches[1] ?? ''));
+            $code = trim((string) ($matches['code'] ?? ''));
+        }
+
+        if ($code === '') {
+            return null;
+        }
+
+        return [
+            'type' => 'code',
+            'code' => $code,
+            'language' => $language,
+            'label' => trim((string) (data_get($block, 'settings.label') ?: data_get($block, 'settings.title') ?: '')),
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $block
+     * @return array<string, mixed>|null
+     */
+    private function mapImageBlock(array $block): ?array
+    {
+        $src = MediaUrl::normalize((string) (
+            data_get($block, 'settings.url')
+            ?: data_get($block, 'settings.src')
+            ?: data_get($block, 'settings.image_url')
+            ?: data_get($block, 'url')
+            ?: data_get($block, 'image_url')
+            ?: data_get($block, 'content')
+            ?: ''
+        ));
+
+        if ($src === '') {
+            return null;
+        }
+
+        return [
+            'type' => 'image',
+            'src' => $src,
+            'alt' => trim((string) (data_get($block, 'settings.alt') ?: data_get($block, 'settings.alt_text') ?: 'Article image')),
+            'caption' => trim((string) (data_get($block, 'settings.caption') ?: data_get($block, 'settings.description') ?: '')),
         ];
     }
 
@@ -139,6 +391,48 @@ class ArticleDetailPage extends Component
         } catch (\Throwable) {
             return $value;
         }
+    }
+
+    private function renderMarkdown(string $content): string
+    {
+        $trimmed = trim($this->normalizeMarkdown($content));
+
+        return $trimmed !== '' ? Str::markdown($trimmed) : '';
+    }
+
+    private function normalizeMarkdown(string $content): string
+    {
+        $normalized = preg_replace('/^(#{1,6})\s+\1\s+/m', '$1 ', trim($content));
+
+        return is_string($normalized) ? $normalized : trim($content);
+    }
+
+    private function extractHeadingText(string $content): string
+    {
+        $normalized = $this->normalizeMarkdown($content);
+        $firstLine = trim(Str::before($normalized, "\n"));
+        $withoutHashes = preg_replace('/^#{1,6}\s*/', '', $firstLine);
+
+        return is_string($withoutHashes) ? trim($withoutHashes) : trim($firstLine);
+    }
+
+    private function cleanQuestion(string $question): string
+    {
+        $cleaned = preg_replace('/^#{1,6}\s*/', '', trim($question));
+
+        return is_string($cleaned) ? trim($cleaned) : trim($question);
+    }
+
+    private function sectionVariant(string $title): string
+    {
+        $normalized = Str::lower($title);
+
+        return match (true) {
+            Str::contains($normalized, 'quick tl;dr') => 'summary',
+            Str::contains($normalized, 'checklist') => 'checklist',
+            Str::contains($normalized, 'recommended tools') => 'recommendations',
+            default => 'standard',
+        };
     }
 
 }

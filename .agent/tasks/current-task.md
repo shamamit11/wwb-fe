@@ -1,12 +1,12 @@
-# Task: Resolve service-hosted media URLs to the media origin
+# Task: Rebuild article detail around structured content blocks
 
 ## Scope
-Fix frontend media URL normalization so relative media paths from the service API resolve to the media origin instead of the API/service origin.
+Use article `blocks` as the primary rendering source for the detail page, clean malformed markdown such as `## ##`, and apply intentional UI treatment per supported block type (`heading`, `paragraph`, `faq`).
 
 ## Spec Reference
 - Spec Path: `.agent/specs/active/public-posts-api.md`
-- Requirement IDs: `PP-1`, `PP-2`, `PP-3`
-- Acceptance Criteria IDs: `AC-1`, `AC-3`, `AC-4`
+- Requirement IDs: `PP-2`
+- Acceptance Criteria IDs: `AC-3`
 
 ## Checklist
 - [x] Confirm spec or draft one if required
@@ -17,12 +17,14 @@ Fix frontend media URL normalization so relative media paths from the service AP
 - [x] Update docs or manifest if stable conventions changed
 
 ## Plan
-- Introduce one shared media URL resolver for relative service payload paths.
-- Prefer an explicit media base URL config when present, otherwise derive the media origin from the service API host.
-- Replace page-local media URL normalization in homepage, article detail, archive/search mappings, and article SEO metadata.
-- Update focused feature tests to assert relative media paths render against the media origin.
+- Normalize the service payload block content before rendering, including malformed repeated markdown heading markers.
+- Build editorial sections from `heading` + `paragraph` blocks and render `faq` blocks separately as expandable panels.
+- Refresh the article detail Blade/CSS so structured blocks present as designed sections instead of one flat markdown column.
 
 ## Verification Evidence
-- Command: `php artisan test tests/Feature/HomePageTest.php tests/Feature/ArticleDetailPageTest.php tests/Feature/AllArticlesPageTest.php tests/Feature/SearchPageTest.php tests/Feature/AboutPageTest.php`
-- Acceptance Criteria Proven: `AC-1`, `AC-3`, and `AC-4` still render service-backed content while relative media paths now resolve to the media origin instead of the service/API origin.
-- Result: Passed, 23 tests / 149 assertions
+- Command: `php -l app/Livewire/ArticleDetailPage.php`
+- Result: Passed, no syntax errors detected
+- Command: `php artisan test tests/Feature/ArticleDetailPageTest.php`
+- Result: Passed, 3 tests / 30 assertions
+- Command: `npm run build`
+- Result: Build completed successfully and emitted assets; Vite warned that the local Node version is `22.1.0` while it prefers `20.19+` or `22.12+`.

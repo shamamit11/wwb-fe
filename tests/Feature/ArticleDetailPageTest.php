@@ -116,7 +116,47 @@ class ArticleDetailPageTest extends TestCase
                                 '@type' => 'TechArticle',
                                 'headline' => 'How AI Agent Memory Works',
                             ],
-                            'blocks' => [],
+                            'blocks' => [
+                                [
+                                    'block_type' => 'heading',
+                                    'content_markdown' => '## ## Structured Overview',
+                                    'settings' => ['level' => 2],
+                                ],
+                                [
+                                    'block_type' => 'paragraph',
+                                    'content_markdown' => "This section comes from structured blocks.\n\n- First point\n- Second point",
+                                ],
+                                [
+                                    'block_type' => 'callout',
+                                    'content_markdown' => 'Use a human review step before publishing.',
+                                    'settings' => [
+                                        'title' => 'Editorial Guardrail',
+                                        'tone' => 'warning',
+                                    ],
+                                ],
+                                [
+                                    'block_type' => 'code',
+                                    'content_markdown' => "```ts\nmemory.write({ scope: 'session' })\n```",
+                                    'settings' => [
+                                        'language' => 'ts',
+                                        'label' => 'Example',
+                                    ],
+                                ],
+                                [
+                                    'block_type' => 'faq',
+                                    'title' => 'Frequently Asked Questions',
+                                    'settings' => ['items' => [
+                                        [
+                                            'question' => 'How should I structure agent memory?',
+                                            'answer_markdown' => "## Start simple\n\nUse short-term memory first, then add retrieval.\n\n- Keep write rules explicit\n- Rank results before injection",
+                                        ],
+                                        [
+                                            'question' => 'When should I add retrieval?',
+                                            'answer' => 'Add retrieval when important context no longer fits reliably in the active conversation window.',
+                                        ],
+                                    ]],
+                                ],
+                            ],
                         ],
                     ];
                 }
@@ -146,11 +186,19 @@ class ArticleDetailPageTest extends TestCase
         $response->assertSee('#memory');
         $response->assertSee('#retrieval');
         $response->assertSee('A practical look at short-term memory, long-term memory, retrieval patterns, and why most agent memory systems fail in production.');
-        $response->assertSee('This article covers <strong>bold text</strong>, <em>italic text</em>, a <a href="https://example.com/docs">link to the docs</a>, lists, quotes, and code blocks.', false);
-        $response->assertSee('<blockquote>', false);
-        $response->assertSee('<code>memory.write()</code>', false);
-        $response->assertSee('<pre><code class="language-ts">', false);
+        $response->assertSee('Structured Overview');
+        $response->assertDontSee('## ## Structured Overview', false);
+        $response->assertSee('This section comes from structured blocks.');
+        $response->assertSee('Editorial Guardrail');
+        $response->assertSee('memory.write({ scope: &#039;session&#039; })', false);
+        $response->assertSee('<div class="article-block article-block--callout article-block--callout-warning">', false);
+        $response->assertSee('<div class="article-block article-block--code">', false);
         $response->assertSee('src="https://media.widewebblog.com/media/posts/ai-agent-memory-hero.jpg"', false);
+        $response->assertSee('Frequently Asked Questions');
+        $response->assertSee('<details class="article-faq', false);
+        $response->assertSee('How should I structure agent memory?');
+        $response->assertSee('<h2>Start simple</h2>', false);
+        $response->assertDontSee('## Start simple', false);
         $response->assertSee('Related Articles');
         $response->assertSee('Agent Context Windows Explained');
         $response->assertSee('/articles/agent-context-windows-explained', false);
