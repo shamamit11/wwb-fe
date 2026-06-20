@@ -11,7 +11,7 @@ return [
         ['label' => 'AI Tools', 'href' => '/#featured', 'key' => 'featured'],
         ['label' => 'Guides', 'href' => '/#guides', 'key' => 'guides'],
         ['label' => 'Topics', 'href' => '/#topics', 'key' => 'topics'],
-        ['label' => 'Resources', 'href' => '/#resources', 'key' => 'resources'],
+        ['label' => 'Resources', 'href' => '/resources', 'key' => 'resources'],
         ['label' => 'About', 'href' => '/#about', 'key' => 'about'],
     ],
     'footer' => [
