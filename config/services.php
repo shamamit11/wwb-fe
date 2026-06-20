@@ -50,6 +50,7 @@ return [
         'pages_path' => env('WIDEWEB_BLOG_API_PAGES_PATH', 'public/pages'),
         'categories_path' => env('WIDEWEB_BLOG_API_CATEGORIES_PATH', 'public/categories'),
         'posts_path' => env('WIDEWEB_BLOG_API_POSTS_PATH', 'public/posts'),
+        'search_path' => env('WIDEWEB_BLOG_API_SEARCH_PATH', 'public/search'),
         'rss_path' => env('WIDEWEB_BLOG_API_RSS_PATH', 'public/rss'),
     ],
 

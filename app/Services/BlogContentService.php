@@ -211,6 +211,58 @@ class BlogContentService
     }
 
     /**
+     * @return array<string, mixed>|null
+     */
+    public function post(string $slug): ?array
+    {
+        $ttl = (int) config('services.wideweb_blog.cache_ttl', 900);
+        $path = rtrim((string) config('services.wideweb_blog.posts_path', 'public/posts'), '/').'/'.$slug;
+
+        /** @var array<string, mixed> $payload */
+        $payload = $this->cache->remember(
+            'wideweb-blog.post.'.$slug,
+            now()->addSeconds($ttl),
+            fn (): array => $this->client->get($path),
+        );
+
+        $item = data_get($payload, 'data');
+
+        return is_array($item) ? $item : null;
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function search(string $query, int $perPage = 12, ?string $sort = null): array
+    {
+        $trimmedQuery = trim($query);
+
+        if ($trimmedQuery === '') {
+            return [];
+        }
+
+        $ttl = (int) config('services.wideweb_blog.cache_ttl', 900);
+        $path = (string) config('services.wideweb_blog.search_path', 'public/search');
+        $params = array_filter([
+            'q' => $trimmedQuery,
+            'sort' => $sort,
+            'per_page' => $perPage,
+        ], static fn (mixed $value): bool => $value !== null && $value !== '');
+
+        /** @var array<string, mixed> $payload */
+        $payload = $this->cache->remember(
+            'wideweb-blog.search.'.md5(json_encode($params, JSON_THROW_ON_ERROR)),
+            now()->addSeconds($ttl),
+            fn (): array => $this->client->get($path, $params),
+        );
+
+        /** @var array<int, array<string, mixed>> $items */
+        $items = data_get($payload, 'data', []);
+
+        return array_values(array_filter($items, static fn (mixed $item): bool => is_array($item)));
+    }
+
+    /**
      * @return array<int, array<string, mixed>>
      */
     public function rssFeed(): array

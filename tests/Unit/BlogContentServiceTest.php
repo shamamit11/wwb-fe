@@ -216,4 +216,88 @@ class BlogContentServiceTest extends TestCase
         );
         $this->assertSame(2, $client->requests);
     }
+
+    public function test_post_detail_payload_is_cached_by_slug_between_calls(): void
+    {
+        config(['services.wideweb_blog.cache_ttl' => 900]);
+        config(['services.wideweb_blog.posts_path' => 'public/posts']);
+
+        $client = new class implements BlogApiClient
+        {
+            public int $requests = 0;
+
+            /** @var array<int, string> */
+            public array $paths = [];
+
+            public function get(string $path, array $query = []): array
+            {
+                $this->requests++;
+                $this->paths[] = $path;
+
+                return [
+                    'data' => [
+                        'slug' => basename($path),
+                        'title' => 'Service Post',
+                    ],
+                ];
+            }
+
+            public function post(string $path, array $body = []): array
+            {
+                return ['data' => []];
+            }
+        };
+
+        $service = new BlogContentService($client, new Repository(new ArrayStore));
+
+        $first = $service->post('service-post');
+        $second = $service->post('service-post');
+
+        $this->assertSame('service-post', $first['slug']);
+        $this->assertSame($first, $second);
+        $this->assertSame(['public/posts/service-post'], $client->paths);
+        $this->assertSame(1, $client->requests);
+    }
+
+    public function test_public_search_returns_the_service_items_and_skips_empty_queries(): void
+    {
+        config(['services.wideweb_blog.cache_ttl' => 900]);
+        config(['services.wideweb_blog.search_path' => 'public/search']);
+
+        $client = new class implements BlogApiClient
+        {
+            public int $requests = 0;
+
+            /** @var array<int, array<string, mixed>> */
+            public array $queries = [];
+
+            public function get(string $path, array $query = []): array
+            {
+                $this->requests++;
+                $this->queries[] = $query;
+
+                return [
+                    'data' => [
+                        ['slug' => 'search-result', 'title' => 'Search Result'],
+                    ],
+                ];
+            }
+
+            public function post(string $path, array $body = []): array
+            {
+                return ['data' => []];
+            }
+        };
+
+        $service = new BlogContentService($client, new Repository(new ArrayStore));
+
+        $results = $service->search('design', 12);
+        $empty = $service->search('   ', 12);
+
+        $this->assertCount(1, $results);
+        $this->assertSame('search-result', $results[0]['slug']);
+        $this->assertSame([], $empty);
+        $this->assertSame([['q' => 'design', 'per_page' => 12]], $client->queries);
+        $this->assertSame(1, $client->requests);
+    }
 }

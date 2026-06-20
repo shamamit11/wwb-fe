@@ -41,33 +41,20 @@ class ContactPage extends Component
     public function mount(array $contactPayload = []): void
     {
         $this->hero = [
-            'eyebrow' => 'Start the Conversation',
-            'title' => 'Tell us what you are building, writing, or rethinking.',
-            'description' => 'Wide Web Blog is built for thoughtful builders. Use the form to reach out about collaborations, editorial opportunities, sponsorships, or ideas worth exploring.',
+            'eyebrow' => 'Contact',
+            'title' => 'Contact Us',
+            'description' => '',
         ];
 
         $this->formSection = [
             'eyebrow' => 'Contact Form',
-            'title' => 'One message, clearly framed.',
-            'description' => 'Keep it concise but useful. Tell us what you need, why it matters, and what a good outcome looks like.',
+            'title' => 'Send a Message',
+            'description' => '',
             'submit_label' => 'Send Message',
             'success_message' => $this->successMessage,
         ];
 
-        $this->reasons = [
-            [
-                'title' => 'Editorial partnerships',
-                'description' => 'Share your concept, audience, and what the collaboration should accomplish.',
-            ],
-            [
-                'title' => 'Product or resource ideas',
-                'description' => 'If there is a template, guide, or workflow you want us to cover, describe the gap clearly.',
-            ],
-            [
-                'title' => 'Signal over noise',
-                'description' => 'The more specific your context is, the better the response will be.',
-            ],
-        ];
+        $this->reasons = [];
 
         $payload = $contactPayload !== [] ? $contactPayload : $this->resolveContactPayload();
         $resolved = is_array(data_get($payload, 'data')) ? data_get($payload, 'data') : $payload;

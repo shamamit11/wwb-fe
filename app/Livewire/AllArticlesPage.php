@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use App\Services\BlogContentService;
-use App\Support\ArticleCatalog;
+use Carbon\CarbonImmutable;
 use Throwable;
 use Livewire\Component;
 
@@ -31,18 +31,16 @@ class AllArticlesPage extends Component
 
     public bool $hasMore = false;
 
-    public bool $usingFallbackCatalog = false;
-
     public function mount(BlogContentService $content, ?string $category = null, ?string $pageTitle = null, ?string $pageDescription = null): void
     {
         try {
             $this->filters = $content->articleFilters();
         } catch (Throwable) {
-            $this->filters = ArticleCatalog::filters();
+            $this->filters = [['slug' => 'all', 'label' => 'All Content']];
         }
 
         if ($this->filters === []) {
-            $this->filters = ArticleCatalog::filters();
+            $this->filters = [['slug' => 'all', 'label' => 'All Content']];
         }
 
         if (filled($category)) {
@@ -77,7 +75,9 @@ class AllArticlesPage extends Component
         try {
             $payload = $content->posts($category, $this->page, 7);
         } catch (Throwable) {
-            $this->hydrateFallbackArticles();
+            $this->articles = $append ? $this->articles : [];
+            $this->totalFiltered = count($this->articles);
+            $this->hasMore = false;
 
             return;
         }
@@ -85,7 +85,6 @@ class AllArticlesPage extends Component
         if ($payload['items'] !== []) {
             $mapped = array_map(fn (array $item): array => $this->mapApiPost($item), $payload['items']);
 
-            $this->usingFallbackCatalog = false;
             $this->articles = $append ? array_values([...$this->articles, ...$mapped]) : $mapped;
             $this->totalFiltered = $payload['total'];
             $this->hasMore = $payload['has_more'];
@@ -93,17 +92,9 @@ class AllArticlesPage extends Component
             return;
         }
 
-        $this->hydrateFallbackArticles();
-    }
-
-    private function hydrateFallbackArticles(): void
-    {
-        $this->usingFallbackCatalog = true;
-        $fallback = $this->filteredFallbackArticles();
-        $limit = $this->page * 7;
-        $this->articles = array_slice($fallback, 0, $limit);
-        $this->totalFiltered = count($fallback);
-        $this->hasMore = $limit < $this->totalFiltered;
+        $this->articles = $append ? $this->articles : [];
+        $this->totalFiltered = count($this->articles);
+        $this->hasMore = false;
     }
 
     /**
@@ -113,38 +104,35 @@ class AllArticlesPage extends Component
     private function mapApiPost(array $item): array
     {
         $category = data_get($item, 'category', []);
+        $publishedAt = (string) (data_get($item, 'published_at') ?: data_get($item, 'created_at') ?: '');
 
         return [
             'slug' => (string) data_get($item, 'slug', ''),
             'category' => (string) data_get($category, 'name', 'Article'),
             'category_slug' => (string) data_get($category, 'slug', 'all'),
             'title' => (string) data_get($item, 'title', 'Untitled article'),
-            'excerpt' => (string) (data_get($item, 'excerpt') ?: data_get($item, 'summary') ?: data_get($item, 'content_preview', '')),
+            'excerpt' => (string) (data_get($item, 'excerpt') ?: ''),
             'author' => (string) (data_get($item, 'author.name') ?: data_get($item, 'author', 'Wide Web Blog')),
-            'date' => (string) (data_get($item, 'published_at') ?: data_get($item, 'created_at') ?: ''),
+            'date' => $this->formatDate($publishedAt),
             'read_time' => (string) (data_get($item, 'read_time') ?: '5 min read'),
-            'image' => (string) (data_get($item, 'featured_image') ?: data_get($item, 'image') ?: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1200&q=80'),
+            'image' => (string) (data_get($item, 'featured_image') ?: data_get($item, 'featured_media.url') ?: ''),
         ];
     }
 
     /**
-     * @return array<int, array<string, mixed>>
+     * @return string
      */
-    private function filteredFallbackArticles(): array
+    private function formatDate(string $value): string
     {
-        $articles = array_values(array_filter(
-            ArticleCatalog::all(),
-            fn (array $article): bool => ! empty($article['excerpt']),
-        ));
-
-        if ($this->activeCategory === 'all') {
-            return $articles;
+        if ($value === '') {
+            return '';
         }
 
-        return array_values(array_filter(
-            $articles,
-            fn (array $article): bool => $article['category_slug'] === $this->activeCategory,
-        ));
+        try {
+            return CarbonImmutable::parse($value)->format('F j, Y');
+        } catch (Throwable) {
+            return $value;
+        }
     }
 
     public function render()

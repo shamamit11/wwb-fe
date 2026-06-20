@@ -11,12 +11,23 @@ class AboutPageTest extends TestCase
 {
     public function test_the_about_page_renders_with_its_own_metadata_and_sections(): void
     {
+        $this->app->instance(BlogApiClient::class, new class implements BlogApiClient
+        {
+            public function get(string $path, array $query = []): array
+            {
+                return ['data' => []];
+            }
+
+            public function post(string $path, array $body = []): array
+            {
+                return ['data' => []];
+            }
+        });
+
         $response = $this->get('/about');
 
         $response->assertOk();
-        $response->assertSee('Navigating the digital frontier together.');
-        $response->assertSee('The Values We Live By');
-        $response->assertSee('Meet the Minds');
+        $response->assertSee('About Us');
         $response->assertSee('<title>About Us | Wide Web Blog</title>', false);
         $response->assertSee('<link rel="canonical" href="http://fe.test/about">', false);
     }

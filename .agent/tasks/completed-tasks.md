@@ -15,3 +15,4 @@
 | 2026-06-20 | Search | Added a header-triggered search dialog, dedicated `/search` results page, local article catalog matching, and article detail links. |
 | 2026-06-20 | About page public payload alignment | Hydrated the About page from `/api/v1/public/about`, including managed hero, mission, stats, values, team, and SEO content with local fallbacks. |
 | 2026-06-20 | Contact page public payload alignment | Hydrated the Contact page from `/api/v1/public/contact`, submitted the form to `/api/v1/public/contact/submit`, and kept managed success/error handling with local fallbacks. |
+| 2026-06-20 | Remove local post fallback content | Replaced local article fallback usage with service-backed public posts/search endpoints for archive, detail, related articles, and search, then verified feature/unit coverage. |

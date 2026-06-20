@@ -29,7 +29,7 @@ class ContactPageTest extends TestCase
         $response = $this->get('/contact');
 
         $response->assertOk();
-        $response->assertSee('Start the Conversation');
+        $response->assertSee('Contact Us');
         $response->assertSee('<title>Contact | Wide Web Blog</title>', false);
         $response->assertSee('<link rel="canonical" href="http://fe.test/contact">', false);
         $response->assertDontSee('Map');

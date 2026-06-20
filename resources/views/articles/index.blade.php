@@ -10,7 +10,7 @@
         }
     }
 
-    $categoryLabel = $categoryData['name'] ?? ($categorySlug ? \App\Support\ArticleCatalog::filterLabel((string) $categorySlug) : null);
+    $categoryLabel = $categoryData['name'] ?? ($categorySlug ? (string) \Illuminate\Support\Str::of((string) $categorySlug)->replace('-', ' ')->title() : null);
     $isCategoryPage = $categoryLabel !== null && $categorySlug !== 'all';
 
     $title = $isCategoryPage
