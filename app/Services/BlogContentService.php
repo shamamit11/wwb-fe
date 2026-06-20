@@ -34,6 +34,24 @@ class BlogContentService
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    public function about(): array
+    {
+        $ttl = (int) config('services.wideweb_blog.cache_ttl', 900);
+        $path = (string) config('services.wideweb_blog.about_path', 'public/about');
+
+        /** @var array<string, mixed> $payload */
+        $payload = $this->cache->remember(
+            'wideweb-blog.about',
+            now()->addSeconds($ttl),
+            fn (): array => $this->client->get($path),
+        );
+
+        return $payload;
+    }
+
+    /**
      * @return array<int, array{label: string, href: string}>
      */
     public function categories(): array

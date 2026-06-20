@@ -3,7 +3,7 @@
         <div class="mx-auto max-w-4xl text-center">
             <span class="text-xs font-semibold uppercase tracking-[0.22em] text-[#c2410c]">{{ $story['eyebrow'] }}</span>
             <h1 class="mt-4 text-4xl font-extrabold leading-tight tracking-tight text-slate-950 md:text-6xl">
-                Navigating the digital <span class="text-[#c2410c]">{{ $story['highlight'] }}</span> together.
+                {{ $story['title'] }}
             </h1>
             <p class="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-600">
                 {{ $story['summary'] }}
@@ -11,7 +11,7 @@
         </div>
 
         <div class="mt-10 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-            <img src="{{ $story['image'] }}" alt="Wide Web Blog editorial workspace" class="h-[420px] w-full object-cover">
+            <img src="{{ $story['image'] }}" alt="{{ $story['image_alt'] }}" class="h-[420px] w-full object-cover">
         </div>
     </section>
 
@@ -36,7 +36,7 @@
 
     <section class="mx-auto mt-20 max-w-7xl">
         <div class="text-center">
-            <h2 class="text-4xl font-bold tracking-tight text-slate-950">The Values We Live By</h2>
+            <h2 class="text-4xl font-bold tracking-tight text-slate-950">{{ $valuesSection['title'] }}</h2>
             <div class="mx-auto mt-4 h-1 w-16 rounded-full bg-[#c2410c]"></div>
         </div>
 
@@ -56,14 +56,14 @@
     <section class="mx-auto mt-20 max-w-7xl overflow-hidden rounded-2xl bg-[#141b2b]">
         <div class="border-b border-white/10 px-8 py-8 md:flex md:items-end md:justify-between lg:px-10">
             <div class="max-w-2xl">
-                <h2 class="text-4xl font-bold tracking-tight text-white">Meet the Minds</h2>
+                <h2 class="text-4xl font-bold tracking-tight text-white">{{ $teamSection['title'] }}</h2>
                 <p class="mt-3 text-base leading-7 text-slate-300">
-                    Our multidisciplinary team combines decades of expertise in software engineering, digital marketing, and thoughtful journalism.
+                    {{ $teamSection['description'] }}
                 </p>
             </div>
-            <button type="button" class="mt-5 rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-white transition-colors hover:border-[#c2410c] hover:bg-[#c2410c] md:mt-0">
-                Join the Team
-            </button>
+            <a href="{{ $teamSection['primary_cta_url'] }}" class="mt-5 inline-flex rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-white transition-colors hover:border-[#c2410c] hover:bg-[#c2410c] md:mt-0">
+                {{ $teamSection['primary_cta_label'] }}
+            </a>
         </div>
 
         <div class="grid gap-6 px-8 py-8 md:grid-cols-2 xl:grid-cols-4 lg:px-10">

@@ -15,6 +15,7 @@ Only record stable, verified facts here.
 - Shared article content for listing and detail pages is centralized in `app/Support/ArticleCatalog.php`.
 - Shared resource content for the resources page is centralized in `app/Support/ResourceCatalog.php`.
 - The About page is a dedicated marketing route at `/about`, not a homepage anchor section.
+- The About page can hydrate hero, mission, stats, values, team, and SEO content from the public `/api/v1/public/about` payload with local fallback defaults.
 - The Contact page is a dedicated marketing route at `/contact` and intentionally exposes only a form flow, without address, map, phone, or direct email details.
 - Privacy Policy and Terms pages are dedicated simple legal routes at `/privacy-policy` and `/terms-and-conditions`, rendered through the shared marketing layout.
 - Footer categories are hydrated from the public categories endpoint through `BlogContentService` with cached fallback config, and category links target `/articles/category/{slug}`.

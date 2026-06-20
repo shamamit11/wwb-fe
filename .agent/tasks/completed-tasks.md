@@ -13,3 +13,4 @@
 | 2026-06-20 | Navigation and footer refactor | Reworked shared navigation/footer, switched category archives to canonical `/articles/category/{slug}` routes, and verified the article/homepage flows. |
 | 2026-06-20 | RSS feed | Added cached frontend RSS publishing at `/rss.xml` from the service public RSS endpoint and wired the footer feed link. |
 | 2026-06-20 | Search | Added a header-triggered search dialog, dedicated `/search` results page, local article catalog matching, and article detail links. |
+| 2026-06-20 | About page public payload alignment | Hydrated the About page from `/api/v1/public/about`, including managed hero, mission, stats, values, team, and SEO content with local fallbacks. |
