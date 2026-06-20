@@ -8,37 +8,11 @@
 
     abort_if($postPayload === null, 404);
 
-    $normalizeMediaUrl = static function (?string $url): string {
-        $resolved = is_string($url) ? trim($url) : '';
-
-        if ($resolved === '' || str_starts_with($resolved, 'http://') || str_starts_with($resolved, 'https://') || str_starts_with($resolved, 'data:')) {
-            return $resolved;
-        }
-
-        if (! str_starts_with($resolved, '/')) {
-            return $resolved;
-        }
-
-        $baseUrl = (string) config('services.wideweb_blog.base_url', '');
-        $origin = $baseUrl !== '' ? (parse_url($baseUrl, PHP_URL_SCHEME) ?: 'https').'://'.parse_url($baseUrl, PHP_URL_HOST) : '';
-        $port = parse_url($baseUrl, PHP_URL_PORT);
-
-        if ($origin === '' || str_ends_with($origin, '://')) {
-            return $resolved;
-        }
-
-        if ($port !== null) {
-            $origin .= ':'.$port;
-        }
-
-        return rtrim($origin, '/').$resolved;
-    };
-
     $seo = data_get($postPayload, 'seo', []);
     $title = (string) (data_get($seo, 'meta_title') ?: data_get($postPayload, 'title', 'Article').' | Wide Web Blog');
     $description = (string) (data_get($seo, 'meta_description') ?: data_get($postPayload, 'excerpt', ''));
     $canonical = (string) (data_get($seo, 'canonical_url') ?: data_get($postPayload, 'canonical_url') ?: url()->current());
-    $image = $normalizeMediaUrl((string) (data_get($seo, 'og_image.url') ?: data_get($postPayload, 'featured_image') ?: data_get($postPayload, 'featured_media.url') ?: ''));
+    $image = \App\Support\MediaUrl::normalize((string) (data_get($seo, 'og_image.url') ?: data_get($postPayload, 'featured_image') ?: data_get($postPayload, 'featured_media.url') ?: ''));
     $robots = sprintf(
         '%s,%s',
         data_get($seo, 'robots_index', true) ? 'index' : 'noindex',

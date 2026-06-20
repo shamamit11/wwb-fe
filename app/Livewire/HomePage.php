@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use App\Services\BlogContentService;
+use App\Support\MediaUrl;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Validate;
@@ -452,7 +453,7 @@ class HomePage extends Component
             return 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1200&q=80';
         }
 
-        return $this->normalizeMediaUrl($image);
+        return MediaUrl::normalize($image);
     }
 
     /**
@@ -467,31 +468,6 @@ class HomePage extends Component
                 ?: data_get($item, 'title'),
             'Editorial article'
         );
-    }
-
-    private function normalizeMediaUrl(string $url): string
-    {
-        if ($url === '' || Str::startsWith($url, ['http://', 'https://', 'data:'])) {
-            return $url;
-        }
-
-        if (! Str::startsWith($url, '/')) {
-            return $url;
-        }
-
-        $baseUrl = (string) config('services.wideweb_blog.base_url', '');
-        $origin = $baseUrl !== '' ? (parse_url($baseUrl, PHP_URL_SCHEME) ?: 'https').'://'.parse_url($baseUrl, PHP_URL_HOST) : '';
-        $port = parse_url($baseUrl, PHP_URL_PORT);
-
-        if ($origin === '' || Str::endsWith($origin, '://')) {
-            return $url;
-        }
-
-        if ($port !== null) {
-            $origin .= ':'.$port;
-        }
-
-        return rtrim($origin, '/').$url;
     }
 
     private function iconForCategory(string $slug): string

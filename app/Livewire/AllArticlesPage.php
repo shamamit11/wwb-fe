@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use App\Services\BlogContentService;
+use App\Support\MediaUrl;
 use Carbon\CarbonImmutable;
 use Throwable;
 use Livewire\Component;
@@ -115,7 +116,7 @@ class AllArticlesPage extends Component
             'author' => (string) (data_get($item, 'author.name') ?: data_get($item, 'author', 'Wide Web Blog')),
             'date' => $this->formatDate($publishedAt),
             'read_time' => (string) (data_get($item, 'read_time') ?: '5 min read'),
-            'image' => (string) (data_get($item, 'featured_image') ?: data_get($item, 'featured_media.url') ?: ''),
+            'image' => MediaUrl::normalize((string) (data_get($item, 'featured_image') ?: data_get($item, 'featured_media.url') ?: '')),
         ];
     }
 

@@ -13,6 +13,8 @@ class SearchPageTest extends TestCase
     {
         parent::setUp();
 
+        config(['services.wideweb_blog.base_url' => 'https://service.widewebblog.com/api/v1']);
+
         $this->app->instance(BlogApiClient::class, new class implements BlogApiClient
         {
             public function get(string $path, array $query = []): array
@@ -24,7 +26,7 @@ class SearchPageTest extends TestCase
                                 'slug' => 'service-design-systems',
                                 'title' => 'Service Design Systems',
                                 'excerpt' => 'Search result excerpt',
-                                'featured_image' => 'https://example.com/service-design-systems.jpg',
+                                'featured_image' => '/media/service-design-systems.jpg',
                                 'author' => ['name' => 'Marcus Thorne'],
                                 'category' => ['name' => 'Developer AI', 'slug' => 'developer-ai'],
                                 'read_time' => '8 min read',
@@ -64,6 +66,7 @@ class SearchPageTest extends TestCase
         $response->assertSee('Results for “design”', false);
         $response->assertSee('Service Design Systems');
         $response->assertSee('/articles/service-design-systems', false);
+        $response->assertSee('src="https://media.widewebblog.com/media/service-design-systems.jpg"', false);
     }
 
     public function test_the_search_results_page_shows_an_empty_state_when_nothing_matches(): void

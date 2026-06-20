@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use App\Services\BlogContentService;
+use App\Support\MediaUrl;
 use Livewire\Component;
 use Throwable;
 
@@ -81,7 +82,7 @@ class AboutPage extends Component
             'eyebrow' => $this->stringOrDefault(data_get($hero, 'eyebrow'), $this->story['eyebrow']),
             'title' => $this->stringOrDefault(data_get($hero, 'title'), $this->story['title']),
             'summary' => $this->stringOrDefault(data_get($hero, 'description'), $this->story['summary']),
-            'image' => $this->stringOrDefault(data_get($hero, 'media_url'), $this->story['image']),
+            'image' => MediaUrl::normalize($this->stringOrDefault(data_get($hero, 'media_url'), $this->story['image'])),
             'image_alt' => $this->stringOrDefault(data_get($hero, 'media_alt'), $this->story['image_alt']),
         ];
 
@@ -144,7 +145,7 @@ class AboutPage extends Component
 
             $name = $this->stringOrDefault(data_get($item, 'name'), '');
             $role = $this->stringOrDefault(data_get($item, 'role') ?: data_get($item, 'title'), '');
-            $image = $this->stringOrDefault(data_get($item, 'image_url') ?: data_get($item, 'media_url') ?: data_get($item, 'image'), '');
+            $image = MediaUrl::normalize($this->stringOrDefault(data_get($item, 'image_url') ?: data_get($item, 'media_url') ?: data_get($item, 'image'), ''));
 
             return filled($name) && filled($role) && filled($image)
                 ? ['name' => $name, 'role' => $role, 'image' => $image]

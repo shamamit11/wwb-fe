@@ -37,6 +37,7 @@ return [
 
     'wideweb_blog' => [
         'base_url' => env('WIDEWEB_BLOG_API_BASE_URL'),
+        'media_base_url' => env('WIDEWEB_BLOG_MEDIA_BASE_URL'),
         'token' => env('WIDEWEB_BLOG_API_TOKEN'),
         'timeout' => (float) env('WIDEWEB_BLOG_API_TIMEOUT', 10),
         'connect_timeout' => (float) env('WIDEWEB_BLOG_API_CONNECT_TIMEOUT', 3),

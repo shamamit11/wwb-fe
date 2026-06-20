@@ -15,6 +15,8 @@ class AllArticlesPageTest extends TestCase
     {
         parent::setUp();
 
+        config(['services.wideweb_blog.base_url' => 'https://service.widewebblog.com/api/v1']);
+
         $this->app->instance(BlogApiClient::class, new class implements BlogApiClient
         {
             public function get(string $path, array $query = []): array
@@ -109,7 +111,7 @@ class AllArticlesPageTest extends TestCase
                     'excerpt' => 'Summary for '.$title,
                     'published_at' => '2026-06-14T10:00:00.000000Z',
                     'read_time' => '5 min read',
-                    'featured_image' => 'https://example.com/'.$slug.'.jpg',
+                    'featured_image' => '/media/'.$slug.'.jpg',
                     'author' => ['name' => 'Author Name'],
                     'category' => [
                         'name' => $categoryName,
@@ -130,6 +132,7 @@ class AllArticlesPageTest extends TestCase
         $response->assertSee('<title>All Articles | Wide Web Blog</title>', false);
         $response->assertSee('<link rel="canonical" href="http://fe.test/articles">', false);
         $response->assertSee('/articles/service-design-systems', false);
+        $response->assertSee('src="https://media.widewebblog.com/media/service-design-systems.jpg"', false);
     }
 
     public function test_category_filters_update_the_visible_article_set(): void

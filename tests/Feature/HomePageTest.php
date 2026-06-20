@@ -213,7 +213,7 @@ class HomePageTest extends TestCase
         $response->assertSee('Developer AI');
         $response->assertSee('aria-label="Scroll topics left"', false);
         $response->assertSee('aria-label="Scroll topics right"', false);
-        $response->assertSee('src="https://service.widewebblog.com/seed/media/ai-agent-memory-cover.webp"', false);
+        $response->assertSee('src="https://media.widewebblog.com/seed/media/ai-agent-memory-cover.webp"', false);
         $response->assertSee('href="/articles/how-ai-agent-memory-works"', false);
         $response->assertSee('<meta property="og:title" content="Wide Web Blog">', false);
         $response->assertSee('<meta name="description" content="Practical guides about AI publishing systems, SEO workflows, and content operations.">', false);
@@ -394,7 +394,7 @@ class HomePageTest extends TestCase
         $response->assertSee('aria-label="Scroll topics right"', false);
         $response->assertSee('min-w-[220px]', false);
         $response->assertSee('text-6xl', false);
-        $response->assertSee('src="https://service.widewebblog.com/seed/media/ai-agent-memory-cover.webp"', false);
+        $response->assertSee('src="https://media.widewebblog.com/seed/media/ai-agent-memory-cover.webp"', false);
         $response->assertSee('src="https://media.widewebblog.com/current-home-hero.webp"', false);
         $response->assertSee('<meta property="og:title" content="Wide Web Blog">', false);
         $response->assertSee('<meta name="description" content="Practical guides about AI publishing systems, SEO workflows, and content operations.">', false);

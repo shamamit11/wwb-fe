@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use App\Services\BlogContentService;
+use App\Support\MediaUrl;
 use Throwable;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -36,7 +37,7 @@ class SearchResultsPage extends Component
                 'slug' => (string) data_get($item, 'slug', ''),
                 'title' => (string) data_get($item, 'title', 'Untitled article'),
                 'excerpt' => (string) data_get($item, 'excerpt', ''),
-                'image' => (string) (data_get($item, 'featured_image') ?: data_get($item, 'featured_media.url') ?: ''),
+                'image' => MediaUrl::normalize((string) (data_get($item, 'featured_image') ?: data_get($item, 'featured_media.url') ?: '')),
                 'category' => (string) data_get($item, 'category.name', 'Article'),
                 'author' => (string) data_get($item, 'author.name', 'Wide Web Blog'),
                 'read_time' => (string) (data_get($item, 'read_time') ?: '5 min read'),

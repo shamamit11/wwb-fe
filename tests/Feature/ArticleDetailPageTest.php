@@ -35,7 +35,7 @@ class ArticleDetailPageTest extends TestCase
                             'content' => "# How AI Agent Memory Works\n\nAgent memory is one of the most misunderstood parts of applied AI systems.\n\nThis article covers **bold text**, *italic text*, a [link to the docs](https://example.com/docs), lists, quotes, and code blocks.\n\n## Short-term memory\n\nShort-term memory usually refers to conversation context and recent working state.\n\n## Markdown examples\n\n### Bold\n\nUse **bold text** when you need emphasis.\n\n### Italic\n\nUse *italic text* for lighter emphasis or terminology.\n\n### Link\n\nRead the [memory architecture guide](https://example.com/memory-architecture) for more detail.\n\n### List\n\n- Store recent context separately from durable facts\n- Rank retrieved memories before injecting them\n- Expire stale memories when they stop being useful\n\n### Quote\n\n> Good memory systems reduce noise before they add context.\n\n### Code\n\nInline code example: `memory.write()`\n\n```ts\nconst memories = await memory.search({\n  query: \"user preferences\",\n  limit: 5,\n});\n```\n\n## Long-term memory\n\nLong-term memory stores durable user facts, decisions, and reusable task context.\n\n## Retrieval patterns\n\nMost production systems need retrieval, ranking, and write policies to avoid noisy context.",
                             'content_markdown' => "# How AI Agent Memory Works\n\nAgent memory is one of the most misunderstood parts of applied AI systems.\n\nThis article covers **bold text**, *italic text*, a [link to the docs](https://example.com/docs), lists, quotes, and code blocks.\n\n## Short-term memory\n\nShort-term memory usually refers to conversation context and recent working state.\n\n## Markdown examples\n\n### Bold\n\nUse **bold text** when you need emphasis.\n\n### Italic\n\nUse *italic text* for lighter emphasis or terminology.\n\n### Link\n\nRead the [memory architecture guide](https://example.com/memory-architecture) for more detail.\n\n### List\n\n- Store recent context separately from durable facts\n- Rank retrieved memories before injecting them\n- Expire stale memories when they stop being useful\n\n### Quote\n\n> Good memory systems reduce noise before they add context.\n\n### Code\n\nInline code example: `memory.write()`\n\n```ts\nconst memories = await memory.search({\n  query: \"user preferences\",\n  limit: 5,\n});\n```\n\n## Long-term memory\n\nLong-term memory stores durable user facts, decisions, and reusable task context.\n\n## Retrieval patterns\n\nMost production systems need retrieval, ranking, and write policies to avoid noisy context.",
                             'author' => ['id' => 1, 'name' => 'Amit Sharma'],
-                            'featured_image' => 'https://cdn.widewebblog.test/media/posts/ai-agent-memory-hero.jpg',
+                            'featured_image' => '/media/posts/ai-agent-memory-hero.jpg',
                             'featured_media' => [
                                 'id' => 55,
                                 'ulid' => '01JZ8Y8A6P8D2D7R5Y3V9K1M2N',
@@ -44,7 +44,7 @@ class ArticleDetailPageTest extends TestCase
                                 'height' => 900,
                                 'alt_text' => 'Abstract diagram showing how AI agents store and retrieve memory',
                                 'caption' => 'AI agent memory systems need retrieval discipline, not just bigger context windows.',
-                                'url' => 'https://cdn.widewebblog.test/media/posts/ai-agent-memory-hero.jpg',
+                                'url' => '/media/posts/ai-agent-memory-hero.jpg',
                             ],
                             'category' => ['id' => 7, 'name' => 'AI Agents', 'slug' => 'ai-agents'],
                             'template' => [
@@ -72,7 +72,7 @@ class ArticleDetailPageTest extends TestCase
                                     'height' => 900,
                                     'alt_text' => 'Abstract diagram showing how AI agents store and retrieve memory',
                                     'caption' => 'AI agent memory systems need retrieval discipline, not just bigger context windows.',
-                                    'url' => 'https://cdn.widewebblog.test/media/posts/ai-agent-memory-hero.jpg',
+                                    'url' => '/media/posts/ai-agent-memory-hero.jpg',
                                 ],
                                 'schema_type' => 'TechArticle',
                             ],
@@ -87,7 +87,7 @@ class ArticleDetailPageTest extends TestCase
                                     'updated_at' => '2026-06-18T10:15:00.000000Z',
                                     'reading_time_minutes' => 5,
                                     'read_time' => '5 min read',
-                                    'featured_image' => 'https://cdn.widewebblog.test/media/posts/context-windows.jpg',
+                                    'featured_image' => '/media/posts/context-windows.jpg',
                                     'featured_media' => [
                                         'id' => 56,
                                         'ulid' => '01JZ8YB8M2X7F3P4Q6S8T1U2V3',
@@ -96,7 +96,7 @@ class ArticleDetailPageTest extends TestCase
                                         'height' => 900,
                                         'alt_text' => 'Visual explaining LLM context windows',
                                         'caption' => null,
-                                        'url' => 'https://cdn.widewebblog.test/media/posts/context-windows.jpg',
+                                        'url' => '/media/posts/context-windows.jpg',
                                     ],
                                     'author' => [
                                         'id' => 1,
@@ -139,7 +139,7 @@ class ArticleDetailPageTest extends TestCase
         $response->assertSee('How AI Agent Memory Works');
         $response->assertSee('<title>How AI Agent Memory Works</title>', false);
         $response->assertSee('<link rel="canonical" href="https://widewebblog.test/posts/how-ai-agent-memory-works/">', false);
-        $response->assertSee('<meta property="og:image" content="https://cdn.widewebblog.test/media/posts/ai-agent-memory-hero.jpg">', false);
+        $response->assertSee('<meta property="og:image" content="https://media.widewebblog.com/media/posts/ai-agent-memory-hero.jpg">', false);
         $response->assertSee('Amit Sharma');
         $response->assertSee('Tutorial');
         $response->assertSee('Tags');
@@ -150,7 +150,7 @@ class ArticleDetailPageTest extends TestCase
         $response->assertSee('<blockquote>', false);
         $response->assertSee('<code>memory.write()</code>', false);
         $response->assertSee('<pre><code class="language-ts">', false);
-        $response->assertSee('src="https://cdn.widewebblog.test/media/posts/ai-agent-memory-hero.jpg"', false);
+        $response->assertSee('src="https://media.widewebblog.com/media/posts/ai-agent-memory-hero.jpg"', false);
         $response->assertSee('Related Articles');
         $response->assertSee('Agent Context Windows Explained');
         $response->assertSee('/articles/agent-context-windows-explained', false);

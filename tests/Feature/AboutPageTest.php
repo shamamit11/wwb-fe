@@ -34,6 +34,8 @@ class AboutPageTest extends TestCase
 
     public function test_the_about_page_can_render_managed_api_content_and_seo(): void
     {
+        config(['services.wideweb_blog.base_url' => 'https://service.widewebblog.com/api/v1']);
+
         $this->app->instance(BlogApiClient::class, new class implements BlogApiClient
         {
             public function get(string $path, array $query = []): array
@@ -48,7 +50,7 @@ class AboutPageTest extends TestCase
                             'title' => 'About the Wide Web Blog Team',
                             'eyebrow' => 'Editorial Story',
                             'media_alt' => 'Wide Web Blog team workspace',
-                            'media_url' => 'https://example.com/about-hero.jpg',
+                            'media_url' => '/about-hero.jpg',
                             'description' => 'A clearer description of the publication mission.',
                         ],
                         'mission_section' => [
@@ -76,7 +78,7 @@ class AboutPageTest extends TestCase
                                 [
                                     'name' => 'Amit Sharma',
                                     'role' => 'Founder',
-                                    'image_url' => 'https://example.com/amit.jpg',
+                                    'image_url' => '/team/amit.jpg',
                                 ],
                             ],
                         ],
@@ -104,6 +106,8 @@ class AboutPageTest extends TestCase
         $response->assertSee('Amit Sharma');
         $response->assertSee('<title>About Wide Web Blog</title>', false);
         $response->assertSee('<meta name="description" content="Custom about page description.">', false);
+        $response->assertSee('src="https://media.widewebblog.com/about-hero.jpg"', false);
+        $response->assertSee('src="https://media.widewebblog.com/team/amit.jpg"', false);
     }
 
     public function test_the_primary_navigation_points_about_to_the_dedicated_route(): void
