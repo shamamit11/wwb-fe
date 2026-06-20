@@ -209,6 +209,7 @@ class ArticleDetailPageTest extends TestCase
         $response->assertSee('Frequently Asked Questions');
         $response->assertSee('<details class="article-faq', false);
         $response->assertSee('How should I structure agent memory?');
+        $response->assertSee('<h3 class="article-faq__question">How should I structure agent memory?</h3>', false);
         $response->assertSee('<h2>Start simple</h2>', false);
         $response->assertDontSee('## Start simple', false);
         $response->assertSee('Related Articles');

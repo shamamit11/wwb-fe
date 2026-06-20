@@ -84,7 +84,13 @@
                                                 <span class="article-section__eyebrow">Shortlist</span>
                                             @endif
 
-                                            <h2 class="article-section__title">{{ $section['title'] }}</h2>
+                                            @if (($section['level'] ?? 2) === 3)
+                                                <h3 class="article-section__title">{{ $section['title'] }}</h3>
+                                            @elseif (($section['level'] ?? 2) >= 4)
+                                                <h4 class="article-section__title">{{ $section['title'] }}</h4>
+                                            @else
+                                                <h2 class="article-section__title">{{ $section['title'] }}</h2>
+                                            @endif
                                         </div>
                                     @endif
 
@@ -167,7 +173,7 @@
                                         @foreach (($section['items'] ?? []) as $item)
                                             <details class="article-faq rounded-2xl border border-slate-200 bg-white p-0 shadow-sm" @if($item['open'] ?? false) open @endif>
                                                 <summary class="article-faq__summary list-none cursor-pointer px-6 py-5 text-lg font-semibold text-slate-950">
-                                                    <span>{{ $item['question'] }}</span>
+                                                    <h3 class="article-faq__question">{{ $item['question'] }}</h3>
                                                     <span class="article-faq__icon" aria-hidden="true">+</span>
                                                 </summary>
                                                 <div class="article-faq__body article-richtext border-t border-slate-100 px-6 py-5">

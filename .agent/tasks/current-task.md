@@ -1,7 +1,7 @@
-# Task: Rewrite service-host SEO URLs to the public site origin
+# Task: Improve article detail heading hierarchy
 
 ## Scope
-Prevent article SEO metadata and JSON-LD from exposing `service.widewebblog.com` by rewriting service-host URLs to the frontend site origin before rendering.
+Refine the article detail page semantics so the structured content follows a cleaner heading hierarchy with `h1`, `h2`, and `h3` tags.
 
 ## Spec Reference
 - Spec Path: `.agent/specs/active/public-posts-api.md`
@@ -17,12 +17,10 @@ Prevent article SEO metadata and JSON-LD from exposing `service.widewebblog.com`
 - [x] Update docs or manifest if stable conventions changed
 
 ## Plan
-- Add one helper that rewrites URLs from the configured service host to the frontend/public site origin.
-- Apply it to article canonical URLs and recursively through article schema payloads before they are sent to the SEO component.
-- Add focused feature coverage proving service-host schema/canonical URLs are normalized in the rendered page.
+- Render structured section titles with their mapped heading level.
+- Promote FAQ question labels to semantic `h3` headings inside the accordion summary.
+- Run the focused article detail feature test after the markup change.
 
 ## Verification Evidence
-- Command: `php -l app/Support/PublicSiteUrl.php`
-- Result: Passed, no syntax errors detected
 - Command: `php artisan test tests/Feature/ArticleDetailPageTest.php`
-- Result: Passed, 3 tests / 35 assertions
+- Result: Passed, 3 tests / 36 assertions
