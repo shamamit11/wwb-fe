@@ -1,10 +1,23 @@
 <?php
 
+use App\Services\BlogContentService;
 use App\Http\Controllers\RssFeedController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/rss.xml', RssFeedController::class)->name('rss.feed');
-Route::view('/', 'home')->name('home');
+Route::get('/', function (BlogContentService $content) {
+    $homepagePayload = [];
+
+    try {
+        $homepagePayload = $content->homepage();
+    } catch (\Throwable) {
+        $homepagePayload = [];
+    }
+
+    return view('home', [
+        'homepagePayload' => $homepagePayload,
+    ]);
+})->name('home');
 Route::view('/articles', 'articles.index')->name('articles.index');
 Route::view('/articles/category/{category}', 'articles.index')->name('articles.category');
 Route::view('/articles/{slug}', 'articles.show')->name('articles.show');

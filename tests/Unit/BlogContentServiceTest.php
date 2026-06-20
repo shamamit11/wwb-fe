@@ -15,7 +15,7 @@ class BlogContentServiceTest extends TestCase
     public function test_homepage_payload_is_cached_between_calls(): void
     {
         config(['services.wideweb_blog.cache_ttl' => 900]);
-        config(['services.wideweb_blog.homepage_path' => 'homepage']);
+        config(['services.wideweb_blog.homepage_path' => 'public/home']);
 
         $client = new class implements BlogApiClient
         {
@@ -299,5 +299,64 @@ class BlogContentServiceTest extends TestCase
         $this->assertSame([], $empty);
         $this->assertSame([['q' => 'design', 'per_page' => 12]], $client->queries);
         $this->assertSame(1, $client->requests);
+    }
+
+    public function test_it_resolves_selected_homepage_posts_and_categories_by_id(): void
+    {
+        config(['services.wideweb_blog.cache_ttl' => 900]);
+        config(['services.wideweb_blog.categories_path' => 'public/categories']);
+        config(['services.wideweb_blog.posts_path' => 'public/posts']);
+
+        $client = new class implements BlogApiClient
+        {
+            /** @var array<int, array{path: string, query: array<string, mixed>}> */
+            public array $requests = [];
+
+            public function get(string $path, array $query = []): array
+            {
+                $this->requests[] = ['path' => $path, 'query' => $query];
+
+                if ($path === 'public/categories') {
+                    return [
+                        'data' => [
+                            ['id' => 1, 'name' => 'AI Tools', 'slug' => 'ai-tools'],
+                            ['id' => 3, 'name' => 'SEO', 'slug' => 'seo'],
+                        ],
+                    ];
+                }
+
+                if ($path === 'public/posts') {
+                    return [
+                        'data' => [
+                            ['id' => 1, 'title' => 'First post', 'slug' => 'first-post'],
+                            ['id' => 2, 'title' => 'Second post', 'slug' => 'second-post'],
+                        ],
+                        'meta' => [
+                            'total' => 2,
+                            'current_page' => 1,
+                            'last_page' => 1,
+                            'per_page' => 50,
+                        ],
+                    ];
+                }
+
+                return ['data' => []];
+            }
+
+            public function post(string $path, array $body = []): array
+            {
+                return ['data' => []];
+            }
+        };
+
+        $service = new BlogContentService($client, new Repository(new ArrayStore));
+
+        $categories = $service->resolveCategoriesByIds([3, 1]);
+        $posts = $service->resolvePostsByIds([2, 1]);
+
+        $this->assertSame(['SEO', 'AI Tools'], array_column($categories, 'name'));
+        $this->assertSame(['Second post', 'First post'], array_column($posts, 'title'));
+        $this->assertCount(2, $client->requests);
+        $this->assertSame(['page' => 1, 'per_page' => 50], $client->requests[1]['query']);
     }
 }

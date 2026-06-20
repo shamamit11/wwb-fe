@@ -104,6 +104,22 @@ class BlogContentService
      */
     public function categories(): array
     {
+        $items = $this->detailedCategories();
+
+        return array_values(array_map(
+            static fn (array $item): array => [
+                'label' => (string) data_get($item, 'name', 'Category'),
+                'href' => '/articles/category/'.(string) data_get($item, 'slug', ''),
+            ],
+            array_filter($items, static fn (mixed $item): bool => is_array($item) && filled(data_get($item, 'slug'))),
+        ));
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function detailedCategories(): array
+    {
         $ttl = (int) config('services.wideweb_blog.cache_ttl', 900);
         $path = (string) config('services.wideweb_blog.categories_path', 'public/categories');
 
@@ -117,13 +133,7 @@ class BlogContentService
         /** @var array<int, array<string, mixed>> $items */
         $items = data_get($payload, 'data', []);
 
-        return array_values(array_map(
-            static fn (array $item): array => [
-                'label' => (string) data_get($item, 'name', 'Category'),
-                'href' => '/articles/category/'.(string) data_get($item, 'slug', ''),
-            ],
-            array_filter($items, static fn (mixed $item): bool => is_array($item) && filled(data_get($item, 'slug'))),
-        ));
+        return array_values(array_filter($items, static fn (mixed $item): bool => is_array($item)));
     }
 
     /**
@@ -281,5 +291,99 @@ class BlogContentService
         $items = data_get($payload, 'data', []);
 
         return array_values(array_filter($items, static fn (mixed $item): bool => is_array($item)));
+    }
+
+    /**
+     * @param  array<int, int|string>  $ids
+     * @return array<int, array<string, mixed>>
+     */
+    public function resolveCategoriesByIds(array $ids): array
+    {
+        $lookup = collect($this->detailedCategories())
+            ->filter(fn (array $item): bool => filled(data_get($item, 'id')))
+            ->keyBy(fn (array $item): string => (string) data_get($item, 'id'));
+
+        return array_values(array_filter(array_map(
+            static fn (int|string $id): ?array => $lookup->get((string) $id),
+            $ids,
+        )));
+    }
+
+    /**
+     * @param  array<int, int|string>  $ids
+     * @return array<int, array<string, mixed>>
+     */
+    public function resolvePostsByIds(array $ids): array
+    {
+        $targetIds = array_values(array_unique(array_map(static fn (int|string $id): string => (string) $id, $ids)));
+
+        if ($targetIds === []) {
+            return [];
+        }
+
+        $found = [];
+        $page = 1;
+        $perPage = 50;
+
+        do {
+            $payload = $this->posts(page: $page, perPage: $perPage);
+
+            foreach ($payload['items'] as $item) {
+                $id = (string) data_get($item, 'id', '');
+
+                if ($id === '' || ! in_array($id, $targetIds, true) || array_key_exists($id, $found)) {
+                    continue;
+                }
+
+                $found[$id] = $item;
+            }
+
+            if (count($found) === count($targetIds)) {
+                break;
+            }
+
+            $page++;
+        } while ($payload['has_more']);
+
+        return array_values(array_filter(array_map(
+            static fn (string $id): ?array => $found[$id] ?? null,
+            $targetIds,
+        )));
+    }
+
+    /**
+     * @param  array<int, int|string>  $categoryIds
+     * @return array<int, array<string, mixed>>
+     */
+    public function resolvePostsForCategoryIds(array $categoryIds, int $limit = 4): array
+    {
+        $categories = $this->resolveCategoriesByIds($categoryIds);
+        $items = [];
+
+        foreach ($categories as $category) {
+            $slug = (string) data_get($category, 'slug', '');
+
+            if ($slug === '') {
+                continue;
+            }
+
+            $payload = $this->posts($slug, 1, max(1, min(50, $limit)));
+
+            foreach ($payload['items'] as $item) {
+                $id = (string) data_get($item, 'id', '');
+
+                if ($id === '' || array_key_exists($id, $items)) {
+                    continue;
+                }
+
+                $items[$id] = $item;
+
+                if (count($items) >= $limit) {
+                    break 2;
+                }
+            }
+        }
+
+        return array_values($items);
     }
 }
