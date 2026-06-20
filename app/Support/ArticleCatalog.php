@@ -277,4 +277,31 @@ class ArticleCatalog
 
         return $related;
     }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public static function search(string $query): array
+    {
+        $needle = mb_strtolower(trim($query));
+
+        if ($needle === '') {
+            return [];
+        }
+
+        return array_values(array_filter(
+            self::all(),
+            static function (array $article) use ($needle): bool {
+                $haystack = mb_strtolower(implode(' ', array_filter([
+                    (string) ($article['title'] ?? ''),
+                    (string) ($article['excerpt'] ?? ''),
+                    (string) ($article['summary'] ?? ''),
+                    (string) ($article['category'] ?? ''),
+                    implode(' ', $article['tags'] ?? []),
+                ])));
+
+                return str_contains($haystack, $needle);
+            },
+        ));
+    }
 }

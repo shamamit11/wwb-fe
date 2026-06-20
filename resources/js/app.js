@@ -34,9 +34,48 @@ const setupMobileNav = () => {
     });
 };
 
+const setupSearchDialog = () => {
+    const dialog = document.querySelector('[data-search-dialog]');
+    const input = dialog?.querySelector('[data-search-input]');
+    const openButtons = document.querySelectorAll('[data-search-open]');
+    const closeButtons = dialog?.querySelectorAll('[data-search-close]');
+
+    if (!dialog || !input || openButtons.length === 0 || !closeButtons) {
+        return;
+    }
+
+    const open = () => {
+        dialog.classList.remove('hidden');
+        dialog.classList.remove('pointer-events-none');
+        document.body.classList.add('overflow-hidden');
+        window.setTimeout(() => input.focus(), 20);
+    };
+
+    const close = () => {
+        dialog.classList.add('hidden');
+        dialog.classList.add('pointer-events-none');
+        document.body.classList.remove('overflow-hidden');
+    };
+
+    openButtons.forEach((button) => {
+        button.addEventListener('click', open);
+    });
+
+    closeButtons.forEach((button) => {
+        button.addEventListener('click', close);
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            close();
+        }
+    });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     syncStickyHeader();
     setupMobileNav();
+    setupSearchDialog();
 
     window.addEventListener('scroll', syncStickyHeader, { passive: true });
 });

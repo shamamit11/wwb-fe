@@ -19,3 +19,4 @@ Only record stable, verified facts here.
 - Privacy Policy and Terms pages are dedicated simple legal routes at `/privacy-policy` and `/terms-and-conditions`, rendered through the shared marketing layout.
 - Footer categories are hydrated from the public categories endpoint through `BlogContentService` with cached fallback config, and category links target `/articles/category/{slug}`.
 - The frontend publishes a cached RSS feed at `/rss.xml`, sourced from the service application's public RSS endpoint, and the footer RSS link targets that route.
+- The frontend search experience uses a dedicated `/search` results page with a header-triggered search dialog and article-detail links.

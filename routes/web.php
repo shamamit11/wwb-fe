@@ -8,6 +8,7 @@ Route::view('/', 'home')->name('home');
 Route::view('/articles', 'articles.index')->name('articles.index');
 Route::view('/articles/category/{category}', 'articles.index')->name('articles.category');
 Route::view('/articles/{slug}', 'articles.show')->name('articles.show');
+Route::view('/search', 'search.index')->name('search.index');
 Route::view('/resources', 'resources.index')->name('resources.index');
 Route::view('/about', 'about.index')->name('about.index');
 Route::view('/contact', 'contact.index')->name('contact.index');
