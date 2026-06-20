@@ -34,6 +34,7 @@ class HomePageTest extends TestCase
         $response->assertSee('Practical Wisdom for Builders');
         $response->assertSee('All Articles');
         $response->assertSee('Contact Us');
+        $response->assertDontSee('href="/resources"', false);
         $response->assertDontSee('Editorial Guidelines');
         $response->assertSee('AI Agents');
         $response->assertSee('aria-label="Scroll topics left"', false);

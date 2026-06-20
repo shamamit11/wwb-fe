@@ -10,7 +10,6 @@ return [
     'navigation' => [
         ['label' => 'Home', 'href' => '/', 'key' => 'home'],
         ['label' => 'All Articles', 'href' => '/articles', 'key' => 'articles'],
-        ['label' => 'Resources', 'href' => '/resources', 'key' => 'resources'],
         ['label' => 'About Us', 'href' => '/about', 'key' => 'about'],
         ['label' => 'Contact Us', 'href' => '/contact', 'key' => 'contact'],
     ],

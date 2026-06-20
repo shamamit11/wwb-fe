@@ -22,3 +22,4 @@
 | 2026-06-20 | Align article detail page with public post payload | Aligned article detail rendering with the current public post payload, including normalized media and SEO images, richer markdown support, slug-based hashtag tags, and sidebar related articles beneath tags. |
 | 2026-06-20 | Add Google site verification meta tag | Added a shared env-backed Google site verification meta tag through site config and the shared SEO partial, with homepage feature coverage. |
 | 2026-06-20 | Integrate footer site settings singleton | Replaced local footer brand/description/social/legal data with the public `site-settings` singleton while keeping categories on the categories API, including legal link resolution and footer fallback coverage. |
+| 2026-06-20 | Hide Resources from navigation | Removed the Resources item from shared site navigation while preserving the route and page implementation for later phase work. |
