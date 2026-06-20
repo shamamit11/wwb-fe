@@ -12,10 +12,6 @@
                 </p>
             </div>
 
-            <div class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
-                <x-site.icon name="schedule" class="text-base" />
-                <span>Last updated: {{ $lastUpdated }}</span>
-            </div>
         </div>
 
         <div class="mt-8 flex flex-wrap gap-3">

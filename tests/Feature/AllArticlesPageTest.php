@@ -126,6 +126,7 @@ class AllArticlesPageTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('All Articles', false);
+        $response->assertDontSee('Last updated:', false);
         $response->assertSee('<title>All Articles | Wide Web Blog</title>', false);
         $response->assertSee('<link rel="canonical" href="http://fe.test/articles">', false);
         $response->assertSee('/articles/service-design-systems', false);

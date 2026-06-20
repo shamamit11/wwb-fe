@@ -1,10 +1,10 @@
-# Task: Fix shared subscribe navigation target
+# Task: Remove All Articles last updated label
 
 ## Scope
-Make the shared header Subscribe action navigate to a real newsletter section from any page instead of using a page-local `#newsletter` anchor that fails on routes like `/about`.
+Remove the static `Last updated: May 2024` label from the All Articles page header without changing the rest of the archive layout or filtering behavior.
 
 ## Spec Reference
-- Spec Path: No active spec; implementing directly from the reported navigation bug and current frontend routing behavior.
+- Spec Path: No active spec; implementing directly from the requested UI copy removal on the existing archive page.
 - Requirement IDs: N/A
 - Acceptance Criteria IDs: N/A
 
@@ -17,10 +17,10 @@ Make the shared header Subscribe action navigate to a real newsletter section fr
 - [x] Update docs or manifest if stable conventions changed
 
 ## Plan
-- Replace the shared header CTA `#newsletter` hash with a route-qualified homepage newsletter anchor.
-- Add a focused feature assertion that the About page renders the shared Subscribe CTA pointing to the homepage newsletter section.
+- Remove the trailing header metadata block from the All Articles page view.
+- Add a focused feature assertion that the All Articles page no longer renders the `Last updated:` label.
 
 ## Verification Evidence
-- Command: `php artisan test tests/Feature/AboutPageTest.php`
-- Acceptance Criteria Proven: The shared Subscribe CTA now targets the homepage newsletter anchor from the About page instead of a broken page-local hash.
-- Result: Passed, 4 tests / 16 assertions
+- Command: `php artisan test tests/Feature/AllArticlesPageTest.php`
+- Acceptance Criteria Proven: The All Articles page renders without the static `Last updated:` label and retains existing archive behavior.
+- Result: Passed, 5 tests / 24 assertions
