@@ -14,3 +14,4 @@ Only record stable, verified facts here.
 - Shared site chrome and navigation metadata are centralized in `config/site.php`.
 - Shared article content for listing and detail pages is centralized in `app/Support/ArticleCatalog.php`.
 - Shared resource content for the resources page is centralized in `app/Support/ResourceCatalog.php`.
+- The About page is a dedicated marketing route at `/about`, not a homepage anchor section.

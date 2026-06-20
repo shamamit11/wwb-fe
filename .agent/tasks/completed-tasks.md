@@ -7,3 +7,4 @@
 | 2026-06-20 | All Articles page | Added `/articles` with shared branding, Livewire filters/load-more behavior, and verified build/tests. |
 | 2026-06-20 | Article detail page | Added slug-based article detail routes, shared article catalog data, related article navigation, and verified tests/build. |
 | 2026-06-20 | Resources page | Added `/resources` with shared branding, Livewire filtering/sorting, shared resource catalog data, and verified tests/build. |
+| 2026-06-20 | About page | Added `/about` with shared branding, mission/values/team sections, and verified tests/build. |

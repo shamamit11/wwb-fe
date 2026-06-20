@@ -12,7 +12,7 @@ return [
         ['label' => 'Guides', 'href' => '/#guides', 'key' => 'guides'],
         ['label' => 'Topics', 'href' => '/#topics', 'key' => 'topics'],
         ['label' => 'Resources', 'href' => '/resources', 'key' => 'resources'],
-        ['label' => 'About', 'href' => '/#about', 'key' => 'about'],
+        ['label' => 'About', 'href' => '/about', 'key' => 'about'],
     ],
     'footer' => [
         'categories' => [
@@ -26,8 +26,8 @@ return [
             ['label' => 'Tutorials', 'href' => '/#guides'],
         ],
         'company' => [
-            ['label' => 'About Us', 'href' => '/#about'],
-            ['label' => 'Editorial Guidelines', 'href' => '/#about'],
+            ['label' => 'About Us', 'href' => '/about'],
+            ['label' => 'Editorial Guidelines', 'href' => '/about'],
             ['label' => 'Privacy Policy', 'href' => '#'],
             ['label' => 'Terms of Service', 'href' => '#'],
             ['label' => 'Contact Us', 'href' => '#newsletter'],
