@@ -19,12 +19,24 @@ class GuzzleBlogApiClient implements BlogApiClient
 
     public function get(string $path, array $query = []): array
     {
+        return $this->request('GET', $path, ['query' => $query]);
+    }
+
+    public function post(string $path, array $body = []): array
+    {
+        return $this->request('POST', $path, ['json' => $body]);
+    }
+
+    /**
+     * @param  array<string, mixed>  $options
+     * @return array<string, mixed>
+     */
+    private function request(string $method, string $path, array $options = []): array
+    {
         try {
             $response = retry(
                 (int) config('services.wideweb_blog.retry_times', 2),
-                fn () => $this->client->request('GET', ltrim($path, '/'), [
-                    'query' => $query,
-                ]),
+                fn () => $this->client->request($method, ltrim($path, '/'), $options),
                 (int) config('services.wideweb_blog.retry_sleep_ms', 150),
             );
 

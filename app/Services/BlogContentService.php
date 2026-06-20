@@ -52,6 +52,35 @@ class BlogContentService
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    public function contact(): array
+    {
+        $ttl = (int) config('services.wideweb_blog.cache_ttl', 900);
+        $path = (string) config('services.wideweb_blog.contact_path', 'public/contact');
+
+        /** @var array<string, mixed> $payload */
+        $payload = $this->cache->remember(
+            'wideweb-blog.contact',
+            now()->addSeconds($ttl),
+            fn (): array => $this->client->get($path),
+        );
+
+        return $payload;
+    }
+
+    /**
+     * @param  array<string, mixed>  $payload
+     * @return array<string, mixed>
+     */
+    public function submitContact(array $payload): array
+    {
+        $path = (string) config('services.wideweb_blog.contact_submit_path', 'public/contact/submit');
+
+        return $this->client->post($path, $payload);
+    }
+
+    /**
      * @return array<int, array{label: string, href: string}>
      */
     public function categories(): array

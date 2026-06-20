@@ -76,6 +76,11 @@ class AboutPageTest extends TestCase
                     ],
                 ];
             }
+
+            public function post(string $path, array $body = []): array
+            {
+                return ['data' => []];
+            }
         });
 
         $response = $this->get('/about');
