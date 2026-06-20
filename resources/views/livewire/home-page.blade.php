@@ -55,7 +55,7 @@
             <div class="grid gap-8 lg:grid-cols-3">
                 <a href="{{ $featuredSection['lead']['href'] }}"
                     class="group flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-900/10 lg:col-span-2">
-                    <div class="relative h-[450px] overflow-hidden">
+                    <div class="relative h-112.5 overflow-hidden">
                         <img src="{{ $featuredSection['lead']['image'] }}"
                             alt="{{ $featuredSection['lead']['image_alt'] }}"
                             class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105">
@@ -182,10 +182,10 @@
 
             <div class="relative">
                 <div data-topic-track
-                    class="flex snap-x snap-mandatory gap-6 overflow-x-auto pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                    class="flex snap-x snap-mandatory gap-6 overflow-x-auto pb-4 scrollbar-none [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                     @foreach ($topicSection['items'] as $topic)
                         <a href="{{ $topic['href'] }}"
-                            class="group flex min-h-[220px] min-w-[220px] flex-none snap-start flex-col items-center justify-center rounded-xl border border-slate-200 bg-white px-8 py-10 text-center transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-900/10">
+                            class="group flex min-h-55 min-w-55 flex-none snap-start flex-col items-center justify-center rounded-xl border border-slate-200 bg-white px-8 py-10 text-center transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-900/10">
                             <x-site.icon :name="$topic['icon']"
                                 class="mb-5 text-6xl text-[#c2410c] transition-transform group-hover:scale-110" />
                             <span
@@ -246,24 +246,20 @@
                 <p class="mt-5 text-lg leading-8 text-slate-600">{{ $newsletterSection['description'] }}</p>
 
                 @if ($newsletterToastVisible)
-                    <div
-                        x-data="{ show: true }"
-                        x-init="setTimeout(() => show = false, 3200)"
-                        x-show="show"
-                        x-transition
+                    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3200)" x-show="show" x-transition
                         @class([
                             'mx-auto mt-8 max-w-xl rounded-2xl border px-5 py-4 text-left text-sm shadow-sm',
-                            'border-emerald-200 bg-emerald-50 text-emerald-900' => $newsletterToastType === 'success',
-                            'border-red-200 bg-red-50 text-red-900' => $newsletterToastType !== 'success',
+                            'border-emerald-200 bg-emerald-50 text-emerald-900' =>
+                                $newsletterToastType === 'success',
+                            'border-red-200 bg-red-50 text-red-900' =>
+                                $newsletterToastType !== 'success',
                         ])>
                         {{ $newsletterToastMessage }}
                     </div>
                 @endif
 
                 <form class="mt-10 flex flex-col gap-4 md:flex-row" wire:submit="subscribe">
-                    <input
-                        type="email"
-                        wire:model.blur="newsletterEmail"
+                    <input type="email" wire:model.blur="newsletterEmail"
                         placeholder="{{ $newsletterSection['placeholder'] }}"
                         class="min-w-0 flex-1 rounded-2xl border-2 border-slate-200 bg-white px-6 py-4 text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-[#c2410c] focus:ring-4 focus:ring-orange-100">
                     <button type="submit"
@@ -271,7 +267,9 @@
                         {{ $newsletterSection['button'] }}
                     </button>
                 </form>
-                @error('newsletterEmail') <p class="mt-3 text-sm text-red-600">{{ $message }}</p> @enderror
+                @error('newsletterEmail')
+                    <p class="mt-3 text-sm text-red-600">{{ $message }}</p>
+                @enderror
 
                 <p class="mt-6 text-sm italic text-slate-500">{{ $newsletterSection['note'] }}</p>
             </div>

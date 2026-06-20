@@ -16,13 +16,13 @@
 
         <div class="mt-8 flex flex-wrap gap-3">
             @foreach ($filters as $filter)
-                <a
-                    href="{{ $filter['slug'] === 'all' ? route('articles.index') : route('articles.category', ['category' => $filter['slug']]) }}"
-                    wire:navigate
-                    @class([
+                <a href="{{ $filter['slug'] === 'all' ? route('articles.index') : route('articles.category', ['category' => $filter['slug']]) }}"
+                    wire:navigate @class([
                         'rounded-full border px-4 py-2 text-sm font-semibold transition-colors',
-                        'border-[#c2410c] bg-[#c2410c] text-white shadow-sm' => $activeCategory === $filter['slug'],
-                        'border-slate-200 bg-white text-slate-600 hover:border-orange-200 hover:text-[#c2410c]' => $activeCategory !== $filter['slug'],
+                        'border-[#c2410c] bg-[#c2410c] text-white shadow-sm' =>
+                            $activeCategory === $filter['slug'],
+                        'border-slate-200 bg-white text-slate-600 hover:border-orange-200 hover:text-[#c2410c]' =>
+                            $activeCategory !== $filter['slug'],
                     ])>
                     {{ $filter['label'] }}
                 </a>
@@ -33,15 +33,18 @@
             <div class="mt-10 grid gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
                 <article class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
                     <div class="grid xl:grid-cols-[1.4fr_0.9fr]">
-                        <div class="min-h-[320px] overflow-hidden">
+                        <div class="min-h-80 overflow-hidden">
                             <a href="{{ route('articles.show', $leadArticle['slug']) }}">
-                                <img src="{{ $leadArticle['image'] }}" alt="{{ $leadArticle['title'] }}" class="h-full w-full object-cover">
+                                <img src="{{ $leadArticle['image'] }}" alt="{{ $leadArticle['title'] }}"
+                                    class="h-full w-full object-cover">
                             </a>
                         </div>
                         <div class="flex flex-col p-8">
-                            <span class="text-xs font-semibold uppercase tracking-[0.22em] text-[#c2410c]">{{ $leadArticle['category'] }}</span>
+                            <span
+                                class="text-xs font-semibold uppercase tracking-[0.22em] text-[#c2410c]">{{ $leadArticle['category'] }}</span>
                             <h2 class="mt-4 text-3xl font-bold leading-tight tracking-tight text-slate-950">
-                                <a href="{{ route('articles.show', $leadArticle['slug']) }}" class="transition-colors hover:text-[#c2410c]">
+                                <a href="{{ route('articles.show', $leadArticle['slug']) }}"
+                                    class="transition-colors hover:text-[#c2410c]">
                                     {{ $leadArticle['title'] }}
                                 </a>
                             </h2>
@@ -62,16 +65,20 @@
                 </article>
 
                 @if ($spotlightArticle)
-                    <article class="group flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
+                    <article
+                        class="group flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
                         <div class="h-64 overflow-hidden">
                             <a href="{{ route('articles.show', $spotlightArticle['slug']) }}">
-                                <img src="{{ $spotlightArticle['image'] }}" alt="{{ $spotlightArticle['title'] }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                <img src="{{ $spotlightArticle['image'] }}" alt="{{ $spotlightArticle['title'] }}"
+                                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
                             </a>
                         </div>
                         <div class="flex flex-1 flex-col p-6">
-                            <span class="text-xs font-semibold uppercase tracking-[0.22em] text-[#c2410c]">{{ $spotlightArticle['category'] }}</span>
+                            <span
+                                class="text-xs font-semibold uppercase tracking-[0.22em] text-[#c2410c]">{{ $spotlightArticle['category'] }}</span>
                             <h3 class="mt-4 text-3xl font-bold leading-tight tracking-tight text-slate-950">
-                                <a href="{{ route('articles.show', $spotlightArticle['slug']) }}" class="transition-colors hover:text-[#c2410c]">
+                                <a href="{{ route('articles.show', $spotlightArticle['slug']) }}"
+                                    class="transition-colors hover:text-[#c2410c]">
                                     {{ $spotlightArticle['title'] }}
                                 </a>
                             </h3>
@@ -90,16 +97,20 @@
 
         <div class="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             @foreach ($gridArticles as $article)
-                <article class="group flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
+                <article
+                    class="group flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
                     <div class="h-60 overflow-hidden">
                         <a href="{{ route('articles.show', $article['slug']) }}">
-                            <img src="{{ $article['image'] }}" alt="{{ $article['title'] }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
+                            <img src="{{ $article['image'] }}" alt="{{ $article['title'] }}"
+                                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
                         </a>
                     </div>
                     <div class="flex flex-1 flex-col p-6">
-                        <span class="text-xs font-semibold uppercase tracking-[0.22em] text-[#c2410c]">{{ $article['category'] }}</span>
+                        <span
+                            class="text-xs font-semibold uppercase tracking-[0.22em] text-[#c2410c]">{{ $article['category'] }}</span>
                         <h2 class="mt-4 text-2xl font-bold leading-tight tracking-tight text-slate-950">
-                            <a href="{{ route('articles.show', $article['slug']) }}" class="transition-colors hover:text-[#c2410c]">
+                            <a href="{{ route('articles.show', $article['slug']) }}"
+                                class="transition-colors hover:text-[#c2410c]">
                                 {{ $article['title'] }}
                             </a>
                         </h2>
@@ -123,9 +134,7 @@
 
         <div class="mt-10 flex flex-col items-center">
             @if ($hasMore)
-                <button
-                    type="button"
-                    wire:click="loadMore"
+                <button type="button" wire:click="loadMore"
                     class="inline-flex items-center gap-2 rounded-xl bg-[#141b2b] px-8 py-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition-colors hover:bg-[#c2410c]">
                     <span>Load More Articles</span>
                     <x-site.icon name="keyboard_arrow_down" />
