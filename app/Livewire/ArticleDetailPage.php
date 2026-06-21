@@ -148,7 +148,7 @@ class ArticleDetailPage extends Component
         $html = PublicApiValue::stringValue(data_get($post, 'full_article_html'));
 
         if ($html !== '') {
-            return $html;
+            return $this->stripDuplicateLeadingHeading($html, (string) data_get($post, 'title', ''));
         }
 
         return $this->renderFlexibleContent((string) (data_get($post, 'content') ?: data_get($post, 'description') ?: ''));
@@ -269,5 +269,29 @@ class ArticleDetailPage extends Component
     private function looksLikeHtml(string $content): bool
     {
         return preg_match('/<\s*[a-zA-Z][^>]*>/', $content) === 1;
+    }
+
+    private function stripDuplicateLeadingHeading(string $html, string $title): string
+    {
+        $trimmedHtml = ltrim($html);
+        $normalizedTitle = Str::of(strip_tags($title))->squish()->lower()->toString();
+
+        if ($trimmedHtml === '' || $normalizedTitle === '') {
+            return $html;
+        }
+
+        if (preg_match('/^\s*<h1\b[^>]*>(.*?)<\/h1>/is', $html, $matches) !== 1) {
+            return $html;
+        }
+
+        $headingText = Str::of(strip_tags((string) ($matches[1] ?? '')))->squish()->lower()->toString();
+
+        if ($headingText !== $normalizedTitle) {
+            return $html;
+        }
+
+        $stripped = preg_replace('/^\s*<h1\b[^>]*>.*?<\/h1>\s*/is', '', $html, 1);
+
+        return is_string($stripped) ? $stripped : $html;
     }
 }

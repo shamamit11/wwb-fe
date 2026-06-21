@@ -9,7 +9,7 @@
         </nav>
 
         <header class="max-w-5xl">
-            <h1 class="text-4xl font-extrabold leading-tight tracking-tight text-slate-950 md:text-6xl">
+            <h1 class="text-3xl font-bold leading-tight tracking-tight text-slate-950 md:text-5xl">
                 {{ $article['title'] }}
             </h1>
 
@@ -66,50 +66,54 @@
                         {{ $article['caption'] }}
                     </figcaption>
                 @endif
-                @if ($article['body_html'] !== '')
-                    <div class="article-richtext mt-12 max-w-3xl">
-                        {!! $article['body_html'] !!}
-                    </div>
-                @endif
-
-                @if (($article['faq_items'] ?? []) !== [] || ($article['faq_html'] ?? '') !== '')
-                    <div class="mt-14 max-w-4xl space-y-5">
-                        <section class="space-y-5">
-                            <div class="article-section__header">
-                                <span class="article-section__eyebrow">FAQ</span>
-                                <h2 class="article-section__title">Frequently Asked Questions</h2>
+                @if ($article['body_html'] !== '' || ($article['faq_items'] ?? []) !== [] || ($article['faq_html'] ?? '') !== '' || $article['tags'] !== [])
+                    <div class="article-content-panel mt-12 max-w-4xl rounded-xl border border-slate-200 bg-white px-6 py-7 shadow-sm md:px-8 md:py-8">
+                        @if ($article['body_html'] !== '')
+                            <div class="article-richtext">
+                                {!! $article['body_html'] !!}
                             </div>
+                        @endif
 
-                            @if (($article['faq_items'] ?? []) !== [])
-                                <div class="space-y-4">
-                                    @foreach (($article['faq_items'] ?? []) as $item)
-                                        <details class="article-faq rounded-2xl border border-slate-200 bg-white p-0 shadow-sm" @if($item['open'] ?? false) open @endif>
-                                            <summary class="article-faq__summary list-none cursor-pointer px-6 py-5 text-lg font-semibold text-slate-950">
-                                                <h3 class="article-faq__question">{{ $item['question'] }}</h3>
-                                                <span class="article-faq__icon" aria-hidden="true">+</span>
-                                            </summary>
-                                            <div class="article-faq__body article-richtext border-t border-slate-100 px-6 py-5">
-                                                {!! $item['answer_html'] !!}
-                                            </div>
-                                        </details>
-                                    @endforeach
-                                </div>
-                            @else
-                                <div class="article-richtext">
-                                    {!! $article['faq_html'] !!}
-                                </div>
-                            @endif
-                        </section>
-                    </div>
-                @endif
+                        @if (($article['faq_items'] ?? []) !== [] || ($article['faq_html'] ?? '') !== '')
+                            <div class="mt-10 space-y-5 border-t border-slate-100 pt-8">
+                                <section class="space-y-5">
+                                    <div class="article-section__header">
+                                        <span class="article-section__eyebrow">FAQ</span>
+                                        <h2 class="article-section__title">Frequently Asked Questions</h2>
+                                    </div>
 
-                @if ($article['tags'] !== [])
-                    <div class="mt-10 flex flex-wrap gap-3">
-                        @foreach ($article['tags'] as $tag)
-                            <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-600">
-                                {{ $tag }}
-                            </span>
-                        @endforeach
+                                    @if (($article['faq_items'] ?? []) !== [])
+                                        <div class="space-y-4">
+                                            @foreach (($article['faq_items'] ?? []) as $item)
+                                                <details class="article-faq rounded-2xl border border-slate-200 bg-white p-0 shadow-sm" @if($item['open'] ?? false) open @endif>
+                                                    <summary class="article-faq__summary list-none cursor-pointer px-6 py-5 text-lg font-semibold text-slate-950">
+                                                        <h3 class="article-faq__question">{{ $item['question'] }}</h3>
+                                                        <span class="article-faq__icon" aria-hidden="true">+</span>
+                                                    </summary>
+                                                    <div class="article-faq__body article-richtext border-t border-slate-100 px-6 py-5">
+                                                        {!! $item['answer_html'] !!}
+                                                    </div>
+                                                </details>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <div class="article-richtext">
+                                            {!! $article['faq_html'] !!}
+                                        </div>
+                                    @endif
+                                </section>
+                            </div>
+                        @endif
+
+                        @if ($article['tags'] !== [])
+                            <div class="mt-8 flex flex-wrap gap-3 border-t border-slate-100 pt-6">
+                                @foreach ($article['tags'] as $tag)
+                                    <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-600">
+                                        {{ $tag }}
+                                    </span>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 @endif
             </div>

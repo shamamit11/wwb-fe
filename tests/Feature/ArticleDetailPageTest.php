@@ -35,7 +35,7 @@ class ArticleDetailPageTest extends TestCase
                             'read_time' => '8 min read',
                             'word_count' => 1248,
                             'content' => 'Legacy fallback content that should not be used when HTML is present.',
-                            'full_article_html' => '<p>Agent memory is one of the most misunderstood parts of applied AI systems.</p><h2>Short-term memory</h2><p>Short-term memory usually refers to conversation context and recent working state.</p><pre><code class="language-ts">const memories = await memory.search({ query: "user preferences", limit: 5 });</code></pre><p>Most production systems need retrieval, ranking, and write policies to avoid noisy context.</p>',
+                            'full_article_html' => '<h1>How AI Agent Memory Works</h1><p>Agent memory is one of the most misunderstood parts of applied AI systems.</p><h2>Short-term memory</h2><p>Short-term memory usually refers to conversation context and recent working state.</p><pre><code class="language-ts">const memories = await memory.search({ query: "user preferences", limit: 5 });</code></pre><p>Most production systems need retrieval, ranking, and write policies to avoid noisy context.</p>',
                             'full_article_delta' => '{"ops":[{"insert":"Agent memory is one of the most misunderstood parts of applied AI systems."}]}',
                             'faq' => '[{"question":"How should I structure agent memory?","answer_markdown":"## Start simple\n\nUse short-term memory first, then add retrieval.\n\n- Keep write rules explicit\n- Rank results before injection"},{"question":"When should I add retrieval?","answer":"Add retrieval when important context no longer fits reliably in the active conversation window."}]',
                             'author' => ['id' => '1', 'name' => 'Amit Sharma'],
@@ -177,6 +177,7 @@ class ArticleDetailPageTest extends TestCase
         $response->assertSee('Short-term memory');
         $response->assertSee('language-ts', false);
         $response->assertSee('const memories = await memory.search', false);
+        $response->assertDontSee('<div class="article-richtext mt-12 max-w-3xl"><h1>How AI Agent Memory Works</h1>', false);
         $response->assertSee('src="https://media.widewebblog.com/media/posts/ai-agent-memory-hero.jpg"', false);
         $response->assertSee('"url": "https://widewebblog.com/posts/how-ai-agent-memory-works/"', false);
         $response->assertSee('"mainEntityOfPage": "https://widewebblog.com/posts/how-ai-agent-memory-works/"', false);
