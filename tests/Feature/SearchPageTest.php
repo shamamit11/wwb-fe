@@ -25,11 +25,11 @@ class SearchPageTest extends TestCase
                             [
                                 'slug' => 'service-design-systems',
                                 'title' => 'Service Design Systems',
-                                'excerpt' => 'Search result excerpt',
+                                'short_description' => 'Search result excerpt',
                                 'featured_image' => '/media/service-design-systems.jpg',
                                 'author' => ['name' => 'Marcus Thorne'],
                                 'category' => ['name' => 'Developer AI', 'slug' => 'developer-ai'],
-                                'read_time' => '8 min read',
+                                'reading_time_minutes' => 8,
                             ],
                         ],
                     ];
@@ -65,6 +65,8 @@ class SearchPageTest extends TestCase
         $response->assertOk();
         $response->assertSee('Results for “design”', false);
         $response->assertSee('Service Design Systems');
+        $response->assertSee('Search result excerpt');
+        $response->assertSee('Marcus Thorne • 8 min read');
         $response->assertSee('/articles/service-design-systems', false);
         $response->assertSee('src="https://media.widewebblog.com/media/service-design-systems.jpg"', false);
     }

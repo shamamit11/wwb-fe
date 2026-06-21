@@ -24,9 +24,9 @@ class AllArticlesPageTest extends TestCase
                 if ($path === 'public/categories') {
                     return [
                         'data' => [
-                            ['name' => 'SEO', 'slug' => 'seo'],
-                            ['name' => 'Content Marketing', 'slug' => 'content-marketing'],
-                            ['name' => 'Developer AI', 'slug' => 'developer-ai'],
+                            ['id' => '1', 'name' => 'SEO', 'slug' => 'seo', 'description' => 'SEO coverage.', 'post_count' => 3, 'seo' => null],
+                            ['id' => '2', 'name' => 'Content Marketing', 'slug' => 'content-marketing', 'description' => 'Content marketing coverage.', 'post_count' => 2, 'seo' => null],
+                            ['id' => '3', 'name' => 'Developer AI', 'slug' => 'developer-ai', 'description' => 'Developer AI coverage.', 'post_count' => 3, 'seo' => null],
                         ],
                     ];
                 }
@@ -34,9 +34,17 @@ class AllArticlesPageTest extends TestCase
                 if ($path === 'public/categories/seo') {
                     return [
                         'data' => [
+                            'id' => '1',
                             'name' => 'SEO',
                             'slug' => 'seo',
                             'description' => 'Browse SEO articles from Wide Web Blog.',
+                            'post_count' => 3,
+                            'seo' => [
+                                'meta_title' => 'SEO Archive | Wide Web Blog',
+                                'meta_description' => 'Browse SEO articles from Wide Web Blog.',
+                                'canonical_url' => 'https://service.widewebblog.com/categories/seo/',
+                            ],
+                            'posts' => [],
                         ],
                     ];
                 }
@@ -44,9 +52,17 @@ class AllArticlesPageTest extends TestCase
                 if ($path === 'public/categories/content-marketing') {
                     return [
                         'data' => [
+                            'id' => '2',
                             'name' => 'Content Marketing',
                             'slug' => 'content-marketing',
                             'description' => 'Browse content marketing articles from Wide Web Blog.',
+                            'post_count' => 2,
+                            'seo' => [
+                                'meta_title' => 'Content Marketing Archive | Wide Web Blog',
+                                'meta_description' => 'Browse content marketing articles from Wide Web Blog.',
+                                'canonical_url' => 'https://service.widewebblog.com/categories/content-marketing/',
+                            ],
+                            'posts' => [],
                         ],
                     ];
                 }
@@ -108,9 +124,9 @@ class AllArticlesPageTest extends TestCase
                 return [
                     'slug' => $slug,
                     'title' => $title,
-                    'excerpt' => 'Summary for '.$title,
+                    'short_description' => 'Summary for '.$title,
                     'published_at' => '2026-06-14T10:00:00.000000Z',
-                    'read_time' => '5 min read',
+                    'reading_time_minutes' => 5,
                     'featured_image' => '/media/'.$slug.'.jpg',
                     'author' => ['name' => 'Author Name'],
                     'category' => [
@@ -147,7 +163,8 @@ class AllArticlesPageTest extends TestCase
         $response->assertSee('SEO', false);
         $response->assertSee('SEO Recovery Guide');
         $response->assertDontSee('Developer AI Systems');
-        $response->assertSee('<link rel="canonical" href="http://fe.test/articles/category/seo">', false);
+        $response->assertSee('<title>SEO Archive | Wide Web Blog</title>', false);
+        $response->assertSee('<link rel="canonical" href="http://fe.test/categories/seo/">', false);
     }
 
     public function test_category_archive_uses_category_specific_heading_and_seo_title(): void
@@ -156,8 +173,8 @@ class AllArticlesPageTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Content Marketing', false);
-        $response->assertSee('<title>Content Marketing | Wide Web Blog</title>', false);
-        $response->assertSee('<link rel="canonical" href="http://fe.test/articles/category/content-marketing">', false);
+        $response->assertSee('<title>Content Marketing Archive | Wide Web Blog</title>', false);
+        $response->assertSee('<link rel="canonical" href="http://fe.test/categories/content-marketing/">', false);
     }
 
     public function test_load_more_reveals_additional_articles_without_a_full_reload(): void

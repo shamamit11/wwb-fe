@@ -12,17 +12,18 @@
 
     $categoryLabel = $categoryData['name'] ?? ($categorySlug ? (string) \Illuminate\Support\Str::of((string) $categorySlug)->replace('-', ' ')->title() : null);
     $isCategoryPage = $categoryLabel !== null && $categorySlug !== 'all';
+    $categorySeo = \App\Support\PublicApiValue::arrayValue(data_get($categoryData, 'seo'));
 
     $title = $isCategoryPage
-        ? $categoryLabel . ' | Wide Web Blog'
+        ? ((string) (data_get($categorySeo, 'meta_title') ?: $categoryLabel . ' | Wide Web Blog'))
         : 'All Articles | Wide Web Blog';
 
     $description = $isCategoryPage
-        ? ($categoryData['description'] ?? ('Browse Wide Web Blog articles in ' . $categoryLabel . ', with practical insights for modern digital creators.'))
+        ? ((string) (data_get($categorySeo, 'meta_description') ?: ($categoryData['description'] ?? ('Browse Wide Web Blog articles in ' . $categoryLabel . ', with practical insights for modern digital creators.'))))
         : 'Browse the full editorial archive of AI, blogging, SEO, case studies, and web development insights from Wide Web Blog.';
 
     $canonical = $isCategoryPage
-        ? route('articles.category', ['category' => $categorySlug])
+        ? (\App\Support\PublicSiteUrl::normalize((string) (data_get($categorySeo, 'canonical_url') ?: route('articles.category', ['category' => $categorySlug]))))
         : route('articles.index');
 
     $schema = [

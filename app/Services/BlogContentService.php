@@ -21,7 +21,7 @@ class BlogContentService
     public function homepage(): array
     {
         $ttl = (int) config('services.wideweb_blog.cache_ttl', 900);
-        $path = (string) config('services.wideweb_blog.homepage_path', 'homepage');
+        $path = (string) config('services.wideweb_blog.homepage_path', 'public/home');
 
         /** @var array<string, mixed> $payload */
         $payload = $this->cache->remember(

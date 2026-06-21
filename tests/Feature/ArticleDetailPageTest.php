@@ -23,41 +23,49 @@ class ArticleDetailPageTest extends TestCase
                 if ($path === 'public/posts/how-ai-agent-memory-works') {
                     return [
                         'data' => [
-                            'id' => 101,
+                            'id' => '101',
                             'title' => 'How AI Agent Memory Works',
                             'slug' => 'how-ai-agent-memory-works',
-                            'excerpt' => 'A practical look at short-term memory, long-term memory, retrieval patterns, and why most agent memory systems fail in production.',
+                            'short_description' => 'A practical look at short-term memory, long-term memory, retrieval patterns, and why most agent memory systems fail in production.',
+                            'description' => 'A practical guide to memory design for AI agents.',
                             'canonical_url' => 'https://service.widewebblog.com/posts/how-ai-agent-memory-works/',
                             'published_at' => '2026-06-14T10:00:00.000000Z',
                             'updated_at' => '2026-06-20T08:30:00.000000Z',
                             'reading_time_minutes' => 8,
                             'read_time' => '8 min read',
                             'word_count' => 1248,
-                            'content' => "# How AI Agent Memory Works\n\nAgent memory is one of the most misunderstood parts of applied AI systems.\n\nThis article covers **bold text**, *italic text*, a [link to the docs](https://example.com/docs), lists, quotes, and code blocks.\n\n## Short-term memory\n\nShort-term memory usually refers to conversation context and recent working state.\n\n## Markdown examples\n\n### Bold\n\nUse **bold text** when you need emphasis.\n\n### Italic\n\nUse *italic text* for lighter emphasis or terminology.\n\n### Link\n\nRead the [memory architecture guide](https://example.com/memory-architecture) for more detail.\n\n### List\n\n- Store recent context separately from durable facts\n- Rank retrieved memories before injecting them\n- Expire stale memories when they stop being useful\n\n### Quote\n\n> Good memory systems reduce noise before they add context.\n\n### Code\n\nInline code example: `memory.write()`\n\n```ts\nconst memories = await memory.search({\n  query: \"user preferences\",\n  limit: 5,\n});\n```\n\n## Long-term memory\n\nLong-term memory stores durable user facts, decisions, and reusable task context.\n\n## Retrieval patterns\n\nMost production systems need retrieval, ranking, and write policies to avoid noisy context.",
-                            'content_markdown' => "# How AI Agent Memory Works\n\nAgent memory is one of the most misunderstood parts of applied AI systems.\n\nThis article covers **bold text**, *italic text*, a [link to the docs](https://example.com/docs), lists, quotes, and code blocks.\n\n## Short-term memory\n\nShort-term memory usually refers to conversation context and recent working state.\n\n## Markdown examples\n\n### Bold\n\nUse **bold text** when you need emphasis.\n\n### Italic\n\nUse *italic text* for lighter emphasis or terminology.\n\n### Link\n\nRead the [memory architecture guide](https://example.com/memory-architecture) for more detail.\n\n### List\n\n- Store recent context separately from durable facts\n- Rank retrieved memories before injecting them\n- Expire stale memories when they stop being useful\n\n### Quote\n\n> Good memory systems reduce noise before they add context.\n\n### Code\n\nInline code example: `memory.write()`\n\n```ts\nconst memories = await memory.search({\n  query: \"user preferences\",\n  limit: 5,\n});\n```\n\n## Long-term memory\n\nLong-term memory stores durable user facts, decisions, and reusable task context.\n\n## Retrieval patterns\n\nMost production systems need retrieval, ranking, and write policies to avoid noisy context.",
-                            'author' => ['id' => 1, 'name' => 'Amit Sharma'],
+                            'content' => 'Legacy fallback content that should not be used when HTML is present.',
+                            'full_article_html' => '<p>Agent memory is one of the most misunderstood parts of applied AI systems.</p><h2>Short-term memory</h2><p>Short-term memory usually refers to conversation context and recent working state.</p><pre><code class="language-ts">const memories = await memory.search({ query: "user preferences", limit: 5 });</code></pre><p>Most production systems need retrieval, ranking, and write policies to avoid noisy context.</p>',
+                            'full_article_delta' => '{"ops":[{"insert":"Agent memory is one of the most misunderstood parts of applied AI systems."}]}',
+                            'faq' => '[{"question":"How should I structure agent memory?","answer_markdown":"## Start simple\n\nUse short-term memory first, then add retrieval.\n\n- Keep write rules explicit\n- Rank results before injection"},{"question":"When should I add retrieval?","answer":"Add retrieval when important context no longer fits reliably in the active conversation window."}]',
+                            'author' => ['id' => '1', 'name' => 'Amit Sharma'],
                             'featured_image' => '/media/posts/ai-agent-memory-hero.jpg',
                             'featured_media' => [
-                                'id' => 55,
+                                'id' => '55',
                                 'ulid' => '01JZ8Y8A6P8D2D7R5Y3V9K1M2N',
+                                'original_filename' => 'ai-agent-memory-hero.jpg',
                                 'mime_type' => 'image/jpeg',
-                                'width' => 1600,
-                                'height' => 900,
+                                'source_type' => 'upload',
+                                'source_url' => 'https://source.example/ai-agent-memory-hero.jpg',
+                                'attribution_text' => 'Wide Web Blog',
+                                'file_size_bytes' => '120000',
+                                'width' => '1600',
+                                'height' => '900',
                                 'alt_text' => 'Abstract diagram showing how AI agents store and retrieve memory',
                                 'caption' => 'AI agent memory systems need retrieval discipline, not just bigger context windows.',
                                 'url' => '/media/posts/ai-agent-memory-hero.jpg',
+                                'status' => 'ready',
+                                'usage_count' => '1',
+                                'usage' => [],
+                                'created_at' => '2026-06-14T10:00:00.000000Z',
+                                'updated_at' => '2026-06-20T08:30:00.000000Z',
                             ],
-                            'category' => ['id' => 7, 'name' => 'AI Agents', 'slug' => 'ai-agents'],
-                            'template' => [
-                                'id' => 3,
-                                'name' => 'Tutorial',
-                                'slug' => 'tutorial',
-                            ],
-                            'tags' => [
-                                ['id' => 11, 'name' => 'Memory', 'slug' => 'memory'],
-                                ['id' => 12, 'name' => 'Retrieval', 'slug' => 'retrieval'],
-                            ],
+                            'category' => ['id' => '7', 'name' => 'AI Agents', 'slug' => 'ai-agents'],
+                            'tags' => '["Memory","Retrieval"]',
                             'seo' => [
+                                'id' => 'seo-1',
+                                'seoable_type' => 'post',
+                                'seoable_id' => '101',
                                 'meta_title' => 'How AI Agent Memory Works',
                                 'meta_description' => 'Understand short-term memory, long-term memory, and retrieval patterns for AI agents in production.',
                                 'canonical_url' => 'https://service.widewebblog.com/posts/how-ai-agent-memory-works/',
@@ -65,24 +73,28 @@ class ArticleDetailPageTest extends TestCase
                                 'robots_follow' => true,
                                 'og_title' => 'How AI Agent Memory Works',
                                 'og_description' => 'A practical guide to memory design for AI agents.',
-                                'og_image' => [
-                                    'id' => 55,
+                                'og_image_media' => [
+                                    'id' => '55',
                                     'ulid' => '01JZ8Y8A6P8D2D7R5Y3V9K1M2N',
+                                    'original_filename' => 'ai-agent-memory-hero.jpg',
                                     'mime_type' => 'image/jpeg',
-                                    'width' => 1600,
-                                    'height' => 900,
                                     'alt_text' => 'Abstract diagram showing how AI agents store and retrieve memory',
                                     'caption' => 'AI agent memory systems need retrieval discipline, not just bigger context windows.',
+                                    'alt_text' => 'Abstract diagram showing how AI agents store and retrieve memory',
                                     'url' => '/media/posts/ai-agent-memory-hero.jpg',
                                 ],
                                 'schema_type' => 'TechArticle',
+                                'schema_payload' => [],
+                                'focus_keyword' => 'agent memory',
+                                'created_at' => '2026-06-14T10:00:00.000000Z',
+                                'updated_at' => '2026-06-20T08:30:00.000000Z',
                             ],
                             'related_posts' => [
                                 [
-                                    'id' => 102,
+                                    'id' => '102',
                                     'title' => 'Agent Context Windows Explained',
                                     'slug' => 'agent-context-windows-explained',
-                                    'excerpt' => 'Why larger context windows help less than most teams expect.',
+                                    'short_description' => 'Why larger context windows help less than most teams expect.',
                                     'canonical_url' => 'https://service.widewebblog.com/posts/agent-context-windows-explained/',
                                     'published_at' => '2026-06-13T09:00:00.000000Z',
                                     'updated_at' => '2026-06-18T10:15:00.000000Z',
@@ -90,26 +102,36 @@ class ArticleDetailPageTest extends TestCase
                                     'read_time' => '5 min read',
                                     'featured_image' => '/media/posts/context-windows.jpg',
                                     'featured_media' => [
-                                        'id' => 56,
+                                        'id' => '56',
                                         'ulid' => '01JZ8YB8M2X7F3P4Q6S8T1U2V3',
+                                        'original_filename' => 'context-windows.jpg',
                                         'mime_type' => 'image/jpeg',
-                                        'width' => 1600,
-                                        'height' => 900,
+                                        'source_type' => 'upload',
+                                        'source_url' => 'https://source.example/context-windows.jpg',
+                                        'attribution_text' => 'Wide Web Blog',
+                                        'file_size_bytes' => '110000',
+                                        'width' => '1600',
+                                        'height' => '900',
                                         'alt_text' => 'Visual explaining LLM context windows',
                                         'caption' => null,
                                         'url' => '/media/posts/context-windows.jpg',
+                                        'status' => 'ready',
+                                        'usage_count' => '1',
+                                        'usage' => [],
+                                        'created_at' => '2026-06-13T09:00:00.000000Z',
+                                        'updated_at' => '2026-06-18T10:15:00.000000Z',
                                     ],
                                     'author' => [
-                                        'id' => 1,
+                                        'id' => '1',
                                         'name' => 'Amit Sharma',
                                     ],
                                     'category' => [
-                                        'id' => 7,
+                                        'id' => '7',
                                         'name' => 'AI Agents',
                                         'slug' => 'ai-agents',
                                     ],
-                                    'tags' => [],
-                                    'seo' => null,
+                                    'tags' => '',
+                                    'seo' => [],
                                 ],
                             ],
                             'schema' => [
@@ -121,47 +143,6 @@ class ArticleDetailPageTest extends TestCase
                                 'publisher' => [
                                     '@type' => 'Organization',
                                     'url' => 'https://service.widewebblog.com/',
-                                ],
-                            ],
-                            'blocks' => [
-                                [
-                                    'block_type' => 'heading',
-                                    'content_markdown' => '## ## Structured Overview',
-                                    'settings' => ['level' => 2],
-                                ],
-                                [
-                                    'block_type' => 'paragraph',
-                                    'content_markdown' => "This section comes from structured blocks.\n\n- First point\n- Second point",
-                                ],
-                                [
-                                    'block_type' => 'callout',
-                                    'content_markdown' => 'Use a human review step before publishing.',
-                                    'settings' => [
-                                        'title' => 'Editorial Guardrail',
-                                        'tone' => 'warning',
-                                    ],
-                                ],
-                                [
-                                    'block_type' => 'code',
-                                    'content_markdown' => "```ts\nmemory.write({ scope: 'session' })\n```",
-                                    'settings' => [
-                                        'language' => 'ts',
-                                        'label' => 'Example',
-                                    ],
-                                ],
-                                [
-                                    'block_type' => 'faq',
-                                    'title' => 'Frequently Asked Questions',
-                                    'settings' => ['items' => [
-                                        [
-                                            'question' => 'How should I structure agent memory?',
-                                            'answer_markdown' => "## Start simple\n\nUse short-term memory first, then add retrieval.\n\n- Keep write rules explicit\n- Rank results before injection",
-                                        ],
-                                        [
-                                            'question' => 'When should I add retrieval?',
-                                            'answer' => 'Add retrieval when important context no longer fits reliably in the active conversation window.',
-                                        ],
-                                    ]],
                                 ],
                             ],
                         ],
@@ -189,18 +170,13 @@ class ArticleDetailPageTest extends TestCase
         $response->assertSee('<meta property="og:url" content="https://widewebblog.com/posts/how-ai-agent-memory-works/">', false);
         $response->assertSee('<meta property="og:image" content="https://media.widewebblog.com/media/posts/ai-agent-memory-hero.jpg">', false);
         $response->assertSee('Amit Sharma');
-        $response->assertSee('Tutorial');
         $response->assertSee('Tags');
-        $response->assertSee('#memory');
-        $response->assertSee('#retrieval');
+        $response->assertSee('Memory');
+        $response->assertSee('Retrieval');
         $response->assertSee('A practical look at short-term memory, long-term memory, retrieval patterns, and why most agent memory systems fail in production.');
-        $response->assertSee('Structured Overview');
-        $response->assertDontSee('## ## Structured Overview', false);
-        $response->assertSee('This section comes from structured blocks.');
-        $response->assertSee('Editorial Guardrail');
-        $response->assertSee('memory.write({ scope: &#039;session&#039; })', false);
-        $response->assertSee('<div class="article-block article-block--callout article-block--callout-warning">', false);
-        $response->assertSee('<div class="article-block article-block--code">', false);
+        $response->assertSee('Short-term memory');
+        $response->assertSee('language-ts', false);
+        $response->assertSee('const memories = await memory.search', false);
         $response->assertSee('src="https://media.widewebblog.com/media/posts/ai-agent-memory-hero.jpg"', false);
         $response->assertSee('"url": "https://widewebblog.com/posts/how-ai-agent-memory-works/"', false);
         $response->assertSee('"mainEntityOfPage": "https://widewebblog.com/posts/how-ai-agent-memory-works/"', false);

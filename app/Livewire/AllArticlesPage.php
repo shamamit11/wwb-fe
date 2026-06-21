@@ -6,6 +6,7 @@ namespace App\Livewire;
 
 use App\Services\BlogContentService;
 use App\Support\MediaUrl;
+use App\Support\PublicApiValue;
 use Carbon\CarbonImmutable;
 use Throwable;
 use Livewire\Component;
@@ -106,17 +107,22 @@ class AllArticlesPage extends Component
     {
         $category = data_get($item, 'category', []);
         $publishedAt = (string) (data_get($item, 'published_at') ?: data_get($item, 'created_at') ?: '');
+        $readTime = (string) data_get($item, 'read_time', '');
+
+        if ($readTime === '' && is_numeric(data_get($item, 'reading_time_minutes'))) {
+            $readTime = (int) data_get($item, 'reading_time_minutes').' min read';
+        }
 
         return [
             'slug' => (string) data_get($item, 'slug', ''),
             'category' => (string) data_get($category, 'name', 'Article'),
             'category_slug' => (string) data_get($category, 'slug', 'all'),
             'title' => (string) data_get($item, 'title', 'Untitled article'),
-            'excerpt' => (string) (data_get($item, 'excerpt') ?: ''),
+            'excerpt' => (string) (data_get($item, 'short_description') ?: data_get($item, 'excerpt') ?: data_get($item, 'description') ?: ''),
             'author' => (string) (data_get($item, 'author.name') ?: data_get($item, 'author', 'Wide Web Blog')),
             'date' => $this->formatDate($publishedAt),
-            'read_time' => (string) (data_get($item, 'read_time') ?: '5 min read'),
-            'image' => MediaUrl::normalize((string) (data_get($item, 'featured_image') ?: data_get($item, 'featured_media.url') ?: '')),
+            'read_time' => $readTime !== '' ? $readTime : '5 min read',
+            'image' => MediaUrl::normalize((string) (data_get($item, 'featured_image') ?: data_get(PublicApiValue::firstArray(data_get($item, 'featured_media')), 'url') ?: '')),
         ];
     }
 

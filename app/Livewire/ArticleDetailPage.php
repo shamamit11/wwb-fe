@@ -6,6 +6,7 @@ namespace App\Livewire;
 
 use App\Services\BlogContentService;
 use App\Support\MediaUrl;
+use App\Support\PublicApiValue;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Str;
@@ -46,287 +47,131 @@ class ArticleDetailPage extends Component
      */
     private function mapArticle(array $post): array
     {
-        $featuredMedia = data_get($post, 'featured_media', []);
-        $authorName = (string) data_get($post, 'author.name', 'Wide Web Blog');
-        $categoryName = (string) data_get($post, 'category.name', 'Articles');
-        $contentMarkdown = (string) (data_get($post, 'content_markdown') ?: data_get($post, 'content') ?: '');
+        $featuredMedia = PublicApiValue::firstArray(data_get($post, 'featured_media'));
+        $faq = $this->normalizeFaq(data_get($post, 'faq'));
 
         return [
             'slug' => (string) data_get($post, 'slug', ''),
             'title' => (string) data_get($post, 'title', 'Untitled article'),
-            'excerpt' => (string) data_get($post, 'excerpt', ''),
-            'category' => $categoryName,
+            'excerpt' => (string) (data_get($post, 'short_description') ?: data_get($post, 'excerpt') ?: data_get($post, 'description') ?: ''),
+            'category' => (string) data_get($post, 'category.name', 'Articles'),
             'category_slug' => (string) data_get($post, 'category.slug', ''),
-            'author' => $authorName,
-            'author_role' => (string) data_get($post, 'template.name', 'Editorial Team'),
+            'author' => (string) data_get($post, 'author.name', 'Wide Web Blog'),
+            'author_role' => '',
             'date' => $this->formatDate((string) data_get($post, 'published_at', '')),
-            'read_time' => (string) (data_get($post, 'read_time') ?: '5 min read'),
+            'read_time' => $this->resolveReadTime($post),
             'image' => MediaUrl::normalize((string) (data_get($post, 'featured_image') ?: data_get($featuredMedia, 'url') ?: '')),
             'image_alt' => (string) (data_get($featuredMedia, 'alt_text') ?: data_get($post, 'title', '')),
             'caption' => (string) data_get($featuredMedia, 'caption', ''),
-            'tags' => array_values(array_map(
-                static fn (array $tag): string => '#'.Str::of((string) (data_get($tag, 'slug') ?: data_get($tag, 'name', '')))
-                    ->lower()
-                    ->slug('-'),
-                array_filter(
-                    data_get($post, 'tags', []),
-                    static fn (mixed $tag): bool => is_array($tag) && filled(data_get($tag, 'name')),
-                ),
-            )),
-            'body_html' => $this->renderMarkdown($contentMarkdown),
-            'sections' => $sections = $this->buildSections(data_get($post, 'blocks', [])),
-            'has_content_sections' => collect($sections)->contains(static fn (array $section): bool => ($section['type'] ?? null) === 'section'),
+            'tags' => $this->normalizeTags(data_get($post, 'tags')),
+            'body_html' => $this->resolveBodyHtml($post),
+            'faq_items' => $faq['items'],
+            'faq_html' => $faq['html'],
         ];
     }
 
     /**
-     * @param  mixed  $blocks
-     * @return array<int, array<string, mixed>>
+     * @param  mixed  $faq
+     * @return array{items: array<int, array<string, mixed>>, html: string}
      */
-    private function buildSections(mixed $blocks): array
+    private function normalizeFaq(mixed $faq): array
     {
-        if (! is_array($blocks)) {
-            return [];
-        }
+        $list = PublicApiValue::listValue($faq);
+        $items = array_values(array_filter(array_map(
+            fn (mixed $item, int $index): ?array => $this->mapFaqItem($item, $index),
+            $list,
+            array_keys($list),
+        )));
 
-        $mappedSections = [];
-        $currentSection = null;
-
-        foreach ($blocks as $block) {
-            if (! is_array($block)) {
-                continue;
-            }
-
-            $blockType = Str::lower(trim((string) (data_get($block, 'block_type') ?: data_get($block, 'type') ?: '')));
-
-            if ($blockType === 'heading') {
-                if ($currentSection !== null && $currentSection['blocks'] !== []) {
-                    $mappedSections[] = $currentSection;
-                }
-
-                $title = $this->extractHeadingText((string) data_get($block, 'content_markdown', ''));
-
-                $currentSection = [
-                    'type' => 'section',
-                    'title' => $title,
-                    'level' => max(2, (int) data_get($block, 'settings.level', 2)),
-                    'blocks' => [],
-                    'variant' => $this->sectionVariant($title),
-                ];
-
-                continue;
-            }
-
-            if ($blockType !== 'faq') {
-                $mappedBlock = $this->mapSectionBlock($blockType, $block);
-
-                if ($mappedBlock === null) {
-                    continue;
-                }
-
-                if ($currentSection === null) {
-                    $currentSection = [
-                        'type' => 'section',
-                        'title' => '',
-                        'level' => 2,
-                        'blocks' => [],
-                        'variant' => 'standard',
-                    ];
-                }
-
-                $currentSection['blocks'][] = $mappedBlock;
-                continue;
-            }
-
-            if ($currentSection !== null && $currentSection['blocks'] !== []) {
-                $mappedSections[] = $currentSection;
-                $currentSection = null;
-            }
-
-            $items = data_get($block, 'settings.items')
-                ?: data_get($block, 'data.items')
-                ?: data_get($block, 'content.items')
-                ?: data_get($block, 'faqs');
-
-            if (! is_array($items)) {
-                continue;
-            }
-
-            $mappedItems = array_map(function (mixed $item, int $index): ?array {
-                if (! is_array($item)) {
-                    return null;
-                }
-
-                $question = $this->cleanQuestion((string) (data_get($item, 'question') ?: data_get($item, 'title') ?: data_get($item, 'label') ?: ''));
-                $answer = (string) (data_get($item, 'answer_markdown')
-                    ?: data_get($item, 'answer')
-                    ?: data_get($item, 'content_markdown')
-                    ?: data_get($item, 'content')
-                    ?: data_get($item, 'body')
-                    ?: data_get($item, 'description')
-                    ?: '');
-
-                if ($question === '' || trim($answer) === '') {
-                    return null;
-                }
-
-                return [
-                    'question' => $question,
-                    'answer_html' => $this->renderMarkdown($answer),
-                    'open' => $index === 0,
-                ];
-            }, $items, array_keys($items));
-
-            $mappedItems = array_values(array_filter(
-                $mappedItems,
-                static fn (?array $item): bool => is_array($item) && $item['answer_html'] !== '',
-            ));
-
-            if ($mappedItems === []) {
-                continue;
-            }
-
-            $mappedSections[] = [
-                'type' => 'faq',
-                'title' => $this->extractHeadingText((string) (data_get($block, 'title') ?: data_get($block, 'heading') ?: 'Frequently Asked Questions')),
-                'items' => $mappedItems,
-            ];
-        }
-
-        if ($currentSection !== null && $currentSection['blocks'] !== []) {
-            $mappedSections[] = $currentSection;
-        }
-
-        return $mappedSections;
-    }
-
-    /**
-     * @param  array<string, mixed>  $block
-     * @return array<string, mixed>|null
-     */
-    private function mapSectionBlock(string $blockType, array $block): ?array
-    {
-        $content = (string) (data_get($block, 'content_markdown') ?: data_get($block, 'content') ?: '');
-
-        return match ($blockType) {
-            'paragraph' => $this->mapHtmlBlock('paragraph', $content),
-            'list' => $this->mapHtmlBlock('list', $content),
-            'quote' => $this->mapQuoteBlock($block, $content),
-            'callout' => $this->mapCalloutBlock($block, $content),
-            'code' => $this->mapCodeBlock($block, $content),
-            'image' => $this->mapImageBlock($block),
-            default => null,
-        };
+        return [
+            'items' => $items,
+            'html' => $items === [] ? $this->renderFlexibleContent(PublicApiValue::stringValue($faq)) : '',
+        ];
     }
 
     /**
      * @return array<string, mixed>|null
      */
-    private function mapHtmlBlock(string $type, string $content): ?array
+    private function mapFaqItem(mixed $item, int $index): ?array
     {
-        $html = $this->renderMarkdown($content);
+        if (! is_array($item)) {
+            return null;
+        }
 
-        if ($html === '') {
+        $question = $this->cleanQuestion((string) (data_get($item, 'question') ?: data_get($item, 'title') ?: data_get($item, 'label') ?: ''));
+        $answer = (string) (data_get($item, 'answer_html')
+            ?: data_get($item, 'answer_markdown')
+            ?: data_get($item, 'answer')
+            ?: data_get($item, 'content_markdown')
+            ?: data_get($item, 'content')
+            ?: data_get($item, 'body')
+            ?: data_get($item, 'description')
+            ?: '');
+        $answerHtml = $this->renderFlexibleContent($answer);
+
+        if ($question === '' || $answerHtml === '') {
             return null;
         }
 
         return [
-            'type' => $type,
-            'html' => $html,
+            'question' => $question,
+            'answer_html' => $answerHtml,
+            'open' => $index === 0,
         ];
     }
 
     /**
-     * @param  array<string, mixed>  $block
-     * @return array<string, mixed>|null
+     * @param  mixed  $postTags
+     * @return array<int, string>
      */
-    private function mapQuoteBlock(array $block, string $content): ?array
+    private function normalizeTags(mixed $postTags): array
     {
-        $html = $this->renderMarkdown($content);
+        $tagObjects = array_values(array_filter(array_map(
+            static fn (mixed $tag): string => is_array($tag)
+                ? (string) (data_get($tag, 'name') ?: data_get($tag, 'slug') ?: '')
+                : '',
+            PublicApiValue::listValue($postTags),
+        )));
 
-        if ($html === '') {
-            return null;
+        if ($tagObjects !== []) {
+            return $tagObjects;
         }
 
-        return [
-            'type' => 'quote',
-            'html' => $html,
-            'citation' => trim((string) (data_get($block, 'settings.citation') ?: data_get($block, 'settings.attribution') ?: '')),
-        ];
+        return array_values(array_filter(PublicApiValue::stringList($postTags)));
     }
 
     /**
-     * @param  array<string, mixed>  $block
-     * @return array<string, mixed>|null
+     * @param  array<string, mixed>  $post
      */
-    private function mapCalloutBlock(array $block, string $content): ?array
+    private function resolveBodyHtml(array $post): string
     {
-        $html = $this->renderMarkdown($content);
+        $html = PublicApiValue::stringValue(data_get($post, 'full_article_html'));
 
-        if ($html === '') {
-            return null;
+        if ($html !== '') {
+            return $html;
         }
 
-        return [
-            'type' => 'callout',
-            'html' => $html,
-            'title' => trim((string) (data_get($block, 'settings.title') ?: data_get($block, 'settings.heading') ?: 'Key Insight')),
-            'tone' => Str::lower(trim((string) (data_get($block, 'settings.tone') ?: data_get($block, 'settings.variant') ?: 'insight'))),
-        ];
+        return $this->renderFlexibleContent((string) (data_get($post, 'content') ?: data_get($post, 'description') ?: ''));
     }
 
     /**
-     * @param  array<string, mixed>  $block
-     * @return array<string, mixed>|null
+     * @param  array<string, mixed>  $item
      */
-    private function mapCodeBlock(array $block, string $content): ?array
+    private function resolveReadTime(array $item): string
     {
-        $language = trim((string) data_get($block, 'settings.language', ''));
-        $code = trim($content);
+        $explicit = PublicApiValue::stringValue(data_get($item, 'read_time'));
 
-        if (preg_match('/^```([a-zA-Z0-9_-]+)?\n(?P<code>.*)\n```$/s', $code, $matches) === 1) {
-            $language = $language !== '' ? $language : trim((string) ($matches[1] ?? ''));
-            $code = trim((string) ($matches['code'] ?? ''));
+        if ($explicit !== '') {
+            return $explicit;
         }
 
-        if ($code === '') {
-            return null;
+        $minutes = data_get($item, 'reading_time_minutes');
+
+        if (is_numeric($minutes) && (int) $minutes > 0) {
+            return (int) $minutes.' min read';
         }
 
-        return [
-            'type' => 'code',
-            'code' => $code,
-            'language' => $language,
-            'label' => trim((string) (data_get($block, 'settings.label') ?: data_get($block, 'settings.title') ?: '')),
-        ];
-    }
-
-    /**
-     * @param  array<string, mixed>  $block
-     * @return array<string, mixed>|null
-     */
-    private function mapImageBlock(array $block): ?array
-    {
-        $src = MediaUrl::normalize((string) (
-            data_get($block, 'settings.url')
-            ?: data_get($block, 'settings.src')
-            ?: data_get($block, 'settings.image_url')
-            ?: data_get($block, 'url')
-            ?: data_get($block, 'image_url')
-            ?: data_get($block, 'content')
-            ?: ''
-        ));
-
-        if ($src === '') {
-            return null;
-        }
-
-        return [
-            'type' => 'image',
-            'src' => $src,
-            'alt' => trim((string) (data_get($block, 'settings.alt') ?: data_get($block, 'settings.alt_text') ?: 'Article image')),
-            'caption' => trim((string) (data_get($block, 'settings.caption') ?: data_get($block, 'settings.description') ?: '')),
-        ];
+        return '5 min read';
     }
 
     /**
@@ -344,8 +189,8 @@ class ArticleDetailPage extends Component
                 'slug' => (string) data_get($item, 'slug', ''),
                 'title' => (string) data_get($item, 'title', 'Untitled article'),
                 'category' => (string) data_get($item, 'category.name', 'Article'),
-                'read_time' => (string) (data_get($item, 'read_time') ?: '5 min read'),
-                'image' => MediaUrl::normalize((string) (data_get($item, 'featured_image') ?: data_get($item, 'featured_media.url') ?: '')),
+                'read_time' => $this->resolveReadTime($item),
+                'image' => MediaUrl::normalize((string) (data_get($item, 'featured_image') ?: data_get(PublicApiValue::firstArray(data_get($item, 'featured_media')), 'url') ?: '')),
             ],
             array_filter($items, static fn (mixed $item): bool => is_array($item) && filled(data_get($item, 'slug'))),
         ));
@@ -357,15 +202,7 @@ class ArticleDetailPage extends Component
      */
     private function extractSidebarTopics(array $post): array
     {
-        $tags = array_values(array_map(
-            static fn (array $tag): string => '#'.Str::of((string) (data_get($tag, 'slug') ?: data_get($tag, 'name', '')))
-                ->lower()
-                ->slug('-'),
-            array_filter(
-                data_get($post, 'tags', []),
-                static fn (mixed $tag): bool => is_array($tag) && filled(data_get($tag, 'name')),
-            ),
-        ));
+        $tags = $this->normalizeTags(data_get($post, 'tags', []));
 
         if ($tags !== []) {
             return $tags;
@@ -393,6 +230,21 @@ class ArticleDetailPage extends Component
         }
     }
 
+    private function renderFlexibleContent(string $content): string
+    {
+        $trimmed = trim($content);
+
+        if ($trimmed === '') {
+            return '';
+        }
+
+        if ($this->looksLikeHtml($trimmed)) {
+            return $trimmed;
+        }
+
+        return $this->renderMarkdown($trimmed);
+    }
+
     private function renderMarkdown(string $content): string
     {
         $trimmed = trim($this->normalizeMarkdown($content));
@@ -407,15 +259,6 @@ class ArticleDetailPage extends Component
         return is_string($normalized) ? $normalized : trim($content);
     }
 
-    private function extractHeadingText(string $content): string
-    {
-        $normalized = $this->normalizeMarkdown($content);
-        $firstLine = trim(Str::before($normalized, "\n"));
-        $withoutHashes = preg_replace('/^#{1,6}\s*/', '', $firstLine);
-
-        return is_string($withoutHashes) ? trim($withoutHashes) : trim($firstLine);
-    }
-
     private function cleanQuestion(string $question): string
     {
         $cleaned = preg_replace('/^#{1,6}\s*/', '', trim($question));
@@ -423,16 +266,8 @@ class ArticleDetailPage extends Component
         return is_string($cleaned) ? trim($cleaned) : trim($question);
     }
 
-    private function sectionVariant(string $title): string
+    private function looksLikeHtml(string $content): bool
     {
-        $normalized = Str::lower($title);
-
-        return match (true) {
-            Str::contains($normalized, 'quick tl;dr') => 'summary',
-            Str::contains($normalized, 'checklist') => 'checklist',
-            Str::contains($normalized, 'recommended tools') => 'recommendations',
-            default => 'standard',
-        };
+        return preg_match('/<\s*[a-zA-Z][^>]*>/', $content) === 1;
     }
-
 }
