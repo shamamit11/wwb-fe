@@ -30,7 +30,7 @@ final class PublicSiteUrl
         $query = parse_url($resolved, PHP_URL_QUERY);
         $fragment = parse_url($resolved, PHP_URL_FRAGMENT);
 
-        $normalized = rtrim($publicOrigin, '/').$path;
+        $normalized = rtrim($publicOrigin, '/').self::normalizePath($path);
 
         if (is_string($query) && $query !== '') {
             $normalized .= '?'.$query;
@@ -41,6 +41,27 @@ final class PublicSiteUrl
         }
 
         return $normalized;
+    }
+
+    private static function normalizePath(string $path): string
+    {
+        if ($path === '' || $path === '/') {
+            return $path;
+        }
+
+        $trimmed = trim($path, '/');
+
+        if ($trimmed === '') {
+            return $path;
+        }
+
+        $segments = explode('/', $trimmed);
+
+        if (count($segments) !== 1) {
+            return $path;
+        }
+
+        return '/articles/'.$segments[0].'/';
     }
 
     /**
