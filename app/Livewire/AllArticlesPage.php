@@ -8,6 +8,7 @@ use App\Services\BlogContentService;
 use App\Support\MediaUrl;
 use App\Support\PublicApiValue;
 use Carbon\CarbonImmutable;
+use Livewire\Attributes\Validate;
 use Throwable;
 use Livewire\Component;
 
@@ -33,8 +34,22 @@ class AllArticlesPage extends Component
 
     public bool $hasMore = false;
 
+    /** @var array<string, mixed> */
+    public array $newsletterSection = [];
+
+    #[Validate('required|email|max:255')]
+    public string $newsletterEmail = '';
+
+    public bool $newsletterToastVisible = false;
+
+    public string $newsletterToastType = 'success';
+
+    public string $newsletterToastMessage = 'Thank you for subscribing.';
+
     public function mount(BlogContentService $content, ?string $category = null, ?string $pageTitle = null, ?string $pageDescription = null): void
     {
+        $this->newsletterSection = $this->defaultNewsletterSection();
+
         try {
             $this->filters = $content->articleFilters();
         } catch (Throwable) {
@@ -55,6 +70,28 @@ class AllArticlesPage extends Component
 
         if (filled($pageDescription)) {
             $this->pageDescription = (string) $pageDescription;
+        }
+
+        if ($this->activeCategory === 'all') {
+            try {
+                $homepage = $content->homepage();
+            } catch (Throwable) {
+                $homepage = [];
+            }
+
+            $resolved = is_array(data_get($homepage, 'data')) ? data_get($homepage, 'data') : $homepage;
+            $newsletter = is_array(data_get($resolved, 'newsletter_section')) ? data_get($resolved, 'newsletter_section') : [];
+
+            if (is_array($resolved)) {
+                $this->newsletterSection = [
+                    'enabled' => true,
+                    'title' => $this->stringOrDefault(data_get($newsletter, 'title'), $this->newsletterSection['title']),
+                    'description' => $this->stringOrDefault(data_get($newsletter, 'description'), $this->newsletterSection['description']),
+                    'placeholder' => $this->newsletterSection['placeholder'],
+                    'button' => $this->newsletterSection['button'],
+                    'note' => $this->newsletterSection['note'],
+                ];
+            }
         }
 
         if (! collect($this->filters)->contains(fn (array $filter): bool => $filter['slug'] === $this->activeCategory)) {
@@ -97,6 +134,65 @@ class AllArticlesPage extends Component
         $this->articles = $append ? $this->articles : [];
         $this->totalFiltered = count($this->articles);
         $this->hasMore = false;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function defaultNewsletterSection(): array
+    {
+        return [
+            'enabled' => true,
+            'title' => 'Stay Ahead of the Curve',
+            'description' => 'Join 25,000+ digital architects. Get one technical, high-signal editorial guide every week directly in your inbox.',
+            'placeholder' => 'Enter your email',
+            'button' => 'Subscribe',
+            'note' => 'High-quality insights. No spam. Unsubscribe anytime.',
+        ];
+    }
+
+    public function subscribe(BlogContentService $content): void
+    {
+        $this->validateOnly('newsletterEmail');
+        $this->resetErrorBag('newsletterEmail');
+        $this->newsletterToastVisible = false;
+
+        try {
+            $response = $content->subscribeToNewsletter([
+                'email' => $this->newsletterEmail,
+                'source' => 'articles',
+                'metadata' => [
+                    'source:fe',
+                    'route:articles',
+                ],
+            ]);
+        } catch (Throwable) {
+            $this->newsletterToastType = 'error';
+            $this->newsletterToastMessage = 'We could not subscribe you right now. Please try again shortly.';
+            $this->newsletterToastVisible = true;
+
+            return;
+        }
+
+        $message = data_get($response, 'data.message');
+
+        $this->newsletterToastType = 'success';
+        $this->newsletterToastMessage = is_string($message) && trim($message) !== ''
+            ? trim($message)
+            : 'Thank you for subscribing.';
+        $this->newsletterToastVisible = true;
+        $this->newsletterEmail = '';
+    }
+
+    private function stringOrDefault(mixed $value, string $default): string
+    {
+        if (! is_string($value)) {
+            return $default;
+        }
+
+        $trimmed = trim($value);
+
+        return $trimmed !== '' ? $trimmed : $default;
     }
 
     /**

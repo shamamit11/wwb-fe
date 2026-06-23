@@ -8,10 +8,9 @@ return [
     'description' => 'Authority-led insights and practical tutorials on AI, SEO, blogging, and digital growth for modern digital creators.',
     'google_site_verification' => env('GOOGLE_SITE_VERIFICATION'),
     'navigation' => [
-        ['label' => 'Home', 'href' => '/', 'key' => 'home'],
-        ['label' => 'All Articles', 'href' => '/articles', 'key' => 'articles'],
-        ['label' => 'About Us', 'href' => '/about', 'key' => 'about'],
-        ['label' => 'Contact Us', 'href' => '/contact', 'key' => 'contact'],
+        // ['label' => 'Home', 'href' => '/', 'key' => 'home'],
+        // ['label' => 'About Us', 'href' => '/about', 'key' => 'about'],
+        // ['label' => 'Contact Us', 'href' => '/contact', 'key' => 'contact'],
     ],
     'footer' => [
         'brand_name' => 'Wide Web Blog',

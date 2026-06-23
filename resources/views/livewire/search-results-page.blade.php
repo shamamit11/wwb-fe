@@ -3,7 +3,7 @@
         <div class="rounded-2xl border border-slate-200 bg-white/90 p-8 shadow-sm backdrop-blur">
             <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
                 <div class="max-w-3xl">
-                    <span class="text-xs font-semibold uppercase tracking-[0.22em] text-[#c2410c]">Search</span>
+                    <span class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--brand-accent)]">Search</span>
                     <h1 class="mt-3 text-4xl font-extrabold tracking-tight text-slate-950 md:text-5xl">
                         @if ($query !== '')
                             Results for “{{ $query }}”
@@ -27,8 +27,8 @@
                             name="q"
                             value="{{ $query }}"
                             placeholder="Search articles, topics, or authors"
-                            class="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-5 py-3 text-base text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-[#c2410c] focus:ring-4 focus:ring-orange-100">
-                        <button type="submit" class="rounded-xl bg-[#141b2b] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#c2410c]">
+                            class="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-5 py-3 text-base text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-[var(--brand-accent)] focus:ring-4 focus:ring-orange-100">
+                        <button type="submit" class="rounded-xl bg-[var(--brand-ink)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--brand-accent)]">
                             Search
                         </button>
                     </div>
@@ -46,7 +46,7 @@
                 <p class="mt-3 text-base leading-7 text-slate-600">
                     Try a broader phrase or browse the article archive instead.
                 </p>
-                <a href="{{ route('articles.index') }}" class="mt-6 inline-flex rounded-xl bg-[#141b2b] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#c2410c]">
+                <a href="{{ route('home') }}" class="mt-6 inline-flex rounded-xl bg-[var(--brand-ink)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--brand-accent)]">
                     View All Articles
                 </a>
             </div>
@@ -58,7 +58,7 @@
                             <img src="{{ $article['image'] }}" alt="{{ $article['title'] }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
                         </div>
                         <div class="flex flex-1 flex-col p-6">
-                            <span class="text-xs font-semibold uppercase tracking-[0.22em] text-[#c2410c]">{{ $article['category'] }}</span>
+                            <span class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--brand-accent)]">{{ $article['category'] }}</span>
                             <h2 class="mt-4 text-2xl font-bold leading-tight tracking-tight text-slate-950">
                                 {{ $article['title'] }}
                             </h2>

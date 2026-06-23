@@ -28,8 +28,8 @@
         @endif
         @livewireStyles
     </head>
-    <body class="min-h-screen bg-white font-sans text-[#141b2b] antialiased selection:bg-orange-100 selection:text-[#7c2d12]">
-        <div class="min-h-screen bg-[radial-gradient(circle_at_top_right,_rgba(251,146,60,0.12),_transparent_30%),linear-gradient(180deg,_#ffffff_0%,_#fffaf5_48%,_#ffffff_100%)]">
+    <body class="min-h-screen bg-white font-sans text-[var(--brand-ink)] antialiased selection:bg-[var(--brand-accent-soft)] selection:text-[var(--brand-ink)]">
+        <div class="min-h-screen bg-[radial-gradient(circle_at_top_right,_rgba(255,106,26,0.16),_transparent_30%),linear-gradient(180deg,_#ffffff_0%,_#fff7f2_48%,_#ffffff_100%)]">
             <x-site.header :active="$activeNav" />
             {{ $slot }}
             <x-site.footer />

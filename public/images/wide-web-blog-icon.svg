@@ -1,0 +1,16 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Wide Web Blog Icon</title>
+  <desc id="desc">Orange circular icon with a white stylized W representing web connections.</desc>
+  <defs>
+    <linearGradient id="wwbOrange" x1="82" y1="62" x2="430" y2="450" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF6A1A"/>
+      <stop offset="1" stop-color="#F04A14"/>
+    </linearGradient>
+  </defs>
+
+  <circle cx="256" cy="256" r="224" fill="url(#wwbOrange)"/>
+  <path d="M88 168 L160 360 L256 180 L352 360 L424 168" stroke="#FFFFFF" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="88" cy="168" r="34" fill="#FFFFFF"/>
+  <circle cx="256" cy="180" r="34" fill="#FFFFFF"/>
+  <circle cx="424" cy="168" r="34" fill="#FFFFFF"/>
+</svg>

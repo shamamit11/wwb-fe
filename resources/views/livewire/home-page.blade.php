@@ -8,11 +8,11 @@
         <div class="relative z-10 mx-auto w-full max-w-7xl px-6 py-20 lg:px-8">
             <div class="glass-card max-w-2xl rounded-xl p-8 shadow-2xl shadow-slate-900/20 md:p-12 lg:p-16">
                 <span
-                    class="inline-flex rounded-full bg-orange-100 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-[#c2410c]">
+                    class="inline-flex rounded-full bg-orange-100 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">
                     {{ $hero['eyebrow'] }}
                 </span>
                 <h1
-                    class="mt-6 max-w-xl text-4xl font-extrabold leading-tight tracking-tight text-[#141b2b] md:text-6xl">
+                    class="mt-6 max-w-xl text-4xl font-extrabold leading-tight tracking-tight text-[var(--brand-ink)] md:text-6xl">
                     {{ $hero['title'] }}
                 </h1>
                 <p class="mt-6 text-lg leading-8 text-slate-600 md:text-xl">
@@ -20,11 +20,11 @@
                 </p>
                 <div class="mt-8 flex flex-wrap gap-4">
                     <a href="{{ $hero['primary_cta_url'] }}"
-                        class="inline-flex rounded-xl bg-[#c2410c] px-8 py-4 text-sm font-semibold text-white shadow-lg shadow-orange-900/20 transition-all hover:-translate-y-0.5 hover:bg-[#9a3412]">
+                        class="inline-flex rounded-xl bg-[var(--brand-accent)] px-8 py-4 text-sm font-semibold text-white shadow-lg shadow-orange-900/20 transition-all hover:-translate-y-0.5 hover:bg-[var(--brand-accent-strong)]">
                         {{ $hero['primary_cta_label'] }}
                     </a>
                     <a href="{{ $hero['secondary_cta_url'] }}"
-                        class="inline-flex rounded-xl border-2 border-slate-200 bg-white px-8 py-4 text-sm font-semibold text-slate-900 transition-all hover:border-[#c2410c] hover:text-[#c2410c]">
+                        class="inline-flex rounded-xl border-2 border-slate-200 bg-white px-8 py-4 text-sm font-semibold text-slate-900 transition-all hover:border-[var(--brand-accent)] hover:text-[var(--brand-accent)]">
                         {{ $hero['secondary_cta_label'] }}
                     </a>
                 </div>
@@ -42,11 +42,11 @@
                 </div>
                 <div class="hidden gap-2 md:flex">
                     <button type="button"
-                        class="rounded-full border border-slate-200 p-2 transition-colors hover:border-[#c2410c] hover:text-[#c2410c]">
+                        class="rounded-full border border-slate-200 p-2 transition-colors hover:border-[var(--brand-accent)] hover:text-[var(--brand-accent)]">
                         <x-site.icon name="chevron_left" />
                     </button>
                     <button type="button"
-                        class="rounded-full border border-slate-200 p-2 transition-colors hover:border-[#c2410c] hover:text-[#c2410c]">
+                        class="rounded-full border border-slate-200 p-2 transition-colors hover:border-[var(--brand-accent)] hover:text-[var(--brand-accent)]">
                         <x-site.icon name="chevron_right" />
                     </button>
                 </div>
@@ -61,14 +61,14 @@
                             class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105">
                         <div class="absolute left-6 top-6">
                             <span
-                                class="rounded-xl bg-[#c2410c] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white shadow-lg">
+                                class="rounded-xl bg-[var(--brand-accent)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white shadow-lg">
                                 {{ $featuredSection['lead']['category'] }}
                             </span>
                         </div>
                     </div>
                     <div class="flex flex-1 flex-col p-8 md:p-10">
                         <h3
-                            class="text-3xl font-bold leading-tight tracking-tight text-slate-950 transition-colors group-hover:text-[#c2410c]">
+                            class="text-3xl font-bold leading-tight tracking-tight text-slate-950 transition-colors group-hover:text-[var(--brand-accent)]">
                             {{ $featuredSection['lead']['title'] }}
                         </h3>
                         <p class="mt-5 text-base leading-7 text-slate-600">
@@ -77,7 +77,7 @@
                         <div class="mt-auto flex items-center justify-between gap-4 border-t border-slate-200 pt-6">
                             <div class="flex items-center gap-3">
                                 <div
-                                    class="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 text-sm font-bold text-[#c2410c]">
+                                    class="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 text-sm font-bold text-[var(--brand-accent)]">
                                     {{ $featuredSection['lead']['author_initials'] }}
                                 </div>
                                 <span
@@ -98,9 +98,9 @@
                             </div>
                             <div class="p-6">
                                 <span
-                                    class="block text-xs font-semibold uppercase tracking-[0.2em] text-[#c2410c]">{{ $item['category'] }}</span>
+                                    class="block text-xs font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">{{ $item['category'] }}</span>
                                 <h3
-                                    class="mt-3 text-2xl font-semibold leading-tight text-slate-950 transition-colors group-hover:text-[#c2410c]">
+                                    class="mt-3 text-2xl font-semibold leading-tight text-slate-950 transition-colors group-hover:text-[var(--brand-accent)]">
                                     {{ $item['title'] }}
                                 </h3>
                                 <div class="mt-5 flex items-center justify-between gap-4 text-sm text-slate-500">
@@ -123,7 +123,7 @@
                         {{ $guideSection['title'] }}</h2>
                     <p class="mt-4 text-base leading-7 text-slate-600">{{ $guideSection['description'] }}</p>
                 </div>
-                <a href="/articles" class="group inline-flex items-center gap-2 text-sm font-semibold text-[#c2410c]">
+                <a href="/articles" class="group inline-flex items-center gap-2 text-sm font-semibold text-[var(--brand-accent)]">
                     Browse all articles
                     <x-site.icon name="arrow_forward" class="transition-transform group-hover:translate-x-1" />
                 </a>
@@ -139,7 +139,7 @@
                         </div>
                         <div class="flex flex-1 flex-col p-6">
                             <span
-                                class="text-xs font-semibold uppercase tracking-[0.2em] text-[#c2410c]">{{ $guide['category'] }}</span>
+                                class="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">{{ $guide['category'] }}</span>
                             <h3 class="mt-3 text-2xl font-semibold leading-tight text-slate-950">{{ $guide['title'] }}
                             </h3>
                             <p class="mt-4 flex-1 text-base leading-7 text-slate-600">{{ $guide['excerpt'] }}</p>
@@ -169,12 +169,12 @@
                 <div class="flex items-center gap-3">
                     <button type="button" aria-label="Scroll topics left"
                         onclick="const track=this.closest('[data-topic-carousel]').querySelector('[data-topic-track]'); track.scrollBy({ left: -320, behavior: 'smooth' });"
-                        class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition-colors hover:border-[#c2410c] hover:text-[#c2410c]">
+                        class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition-colors hover:border-[var(--brand-accent)] hover:text-[var(--brand-accent)]">
                         <x-site.icon name="chevron_left" class="text-xl" />
                     </button>
                     <button type="button" aria-label="Scroll topics right"
                         onclick="const track=this.closest('[data-topic-carousel]').querySelector('[data-topic-track]'); track.scrollBy({ left: 320, behavior: 'smooth' });"
-                        class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition-colors hover:border-[#c2410c] hover:text-[#c2410c]">
+                        class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition-colors hover:border-[var(--brand-accent)] hover:text-[var(--brand-accent)]">
                         <x-site.icon name="chevron_right" class="text-xl" />
                     </button>
                 </div>
@@ -187,7 +187,7 @@
                         <a href="{{ $topic['href'] }}"
                             class="group flex min-h-55 min-w-55 flex-none snap-start flex-col items-center justify-center rounded-xl border border-slate-200 bg-white px-8 py-10 text-center transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-900/10">
                             <x-site.icon :name="$topic['icon']"
-                                class="mb-5 text-6xl text-[#c2410c] transition-transform group-hover:scale-110" />
+                                class="mb-5 text-6xl text-[var(--brand-accent)] transition-transform group-hover:scale-110" />
                             <span
                                 class="text-base font-semibold tracking-wide text-slate-900">{{ $topic['label'] }}</span>
                         </a>
@@ -200,7 +200,7 @@
     @if ($promoSection['enabled'])
         <section id="resources" class="px-6 py-6 lg:px-8">
             <div
-                class="mx-auto max-w-7xl overflow-hidden rounded-xl bg-[#141b2b] px-8 py-12 text-white shadow-2xl shadow-slate-900/20 lg:px-12">
+                class="mx-auto max-w-7xl overflow-hidden rounded-xl bg-[var(--brand-ink)] px-8 py-12 text-white shadow-2xl shadow-slate-900/20 lg:px-12">
                 <div class="grid items-center gap-12 lg:grid-cols-2">
                     <div>
                         <span
@@ -217,7 +217,7 @@
                             @endforeach
                         </ul>
                         <a href="{{ $promoSection['primary_cta_url'] }}"
-                            class="mt-10 inline-flex rounded-xl bg-[#c2410c] px-8 py-4 text-sm font-semibold text-white shadow-lg shadow-orange-950/30 transition-all hover:scale-[1.01] hover:bg-[#9a3412]">
+                            class="mt-10 inline-flex rounded-xl bg-[var(--brand-accent)] px-8 py-4 text-sm font-semibold text-white shadow-lg shadow-orange-950/30 transition-all hover:scale-[1.01] hover:bg-[var(--brand-accent-strong)]">
                             {{ $promoSection['primary_cta_label'] }}
                         </a>
                     </div>
@@ -261,9 +261,9 @@
                 <form class="mt-10 flex flex-col gap-4 md:flex-row" wire:submit="subscribe">
                     <input type="email" wire:model.blur="newsletterEmail"
                         placeholder="{{ $newsletterSection['placeholder'] }}"
-                        class="min-w-0 flex-1 rounded-2xl border-2 border-slate-200 bg-white px-6 py-4 text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-[#c2410c] focus:ring-4 focus:ring-orange-100">
+                        class="min-w-0 flex-1 rounded-2xl border-2 border-slate-200 bg-white px-6 py-4 text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-[var(--brand-accent)] focus:ring-4 focus:ring-orange-100">
                     <button type="submit"
-                        class="rounded-2xl bg-[#141b2b] px-10 py-4 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-[#c2410c]">
+                        class="rounded-2xl bg-[var(--brand-ink)] px-10 py-4 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-[var(--brand-accent)]">
                         {{ $newsletterSection['button'] }}
                     </button>
                 </form>

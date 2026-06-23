@@ -1,10 +1,10 @@
 <main class="px-6 py-10 lg:px-8 lg:py-14">
     <section class="mx-auto max-w-7xl">
         <div class="flex flex-col gap-6 border-b border-slate-200 pb-10 lg:flex-row lg:items-end lg:justify-between">
-            <div class="max-w-2xl">
+            <div class="w-full">
                 <h1 @class([
                     'font-extrabold tracking-tight text-slate-950',
-                    'text-4xl md:text-6xl' => $activeCategory === 'all',
+                    'text-3xl md:text-5xl lg:text-[3.5rem]' => $activeCategory === 'all',
                     'text-4xl md:text-5xl lg:text-[3.25rem]' => $activeCategory !== 'all',
                 ])>{{ $pageTitle }}</h1>
                 <p class="mt-4 text-lg leading-8 text-slate-600">
@@ -16,12 +16,12 @@
 
         <div class="mt-8 flex flex-wrap gap-3">
             @foreach ($filters as $filter)
-                <a href="{{ $filter['slug'] === 'all' ? route('articles.index') : route('articles.category', ['category' => $filter['slug']]) }}"
+                <a href="{{ $filter['slug'] === 'all' ? route('home') : route('articles.category', ['category' => $filter['slug']]) }}"
                     wire:navigate @class([
                         'rounded-full border px-4 py-2 text-sm font-semibold transition-colors',
-                        'border-[#c2410c] bg-[#c2410c] text-white shadow-sm' =>
+                        'border-[var(--brand-accent)] bg-[var(--brand-accent)] text-white shadow-sm' =>
                             $activeCategory === $filter['slug'],
-                        'border-slate-200 bg-white text-slate-600 hover:border-orange-200 hover:text-[#c2410c]' =>
+                        'border-slate-200 bg-white text-slate-600 hover:border-orange-200 hover:text-[var(--brand-accent)]' =>
                             $activeCategory !== $filter['slug'],
                     ])>
                     {{ $filter['label'] }}
@@ -41,10 +41,10 @@
                         </div>
                         <div class="flex flex-col p-8">
                             <span
-                                class="text-xs font-semibold uppercase tracking-[0.22em] text-[#c2410c]">{{ $leadArticle['category'] }}</span>
+                                class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--brand-accent)]">{{ $leadArticle['category'] }}</span>
                             <h2 class="mt-4 text-3xl font-bold leading-tight tracking-tight text-slate-950">
                                 <a href="{{ route('articles.show', $leadArticle['slug']) }}"
-                                    class="transition-colors hover:text-[#c2410c]">
+                                    class="transition-colors hover:text-[var(--brand-accent)]">
                                     {{ $leadArticle['title'] }}
                                 </a>
                             </h2>
@@ -75,10 +75,10 @@
                         </div>
                         <div class="flex flex-1 flex-col p-6">
                             <span
-                                class="text-xs font-semibold uppercase tracking-[0.22em] text-[#c2410c]">{{ $spotlightArticle['category'] }}</span>
+                                class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--brand-accent)]">{{ $spotlightArticle['category'] }}</span>
                             <h3 class="mt-4 text-3xl font-bold leading-tight tracking-tight text-slate-950">
                                 <a href="{{ route('articles.show', $spotlightArticle['slug']) }}"
-                                    class="transition-colors hover:text-[#c2410c]">
+                                    class="transition-colors hover:text-[var(--brand-accent)]">
                                     {{ $spotlightArticle['title'] }}
                                 </a>
                             </h3>
@@ -107,10 +107,10 @@
                     </div>
                     <div class="flex flex-1 flex-col p-6">
                         <span
-                            class="text-xs font-semibold uppercase tracking-[0.22em] text-[#c2410c]">{{ $article['category'] }}</span>
+                            class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--brand-accent)]">{{ $article['category'] }}</span>
                         <h2 class="mt-4 text-2xl font-bold leading-tight tracking-tight text-slate-950">
                             <a href="{{ route('articles.show', $article['slug']) }}"
-                                class="transition-colors hover:text-[#c2410c]">
+                                class="transition-colors hover:text-[var(--brand-accent)]">
                                 {{ $article['title'] }}
                             </a>
                         </h2>
@@ -135,7 +135,7 @@
         <div class="mt-10 flex flex-col items-center">
             @if ($hasMore)
                 <button type="button" wire:click="loadMore"
-                    class="inline-flex items-center gap-2 rounded-xl bg-[#141b2b] px-8 py-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition-colors hover:bg-[#c2410c]">
+                    class="inline-flex items-center gap-2 rounded-xl bg-[var(--brand-ink)] px-8 py-4 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition-colors hover:bg-[var(--brand-accent)]">
                     <span>Load More Articles</span>
                     <x-site.icon name="keyboard_arrow_down" />
                 </button>
@@ -145,5 +145,44 @@
                 Showing {{ $visibleTotal }} of {{ $totalFiltered }} articles
             </p>
         </div>
+
+        @if ($newsletterSection['enabled'])
+            <section id="newsletter" class="mt-20 border-t border-slate-200 px-2 pt-16">
+                <div class="mx-auto max-w-3xl text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-950 md:text-4xl">
+                        {{ $newsletterSection['title'] }}
+                    </h2>
+                    <p class="mt-5 text-lg leading-8 text-slate-600">{{ $newsletterSection['description'] }}</p>
+
+                    @if ($newsletterToastVisible)
+                        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3200)" x-show="show" x-transition
+                            @class([
+                                'mx-auto mt-8 max-w-xl rounded-2xl border px-5 py-4 text-left text-sm shadow-sm',
+                                'border-emerald-200 bg-emerald-50 text-emerald-900' =>
+                                    $newsletterToastType === 'success',
+                                'border-red-200 bg-red-50 text-red-900' =>
+                                    $newsletterToastType !== 'success',
+                            ])>
+                            {{ $newsletterToastMessage }}
+                        </div>
+                    @endif
+
+                    <form class="mt-10 flex flex-col gap-4 md:flex-row" wire:submit="subscribe">
+                        <input type="email" wire:model.blur="newsletterEmail"
+                            placeholder="{{ $newsletterSection['placeholder'] }}"
+                            class="min-w-0 flex-1 rounded-2xl border-2 border-slate-200 bg-white px-6 py-4 text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-[var(--brand-accent)] focus:ring-4 focus:ring-orange-100">
+                        <button type="submit"
+                            class="rounded-2xl bg-[var(--brand-ink)] px-10 py-4 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-[var(--brand-accent)]">
+                            {{ $newsletterSection['button'] }}
+                        </button>
+                    </form>
+                    @error('newsletterEmail')
+                        <p class="mt-3 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+
+                    <p class="mt-6 text-sm italic text-slate-500">{{ $newsletterSection['note'] }}</p>
+                </div>
+            </section>
+        @endif
     </section>
 </main>

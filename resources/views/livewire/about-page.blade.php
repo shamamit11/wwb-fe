@@ -1,7 +1,7 @@
 <main class="px-6 py-10 lg:px-8 lg:py-14">
     <section class="mx-auto max-w-7xl">
         <div class="mx-auto max-w-4xl text-center">
-            <span class="text-xs font-semibold uppercase tracking-[0.22em] text-[#c2410c]">{{ $story['eyebrow'] }}</span>
+            <span class="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--brand-accent)]">{{ $story['eyebrow'] }}</span>
             <h1 class="mt-4 text-4xl font-extrabold leading-tight tracking-tight text-slate-950 md:text-6xl">
                 {{ $story['title'] }}
             </h1>
@@ -30,7 +30,7 @@
                 @endif
                 @if ($mission['quote'] !== '')
                     <blockquote
-                        class="mt-8 border-l-4 border-[#c2410c] bg-orange-50/60 px-5 py-4 text-xl italic leading-8 text-[#c2410c]">
+                        class="mt-8 border-l-4 border-[var(--brand-accent)] bg-orange-50/60 px-5 py-4 text-xl italic leading-8 text-[var(--brand-accent)]">
                         “{{ $mission['quote'] }}”
                     </blockquote>
                 @endif
@@ -40,7 +40,7 @@
                 <div class="grid gap-4 sm:grid-cols-2">
                     @foreach ($stats as $stat)
                         <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-                            <div class="text-4xl font-extrabold tracking-tight text-[#c2410c]">{{ $stat['value'] }}
+                            <div class="text-4xl font-extrabold tracking-tight text-[var(--brand-accent)]">{{ $stat['value'] }}
                             </div>
                             <div class="mt-2 text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
                                 {{ $stat['label'] }}</div>
@@ -55,14 +55,14 @@
         <section class="mx-auto mt-20 max-w-7xl">
             <div class="text-center">
                 <h2 class="text-4xl font-bold tracking-tight text-slate-950">{{ $valuesSection['title'] }}</h2>
-                <div class="mx-auto mt-4 h-1 w-16 rounded-full bg-[#c2410c]"></div>
+                <div class="mx-auto mt-4 h-1 w-16 rounded-full bg-[var(--brand-accent)]"></div>
             </div>
 
             <div class="mt-10 grid gap-6 md:grid-cols-3">
                 @foreach ($values as $value)
                     <article
                         class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-[#c2410c]">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-[var(--brand-accent)]">
                             <x-site.icon :name="$value['icon']" />
                         </div>
                         <h3 class="mt-5 text-2xl font-bold tracking-tight text-slate-950">{{ $value['title'] }}</h3>
@@ -74,7 +74,7 @@
     @endif
 
     @if ($team !== [])
-        <section class="mx-auto mt-20 max-w-7xl overflow-hidden rounded-2xl bg-[#141b2b]">
+        <section class="mx-auto mt-20 max-w-7xl overflow-hidden rounded-2xl bg-[var(--brand-ink)]">
             <div class="border-b border-white/10 px-8 py-8 md:flex md:items-end md:justify-between lg:px-10">
                 <div class="max-w-2xl">
                     <h2 class="text-4xl font-bold tracking-tight text-white">{{ $teamSection['title'] }}</h2>
@@ -84,7 +84,7 @@
                 </div>
                 @if ($teamSection['primary_cta_label'] !== '' && $teamSection['primary_cta_url'] !== '')
                     <a href="{{ $teamSection['primary_cta_url'] }}"
-                        class="mt-5 inline-flex rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-white transition-colors hover:border-[#c2410c] hover:bg-[#c2410c] md:mt-0">
+                        class="mt-5 inline-flex rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-white transition-colors hover:border-[var(--brand-accent)] hover:bg-[var(--brand-accent)] md:mt-0">
                         {{ $teamSection['primary_cta_label'] }}
                     </a>
                 @endif

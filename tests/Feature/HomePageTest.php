@@ -11,7 +11,7 @@ use Tests\TestCase;
 
 class HomePageTest extends TestCase
 {
-    public function test_the_home_page_renders_the_livewire_marketing_homepage(): void
+    public function test_the_home_page_renders_the_articles_archive_by_default(): void
     {
         config(['services.wideweb_blog.homepage_path' => 'public/home']);
 
@@ -31,19 +31,16 @@ class HomePageTest extends TestCase
         $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertSee('Learn AI, SEO, Blogging, and Digital Growth, One Practical Guide at a Time.');
-        $response->assertSee('Featured Editorial');
-        $response->assertSee('Practical Wisdom for Builders');
         $response->assertSee('All Articles');
-        $response->assertSee('Contact Us');
+        $response->assertSee('Subscribe');
         $response->assertDontSee('href="/resources"', false);
-        $response->assertDontSee('Editorial Guidelines');
-        $response->assertSee('AI Agents');
-        $response->assertSee('aria-label="Scroll topics left"', false);
-        $response->assertSee('aria-label="Scroll topics right"', false);
+        $response->assertDontSee('Contact Us');
+        $response->assertDontSee('href="/about"', false);
+        $response->assertDontSee('href="/articles"', false);
+        $response->assertSee('id="newsletter"', false);
     }
 
-    public function test_the_home_page_resolves_managed_homepage_post_and_category_ids_from_public_data(): void
+    public function test_the_home_page_uses_homepage_api_hero_newsletter_and_seo_copy(): void
     {
         config(['services.wideweb_blog.homepage_path' => 'public/home']);
         config(['services.wideweb_blog.base_url' => 'https://service.widewebblog.com/api/v1']);
@@ -203,24 +200,18 @@ class HomePageTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Practical AI publishing systems for real editorial teams');
-        $response->assertSee('Featured Editorial');
-        $response->assertSee('Recent Articles');
-        $response->assertSee('Explore Core Topics');
-        $response->assertSee('Build better AI-assisted publishing workflows');
+        $response->assertSee('Guides, workflows, and implementation notes for AI-assisted blogging, SEO, and automation.');
         $response->assertSee('Get workflow notes in your inbox');
         $response->assertSee('How AI Agent Memory Works');
-        $response->assertDontSee('Convergence of Generative AI and Design Systems');
-        $response->assertSee('Developer AI');
-        $response->assertSee('aria-label="Scroll topics left"', false);
-        $response->assertSee('aria-label="Scroll topics right"', false);
-        $response->assertSee('src="https://media.widewebblog.com/seed/media/ai-agent-memory-cover.webp"', false);
-        $response->assertSee('href="/articles/how-ai-agent-memory-works"', false);
+        $response->assertSee('Convergence of Generative AI and Design Systems');
+        $response->assertSee('src="https://media.widewebblog.com/seed/media/lead.webp"', false);
+        $response->assertSee('href="http://fe.test/articles/how-ai-agent-memory-works"', false);
         $response->assertSee('<meta property="og:title" content="Wide Web Blog">', false);
         $response->assertSee('<meta name="description" content="Practical guides about AI publishing systems, SEO workflows, and content operations.">', false);
         $response->assertSee('<link rel="canonical" href="http://fe.test">', false);
     }
 
-    public function test_the_home_page_renders_the_current_public_home_endpoint_shape(): void
+    public function test_the_home_page_uses_current_public_home_endpoint_shape_for_archive_copy(): void
     {
         config(['services.wideweb_blog.homepage_path' => 'public/home']);
         config(['services.wideweb_blog.base_url' => 'https://service.widewebblog.com/api/v1']);
@@ -378,24 +369,9 @@ class HomePageTest extends TestCase
         $response->assertOk();
         $response->assertSee('Practical AI publishing systems for real editorial teams');
         $response->assertSee('Guides, workflows, and implementation notes for AI-assisted blogging, SEO, and automation.');
-        $response->assertSee('Read the latest guide');
-        $response->assertSee('Browse AI Articles');
-        $response->assertSee('Featured Editorial');
-        $response->assertSee('Recent Articles');
-        $response->assertSee('Explore Core Topics');
-        $response->assertSee('Build better AI-assisted publishing workflows');
         $response->assertSee('Get workflow notes in your inbox');
-        $response->assertSee('How AI Agent Memory Works');
-        $response->assertSee('Admin User');
-        $response->assertSee('8 min read');
-        $response->assertSee('AI Agents');
-        $response->assertSee('Productivity &amp; Automation', false);
-        $response->assertSee('aria-label="Scroll topics left"', false);
-        $response->assertSee('aria-label="Scroll topics right"', false);
-        $response->assertSee('min-w-[220px]', false);
-        $response->assertSee('text-6xl', false);
-        $response->assertSee('src="https://media.widewebblog.com/seed/media/ai-agent-memory-cover.webp"', false);
-        $response->assertSee('src="https://media.widewebblog.com/current-home-hero.webp"', false);
+        $response->assertSee('text-5xl', false);
+        $response->assertSee('Showing 0 of 0 articles');
         $response->assertSee('<meta property="og:title" content="Wide Web Blog">', false);
         $response->assertSee('<meta name="description" content="Practical guides about AI publishing systems, SEO workflows, and content operations.">', false);
     }
@@ -420,9 +396,9 @@ class HomePageTest extends TestCase
         $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertSee('<meta name="description" content="Learn AI, SEO, blogging, and digital growth through practical editorial guides, creator playbooks, and technical walkthroughs.">', false);
+        $response->assertSee('<meta name="description" content="Browse the full editorial archive of AI, blogging, SEO, case studies, and web development insights from Wide Web Blog.">', false);
         $response->assertSee('<link rel="canonical" href="http://fe.test">', false);
-        $response->assertSee('<meta property="og:title" content="Wide Web Blog | Premium Digital Editorial &amp; Creator Guides">', false);
+        $response->assertSee('<meta property="og:title" content="All Articles | Wide Web Blog">', false);
         $response->assertDontSee('cdn.tailwindcss.com');
     }
 

@@ -21,6 +21,26 @@ class AllArticlesPageTest extends TestCase
         {
             public function get(string $path, array $query = []): array
             {
+                if ($path === 'public/home') {
+                    return [
+                        'data' => [
+                            'hero' => [
+                                'title' => 'Homepage Hero Title',
+                                'description' => 'Homepage hero description from the public home payload.',
+                            ],
+                            'newsletter_section' => [
+                                'enabled' => false,
+                                'title' => 'Newsletter title from homepage API',
+                                'description' => 'Newsletter description from homepage API.',
+                            ],
+                            'seo' => [
+                                'meta_title' => 'Homepage SEO Title',
+                                'meta_description' => 'Homepage SEO description from the public home payload.',
+                            ],
+                        ],
+                    ];
+                }
+
                 if ($path === 'public/categories') {
                     return [
                         'data' => [
@@ -96,6 +116,15 @@ class AllArticlesPageTest extends TestCase
 
             public function post(string $path, array $body = []): array
             {
+                if ($path === 'public/newsletter/subscribe') {
+                    return [
+                        'data' => [
+                            'status' => 'subscribed',
+                            'message' => 'Thank you for subscribing.',
+                        ],
+                    ];
+                }
+
                 return ['data' => []];
             }
 
@@ -138,17 +167,23 @@ class AllArticlesPageTest extends TestCase
         });
     }
 
-    public function test_the_all_articles_page_renders_with_its_own_seo_metadata(): void
+    public function test_the_home_archive_uses_homepage_api_copy_and_seo_metadata(): void
     {
-        $response = $this->get('/articles');
+        $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertSee('All Articles', false);
+        $response->assertSee('Homepage Hero Title', false);
+        $response->assertSee('Homepage hero description from the public home payload.', false);
         $response->assertDontSee('Last updated:', false);
-        $response->assertSee('<title>All Articles | Wide Web Blog</title>', false);
-        $response->assertSee('<link rel="canonical" href="http://fe.test/articles">', false);
+        $response->assertSee('<title>Homepage SEO Title</title>', false);
+        $response->assertSee('<meta name="description" content="Homepage SEO description from the public home payload.">', false);
+        $response->assertSee('<link rel="canonical" href="http://fe.test">', false);
         $response->assertSee('/articles/service-design-systems', false);
         $response->assertSee('src="https://media.widewebblog.com/media/service-design-systems.jpg"', false);
+        $response->assertSee('id="newsletter"', false);
+        $response->assertSee('Newsletter title from homepage API', false);
+        $response->assertSee('Newsletter description from homepage API.', false);
+        $response->assertDontSee('>All Articles<', false);
     }
 
     public function test_category_filters_update_the_visible_article_set(): void
@@ -193,5 +228,24 @@ class AllArticlesPageTest extends TestCase
             ->assertSet('activeCategory', 'developer-ai')
             ->assertSee('Developer AI Systems')
             ->assertDontSee('SEO Recovery Guide');
+    }
+
+    public function test_the_articles_page_newsletter_form_subscribes_successfully(): void
+    {
+        Livewire::test(AllArticlesPage::class)
+            ->set('newsletterEmail', 'reader@example.com')
+            ->call('subscribe')
+            ->assertSet('newsletterToastVisible', true)
+            ->assertSet('newsletterToastType', 'success')
+            ->assertSet('newsletterToastMessage', 'Thank you for subscribing.')
+            ->assertSet('newsletterEmail', '');
+    }
+
+    public function test_the_articles_page_newsletter_form_validates_email(): void
+    {
+        Livewire::test(AllArticlesPage::class)
+            ->set('newsletterEmail', 'not-an-email')
+            ->call('subscribe')
+            ->assertHasErrors(['newsletterEmail' => 'email']);
     }
 }

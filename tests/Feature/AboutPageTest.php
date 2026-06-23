@@ -110,15 +110,17 @@ class AboutPageTest extends TestCase
         $response->assertSee('src="https://media.widewebblog.com/team/amit.jpg"', false);
     }
 
-    public function test_the_primary_navigation_points_about_to_the_dedicated_route(): void
+    public function test_the_primary_navigation_can_be_hidden_while_the_header_brand_and_cta_remain(): void
     {
         $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertSee('href="/about"', false);
+        $response->assertDontSee('href="/about"', false);
+        $response->assertSee('src="http://fe.test/images/wide-web-blog-icon.svg"', false);
+        $response->assertSee('Subscribe');
     }
 
-    public function test_the_shared_subscribe_cta_points_to_the_home_newsletter_section(): void
+    public function test_the_shared_subscribe_cta_points_to_the_articles_newsletter_section(): void
     {
         $response = $this->get('/about');
 

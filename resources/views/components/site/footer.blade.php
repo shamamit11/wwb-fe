@@ -18,7 +18,7 @@
                         @foreach (data_get($footerData, 'social_links', []) as $item)
                             <a href="{{ $item['url'] }}"
                             aria-label="{{ $item['label'] }}"
-                            class="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 transition-all hover:border-[#c2410c] hover:bg-[#c2410c] hover:text-white">
+                            class="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 transition-all hover:border-[var(--brand-accent)] hover:bg-[var(--brand-accent)] hover:text-white">
                                 <x-site.icon :name="$item['icon']" />
                             </a>
                         @endforeach
@@ -31,7 +31,7 @@
                 <ul class="space-y-4">
                     @foreach ($categories as $item)
                         <li>
-                            <a href="{{ $item['href'] }}" class="text-slate-600 transition-colors hover:text-[#c2410c]">
+                            <a href="{{ $item['href'] }}" class="text-slate-600 transition-colors hover:text-[var(--brand-accent)]">
                                 {{ $item['label'] }}
                             </a>
                         </li>
@@ -45,7 +45,7 @@
                     <ul class="space-y-4">
                         @foreach (data_get($footerData, 'legal_links', []) as $item)
                             <li>
-                                <a href="{{ $item['href'] }}" class="text-slate-600 transition-colors hover:text-[#c2410c]">
+                                <a href="{{ $item['href'] }}" class="text-slate-600 transition-colors hover:text-[var(--brand-accent)]">
                                     {{ $item['label'] }}
                                 </a>
                             </li>
@@ -70,7 +70,7 @@
             @endphp
             <p>© {{ now()->year }} {{ data_get($footerData, 'brand_name', config('site.name', config('app.name'))) }}.</p>
             <div class="flex gap-8">
-                <a href="{{ $siteUrl.route('rss.feed', [], false) }}" class="uppercase tracking-[0.2em] transition-colors hover:text-[#c2410c]">RSS Feed</a>
+                <a href="{{ $siteUrl.route('rss.feed', [], false) }}" class="uppercase tracking-[0.2em] transition-colors hover:text-[var(--brand-accent)]">RSS Feed</a>
             </div>
         </div>
     </div>
