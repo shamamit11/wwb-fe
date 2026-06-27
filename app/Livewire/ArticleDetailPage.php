@@ -61,7 +61,11 @@ class ArticleDetailPage extends Component
             'date' => $this->formatDate((string) data_get($post, 'published_at', '')),
             'read_time' => $this->resolveReadTime($post),
             'image' => MediaUrl::normalize((string) (data_get($post, 'featured_image') ?: data_get($featuredMedia, 'url') ?: '')),
-            'image_alt' => (string) (data_get($featuredMedia, 'alt_text') ?: data_get($post, 'title', '')),
+            'image_alt' => $this->normalizeImageAlt(
+                PublicApiValue::stringValue(data_get($featuredMedia, 'alt_text')),
+                (string) data_get($post, 'title', ''),
+                (string) data_get($featuredMedia, 'caption', ''),
+            ),
             'caption' => (string) data_get($featuredMedia, 'caption', ''),
             'tags' => $this->normalizeTags(data_get($post, 'tags')),
             'body_html' => $this->resolveBodyHtml($post),
@@ -217,6 +221,23 @@ class ArticleDetailPage extends Component
                 static fn (mixed $related): bool => is_array($related) && filled(data_get($related, 'title')),
             ),
         ));
+    }
+
+    private function normalizeImageAlt(string $altText, string $title, string $caption): string
+    {
+        $normalizedAlt = trim(strip_tags($altText));
+        $normalizedTitle = trim(strip_tags($title));
+        $normalizedCaption = trim(strip_tags($caption));
+
+        if ($normalizedAlt !== '' && strcasecmp($normalizedAlt, $normalizedTitle) !== 0) {
+            return $normalizedAlt;
+        }
+
+        if ($normalizedCaption !== '' && strcasecmp($normalizedCaption, $normalizedTitle) !== 0) {
+            return $normalizedCaption;
+        }
+
+        return '';
     }
 
     private function formatDate(string $value): string

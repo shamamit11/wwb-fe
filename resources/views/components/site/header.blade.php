@@ -30,6 +30,7 @@
             <button
                 type="button"
                 data-mobile-toggle
+                aria-label="Open navigation menu"
                 aria-controls="mobile-primary-nav"
                 aria-expanded="false"
                 class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200/80 bg-white text-slate-700 shadow-sm xl:hidden">

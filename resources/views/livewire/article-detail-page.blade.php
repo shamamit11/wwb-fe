@@ -184,7 +184,7 @@
                             <div class="h-52 overflow-hidden">
                                 <img
                                     src="{{ $related['image'] }}"
-                                    alt="{{ $related['title'] }}"
+                                    alt=""
                                     width="800"
                                     height="600"
                                     loading="lazy"
