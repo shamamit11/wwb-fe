@@ -8,7 +8,7 @@ final class PublicSiteUrl
 {
     public static function normalize(?string $url): string
     {
-        $resolved = is_string($url) ? trim($url) : '';
+        $resolved = self::extractUrl(is_string($url) ? trim($url) : '');
 
         if ($resolved === '') {
             return '';
@@ -45,6 +45,36 @@ final class PublicSiteUrl
         }
 
         return $normalized;
+    }
+
+    public static function articleUrl(string $slug): string
+    {
+        $trimmed = trim($slug);
+
+        if ($trimmed === '') {
+            return '';
+        }
+
+        $origin = self::publicOrigin();
+
+        return $origin !== ''
+            ? rtrim($origin, '/').'/articles/'.$trimmed.'/'
+            : '/articles/'.$trimmed.'/';
+    }
+
+    public static function categoryUrl(string $slug): string
+    {
+        $trimmed = trim($slug);
+
+        if ($trimmed === '') {
+            return '';
+        }
+
+        $origin = self::publicOrigin();
+
+        return $origin !== ''
+            ? rtrim($origin, '/').'/articles/category/'.$trimmed.'/'
+            : '/articles/category/'.$trimmed.'/';
     }
 
     private static function normalizePath(string $path): string
@@ -101,6 +131,65 @@ final class PublicSiteUrl
         return $value;
     }
 
+    /**
+     * @param  mixed  $value
+     * @return mixed
+     */
+    public static function normalizeArticleContextRecursive(mixed $value, string $articleSlug, ?string $categorySlug = null): mixed
+    {
+        if (is_string($value)) {
+            $normalized = self::normalize($value);
+            $articleUrl = self::articleUrl($articleSlug);
+
+            if ($articleUrl !== '') {
+                $origin = rtrim(self::publicOrigin(), '/');
+                $normalized = str_replace(
+                    [
+                        $origin.'/'.$articleSlug.'/',
+                        $origin.'/'.$articleSlug.'#',
+                    ],
+                    [
+                        $articleUrl,
+                        $articleUrl.'#',
+                    ],
+                    $normalized,
+                );
+            }
+
+            if (is_string($categorySlug) && trim($categorySlug) !== '') {
+                $categoryUrl = self::categoryUrl($categorySlug);
+
+                if ($categoryUrl !== '') {
+                    $origin = rtrim(self::publicOrigin(), '/');
+                    $categoryPath = trim($categorySlug, '/');
+                    $normalized = str_replace(
+                        [
+                            $origin.'/categories/'.$categoryPath.'/',
+                            $origin.'/categories/'.$categoryPath.'#',
+                        ],
+                        [
+                            $categoryUrl,
+                            $categoryUrl.'#',
+                        ],
+                        $normalized,
+                    );
+                }
+            }
+
+            return $normalized;
+        }
+
+        if (! is_array($value)) {
+            return $value;
+        }
+
+        foreach ($value as $key => $item) {
+            $value[$key] = self::normalizeArticleContextRecursive($item, $articleSlug, $categorySlug);
+        }
+
+        return $value;
+    }
+
     private static function publicOrigin(): string
     {
         $appUrl = (string) config('app.url', '');
@@ -119,6 +208,19 @@ final class PublicSiteUrl
         }
 
         return $origin;
+    }
+
+    private static function extractUrl(string $value): string
+    {
+        if ($value === '') {
+            return '';
+        }
+
+        if (preg_match('/^\[[^\]]*\]\((https?:\/\/[^)]+)\)$/i', $value, $matches) === 1) {
+            return trim((string) $matches[1]);
+        }
+
+        return $value;
     }
 
     /**
