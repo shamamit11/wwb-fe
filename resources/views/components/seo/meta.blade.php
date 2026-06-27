@@ -11,6 +11,8 @@
 <title>{{ $title }}</title>
 <meta name="description" content="{{ $description }}">
 <meta name="robots" content="{{ $robots }}">
+<link rel="icon" type="image/svg+xml" href="{{ asset('images/wide-web-blog-icon.svg') }}">
+<link rel="shortcut icon" href="{{ asset('images/wide-web-blog-icon.svg') }}">
 
 @if (filled(config('site.google_site_verification')))
     <meta name="google-site-verification" content="{{ config('site.google_site_verification') }}">
