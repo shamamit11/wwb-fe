@@ -75,7 +75,7 @@ class RssFeedController extends Controller
 
         foreach ($items as $item) {
             $title = (string) data_get($item, 'title', 'Untitled');
-            $link = PublicSiteUrl::normalize((string) data_get($item, 'link', $siteUrl));
+            $link = $this->resolveItemLink($item, $siteUrl);
             $link = $link !== '' ? $link : $siteUrl;
             $description = (string) data_get($item, 'description', '');
             $publishedAt = (string) data_get($item, 'published_at', now()->toISOString());
@@ -105,6 +105,20 @@ class RssFeedController extends Controller
         $xml[] = '</rss>';
 
         return implode("\n", $xml);
+    }
+
+    /**
+     * @param  array<string, mixed>  $item
+     */
+    private function resolveItemLink(array $item, string $siteUrl): string
+    {
+        $slug = trim((string) data_get($item, 'slug', ''));
+
+        if ($slug !== '') {
+            return rtrim($siteUrl, '/').route('articles.show', ['slug' => $slug], false);
+        }
+
+        return PublicSiteUrl::normalize((string) data_get($item, 'link', $siteUrl));
     }
 
     private function xml(string $value): string
