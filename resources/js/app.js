@@ -18,24 +18,6 @@ const syncStickyHeader = () => {
     header.classList.remove('bg-white/95', 'shadow-lg', 'shadow-slate-900/5');
 };
 
-const setupMobileNav = () => {
-    const toggle = document.querySelector('[data-mobile-toggle]');
-    const nav = document.querySelector('[data-mobile-nav]');
-
-    if (!toggle || !nav || toggle.dataset.mobileNavBound === 'true') {
-        return;
-    }
-
-    toggle.dataset.mobileNavBound = 'true';
-
-    toggle.addEventListener('click', () => {
-        const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
-
-        toggle.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
-        nav.classList.toggle('hidden', isExpanded);
-    });
-};
-
 const setupSearchDialog = () => {
     const dialog = document.querySelector('[data-search-dialog]');
     const input = dialog?.querySelector('[data-search-input]');
@@ -91,7 +73,6 @@ const setupSearchDialog = () => {
 
 const initializeSiteChrome = () => {
     syncStickyHeader();
-    setupMobileNav();
     setupSearchDialog();
 };
 

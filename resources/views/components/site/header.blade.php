@@ -27,31 +27,13 @@
             <a href="{{ route('home') }}#newsletter" class="hidden min-h-11 items-center rounded-2xl bg-[var(--brand-ink)] px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition-all hover:-translate-y-0.5 hover:bg-[var(--brand-accent)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-100 md:inline-flex">
                 Subscribe
             </a>
-            <button
-                type="button"
-                data-mobile-toggle
-                aria-label="Open navigation menu"
-                aria-controls="mobile-primary-nav"
-                aria-expanded="false"
-                class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200/80 bg-white text-slate-700 shadow-sm xl:hidden">
-                <x-site.icon name="menu" class="align-middle" />
-            </button>
+            <a
+                href="{{ route('home') }}#newsletter"
+                aria-label="Open newsletter section"
+                class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200/80 bg-white text-slate-700 shadow-sm transition-colors hover:border-orange-200 hover:bg-orange-50 hover:text-[var(--brand-accent)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-100 md:hidden">
+                <x-site.icon name="email" class="align-middle" />
+            </a>
         </div>
-    </div>
-
-    <div id="mobile-primary-nav" data-mobile-nav class="hidden border-t border-slate-200 bg-white xl:hidden">
-        <nav class="mx-auto flex max-w-7xl flex-col px-6 py-4" aria-label="Mobile primary">
-            @foreach ($navigation as $item)
-                <a href="{{ $item['href'] }}"
-                    @class([
-                        'rounded-lg px-3 py-3 text-sm font-medium transition-colors',
-                        'bg-orange-50 text-[var(--brand-accent)]' => ($item['key'] ?? null) === $active,
-                        'text-slate-700 hover:bg-slate-50 hover:text-[var(--brand-accent)]' => ($item['key'] ?? null) !== $active,
-                    ])>
-                    {{ $item['label'] }}
-                </a>
-            @endforeach
-        </nav>
     </div>
 
     <div data-search-dialog class="pointer-events-none fixed inset-0 z-[60] hidden">
