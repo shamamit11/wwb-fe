@@ -29,6 +29,12 @@
                     <div class="archive-card__media archive-card__media--featured">
                         <a href="{{ route('articles.show', $leadArticle['slug']) }}">
                             <img src="{{ $leadArticle['image'] }}" alt="{{ $leadArticle['title'] }}"
+                                width="1200"
+                                height="675"
+                                fetchpriority="high"
+                                loading="eager"
+                                decoding="async"
+                                sizes="(min-width: 1280px) 66rem, 100vw"
                                 class="archive-card__image">
                         </a>
                     </div>
@@ -66,6 +72,11 @@
                         <div class="archive-card__media h-64 md:h-72 xl:h-80">
                             <a href="{{ route('articles.show', $spotlightArticle['slug']) }}">
                                 <img src="{{ $spotlightArticle['image'] }}" alt="{{ $spotlightArticle['title'] }}"
+                                    width="800"
+                                    height="600"
+                                    loading="lazy"
+                                    decoding="async"
+                                    sizes="(min-width: 1280px) 22rem, (min-width: 768px) 50vw, 100vw"
                                     class="archive-card__image">
                             </a>
                         </div>
@@ -101,6 +112,11 @@
                     <div class="archive-card__media aspect-[4/3]">
                         <a href="{{ route('articles.show', $article['slug']) }}">
                             <img src="{{ $article['image'] }}" alt="{{ $article['title'] }}"
+                                width="800"
+                                height="600"
+                                loading="lazy"
+                                decoding="async"
+                                sizes="(min-width: 1280px) 25rem, (min-width: 768px) 50vw, 100vw"
                                 class="archive-card__image">
                         </a>
                     </div>

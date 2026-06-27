@@ -57,7 +57,16 @@
 
                 @if ($article['image'] !== '')
                     <figure class="mt-10 max-w-4xl overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-                        <img src="{{ $article['image'] }}" alt="{{ $article['image_alt'] }}" class="h-auto w-full object-cover">
+                        <img
+                            src="{{ $article['image'] }}"
+                            alt="{{ $article['image_alt'] }}"
+                            width="1200"
+                            height="675"
+                            fetchpriority="high"
+                            loading="eager"
+                            decoding="async"
+                            sizes="(min-width: 1280px) 64rem, 100vw"
+                            class="h-auto w-full object-cover">
                     </figure>
                 @endif
 
@@ -173,7 +182,15 @@
                     @foreach ($relatedArticles as $related)
                         <a href="{{ route('articles.show', $related['slug']) }}" class="group block overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
                             <div class="h-52 overflow-hidden">
-                                <img src="{{ $related['image'] }}" alt="{{ $related['title'] }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                <img
+                                    src="{{ $related['image'] }}"
+                                    alt="{{ $related['title'] }}"
+                                    width="800"
+                                    height="600"
+                                    loading="lazy"
+                                    decoding="async"
+                                    sizes="(min-width: 768px) 33vw, 100vw"
+                                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
                             </div>
                             <div class="p-5">
                                 <div class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">

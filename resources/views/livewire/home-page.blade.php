@@ -1,7 +1,16 @@
 <main>
     <section class="relative flex min-h-[80vh] items-center overflow-hidden">
         <div class="absolute inset-0">
-            <img src="{{ $hero['image'] }}" alt="{{ $hero['image_alt'] }}" class="h-full w-full object-cover">
+            <img
+                src="{{ $hero['image'] }}"
+                alt="{{ $hero['image_alt'] }}"
+                width="1600"
+                height="900"
+                fetchpriority="high"
+                loading="eager"
+                decoding="async"
+                sizes="100vw"
+                class="h-full w-full object-cover">
             <div class="absolute inset-0 bg-slate-950/25"></div>
         </div>
 
@@ -58,6 +67,11 @@
                     <div class="relative h-112.5 overflow-hidden">
                         <img src="{{ $featuredSection['lead']['image'] }}"
                             alt="{{ $featuredSection['lead']['image_alt'] }}"
+                            width="1200"
+                            height="675"
+                            loading="lazy"
+                            decoding="async"
+                            sizes="(min-width: 1024px) 66vw, 100vw"
                             class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105">
                         <div class="absolute left-6 top-6">
                             <span
@@ -94,6 +108,11 @@
                             class="group flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
                             <div class="h-48 overflow-hidden">
                                 <img src="{{ $item['image'] }}" alt="{{ $item['image_alt'] }}"
+                                    width="800"
+                                    height="600"
+                                    loading="lazy"
+                                    decoding="async"
+                                    sizes="(min-width: 1024px) 22vw, 100vw"
                                     class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110">
                             </div>
                             <div class="p-6">
@@ -135,6 +154,11 @@
                         class="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-900/10">
                         <div class="h-48 overflow-hidden">
                             <img src="{{ $guide['image'] }}" alt="{{ $guide['image_alt'] }}"
+                                width="800"
+                                height="600"
+                                loading="lazy"
+                                decoding="async"
+                                sizes="(min-width: 1280px) 24vw, (min-width: 768px) 50vw, 100vw"
                                 class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
                         </div>
                         <div class="flex flex-1 flex-col p-6">

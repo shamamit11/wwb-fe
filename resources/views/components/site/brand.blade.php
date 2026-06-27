@@ -7,6 +7,10 @@
     <img
         src="{{ asset('images/wide-web-blog-icon.svg') }}"
         alt="Wide Web Blog"
+        width="{{ $compact ? '32' : '40' }}"
+        height="{{ $compact ? '32' : '40' }}"
+        fetchpriority="high"
+        decoding="async"
         @class([
             'shrink-0 drop-shadow-[0_10px_18px_rgba(240,74,20,0.18)]',
             'h-8 w-8' => $compact,
