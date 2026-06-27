@@ -112,7 +112,7 @@ class AllArticlesPage extends Component
         $category = $this->activeCategory === 'all' ? null : $this->activeCategory;
 
         try {
-            $payload = $content->posts($category, $this->page, 7);
+            $payload = $content->posts($category, $this->page, 8);
         } catch (Throwable) {
             $this->articles = $append ? $this->articles : [];
             $this->totalFiltered = count($this->articles);

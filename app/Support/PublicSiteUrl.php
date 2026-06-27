@@ -16,13 +16,17 @@ final class PublicSiteUrl
 
         $host = parse_url($resolved, PHP_URL_HOST);
         $serviceHost = parse_url((string) config('services.wideweb_blog.base_url', ''), PHP_URL_HOST);
+        $publicHost = parse_url((string) config('app.url', ''), PHP_URL_HOST);
         $publicOrigin = self::publicOrigin();
 
-        if (! is_string($host) || $host === '' || ! is_string($serviceHost) || $serviceHost === '' || $publicOrigin === '') {
+        if (! is_string($host) || $host === '' || $publicOrigin === '') {
             return $resolved;
         }
 
-        if ($host !== $serviceHost) {
+        $matchesServiceHost = is_string($serviceHost) && $serviceHost !== '' && $host === $serviceHost;
+        $matchesPublicHost = is_string($publicHost) && $publicHost !== '' && $host === $publicHost;
+
+        if (! $matchesServiceHost && ! $matchesPublicHost) {
             return $resolved;
         }
 
@@ -57,11 +61,23 @@ final class PublicSiteUrl
 
         $segments = explode('/', $trimmed);
 
-        if (count($segments) !== 1) {
-            return $path;
+        if ($segments[0] === 'articles' && count($segments) === 2) {
+            return '/articles/'.$segments[1].'/';
         }
 
-        return '/articles/'.$segments[0].'/';
+        if ($segments[0] === 'articles' && count($segments) === 3 && $segments[1] === 'category') {
+            return '/articles/category/'.$segments[2].'/';
+        }
+
+        if ($segments[0] === 'categories' && count($segments) === 2) {
+            return '/articles/category/'.$segments[1].'/';
+        }
+
+        if (count($segments) === 1 && ! in_array($segments[0], self::reservedPaths(), true)) {
+            return '/articles/'.$segments[0].'/';
+        }
+
+        return $path;
     }
 
     /**
@@ -103,5 +119,22 @@ final class PublicSiteUrl
         }
 
         return $origin;
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private static function reservedPaths(): array
+    {
+        return [
+            'about',
+            'articles',
+            'contact',
+            'privacy-policy',
+            'resources',
+            'rss.xml',
+            'search',
+            'terms-and-conditions',
+        ];
     }
 }
