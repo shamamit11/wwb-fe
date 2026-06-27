@@ -190,6 +190,79 @@ final class PublicSiteUrl
         return $value;
     }
 
+    /**
+     * @param  array<string, mixed>  $schema
+     * @return array<string, mixed>
+     */
+    public static function normalizeArticleSchema(array $schema, string $articleSlug, ?string $categorySlug = null): array
+    {
+        $schema = self::normalizeArticleContextRecursive($schema, $articleSlug, $categorySlug);
+        $articleUrl = self::articleUrl($articleSlug);
+
+        if ($articleUrl === '') {
+            return $schema;
+        }
+
+        $breadcrumbId = $articleUrl.'#breadcrumb';
+        $articleId = $articleUrl.'#article';
+        $faqId = $articleUrl.'#faq';
+        $categoryUrl = is_string($categorySlug) && trim($categorySlug) !== ''
+            ? self::categoryUrl($categorySlug)
+            : '';
+
+        if (isset($schema['@graph']) && is_array($schema['@graph'])) {
+            foreach ($schema['@graph'] as $index => $entry) {
+                if (! is_array($entry)) {
+                    continue;
+                }
+
+                $type = (string) ($entry['@type'] ?? '');
+
+                if ($type === 'BreadcrumbList') {
+                    $entry['@id'] = $breadcrumbId;
+
+                    if (isset($entry['itemListElement']) && is_array($entry['itemListElement'])) {
+                        foreach ($entry['itemListElement'] as $itemIndex => $item) {
+                            if (! is_array($item)) {
+                                continue;
+                            }
+
+                            $position = (int) ($item['position'] ?? 0);
+
+                            if ($position === 2 && $categoryUrl !== '') {
+                                $item['item'] = $categoryUrl;
+                            }
+
+                            if ($position === 3) {
+                                $item['item'] = $articleUrl;
+                            }
+
+                            $entry['itemListElement'][$itemIndex] = $item;
+                        }
+                    }
+                }
+
+                if ($type === 'Article') {
+                    $entry['@id'] = $articleId;
+                    $entry['url'] = $articleUrl;
+                    $entry['mainEntityOfPage'] = $articleUrl;
+
+                    if (isset($entry['breadcrumb']) && is_array($entry['breadcrumb'])) {
+                        $entry['breadcrumb']['@id'] = $breadcrumbId;
+                    }
+                }
+
+                if ($type === 'FAQPage') {
+                    $entry['@id'] = $faqId;
+                }
+
+                $schema['@graph'][$index] = $entry;
+            }
+        }
+
+        return $schema;
+    }
+
     private static function publicOrigin(): string
     {
         $appUrl = (string) config('app.url', '');
