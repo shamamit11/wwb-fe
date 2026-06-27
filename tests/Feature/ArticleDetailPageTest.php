@@ -253,4 +253,43 @@ HTML,
         $response->assertDontSee('ql-code-block-container', false);
         $response->assertDontSee('ql-code-block', false);
     }
+
+    public function test_mojibake_characters_are_normalized_in_article_html(): void
+    {
+        $payload = [
+            'slug' => 'encoding-fix-article',
+            'title' => 'Encoding Fix Article',
+            'short_description' => 'Encoding fix article.',
+            'published_at' => '2026-06-23T14:31:20.000000Z',
+            'read_time' => '3 min read',
+            'category' => ['name' => 'SEO', 'slug' => 'seo'],
+            'author' => ['name' => 'Admin User'],
+            'full_article_html' => <<<'HTML'
+<h1>Encoding Fix Article</h1>
+<p>Search engines donâ€™t act on intentions â€” they act on what they can fetch.</p>
+HTML,
+            'related_posts' => [],
+            'tags' => [],
+            'seo' => [],
+        ];
+
+        $this->app->bind(\App\Services\BlogContentService::class, fn () => new class($payload) extends \App\Services\BlogContentService
+        {
+            public function __construct(private array $payload)
+            {
+            }
+
+            public function post(string $slug): ?array
+            {
+                return $slug === 'encoding-fix-article' ? $this->payload : null;
+            }
+        });
+
+        $response = $this->get('/articles/encoding-fix-article');
+
+        $response->assertOk();
+        $response->assertSee('Search engines don’t act on intentions — they act on what they can fetch.');
+        $response->assertDontSee('donâ€™t');
+        $response->assertDontSee('â€”');
+    }
 }

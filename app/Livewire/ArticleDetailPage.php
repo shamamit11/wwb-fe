@@ -234,7 +234,7 @@ class ArticleDetailPage extends Component
 
     private function renderFlexibleContent(string $content): string
     {
-        $trimmed = trim($content);
+        $trimmed = trim($this->normalizeTextEncoding($content));
 
         if ($trimmed === '') {
             return '';
@@ -299,14 +299,39 @@ class ArticleDetailPage extends Component
 
     private function normalizeRichHtml(string $html): string
     {
-        return $this->normalizeQuillCodeBlocks($html);
+        return $this->normalizeQuillCodeBlocks($this->normalizeTextEncoding($html));
+    }
+
+    private function normalizeTextEncoding(string $content): string
+    {
+        if ($content === '' || ! $this->looksLikeMojibake($content)) {
+            return $content;
+        }
+
+        return strtr($content, [
+            'â€”' => '—',
+            'â€“' => '–',
+            'â€™' => '’',
+            'â€˜' => '‘',
+            'â€œ' => '“',
+            'â€�' => '”',
+            'â€¦' => '…',
+            'â†’' => '→',
+            'Â ' => ' ',
+            'Â ' => ' ',
+        ]);
+    }
+
+    private function looksLikeMojibake(string $content): bool
+    {
+        return preg_match('/(?:â€”|â€“|â€˜|â€™|â€œ|â€�|â€¦|Â |Â\xa0|Ã)/u', $content) === 1;
     }
 
     private function normalizeQuillCodeBlocks(string $html): string
     {
         $previous = libxml_use_internal_errors(true);
         $document = new \DOMDocument('1.0', 'UTF-8');
-        $wrappedHtml = '<!DOCTYPE html><html><body>'.$html.'</body></html>';
+        $wrappedHtml = '<?xml encoding="UTF-8"><!DOCTYPE html><html><body>'.$html.'</body></html>';
 
         if (! $document->loadHTML($wrappedHtml, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD)) {
             libxml_clear_errors();
