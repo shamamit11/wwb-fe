@@ -206,4 +206,51 @@ class ArticleDetailPageTest extends TestCase
         $response->assertOk();
         $response->assertSee('/articles/agent-context-windows-explained', false);
     }
+
+    public function test_quill_code_blocks_are_rendered_as_semantic_preformatted_code(): void
+    {
+        $payload = [
+            'slug' => 'log-file-analysis-seo-playbook',
+            'title' => 'Log File Analysis for SEO: A Step-by-Step Playbook with Queries and Prioritization',
+            'short_description' => 'Practical playbook for log file analysis SEO.',
+            'published_at' => '2026-06-23T14:31:20.000000Z',
+            'read_time' => '8 min read',
+            'category' => ['name' => 'SEO', 'slug' => 'seo'],
+            'author' => ['name' => 'Admin User'],
+            'full_article_html' => <<<'HTML'
+<h1>Log File Analysis for SEO: A Step-by-Step Playbook with Queries and Prioritization</h1>
+<p>Intro paragraph.</p>
+<div class="ql-code-block-container" spellcheck="false">
+  <div class="ql-code-block" data-language="plain">SELECT</div>
+  <div class="ql-code-block" data-language="plain">url,</div>
+  <div class="ql-code-block" data-language="plain">COUNT(1) AS crawl_count</div>
+  <div class="ql-code-block" data-language="plain">FROM `project.dataset.access_logs`</div>
+</div>
+<p>Outro paragraph.</p>
+HTML,
+            'related_posts' => [],
+            'tags' => [],
+            'seo' => [],
+        ];
+
+        $this->app->bind(\App\Services\BlogContentService::class, fn () => new class($payload) extends \App\Services\BlogContentService
+        {
+            public function __construct(private array $payload)
+            {
+            }
+
+            public function post(string $slug): ?array
+            {
+                return $slug === 'log-file-analysis-seo-playbook' ? $this->payload : null;
+            }
+        });
+
+        $response = $this->get('/articles/log-file-analysis-seo-playbook');
+
+        $response->assertOk();
+        $response->assertSee('<pre><code>SELECT', false);
+        $response->assertSee("url,\nCOUNT(1) AS crawl_count\nFROM `project.dataset.access_logs`", false);
+        $response->assertDontSee('ql-code-block-container', false);
+        $response->assertDontSee('ql-code-block', false);
+    }
 }

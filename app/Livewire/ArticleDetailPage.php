@@ -148,7 +148,9 @@ class ArticleDetailPage extends Component
         $html = PublicApiValue::stringValue(data_get($post, 'full_article_html'));
 
         if ($html !== '') {
-            return $this->stripDuplicateLeadingHeading($html, (string) data_get($post, 'title', ''));
+            return $this->normalizeRichHtml(
+                $this->stripDuplicateLeadingHeading($html, (string) data_get($post, 'title', ''))
+            );
         }
 
         return $this->renderFlexibleContent((string) (data_get($post, 'content') ?: data_get($post, 'description') ?: ''));
@@ -293,5 +295,77 @@ class ArticleDetailPage extends Component
         $stripped = preg_replace('/^\s*<h1\b[^>]*>.*?<\/h1>\s*/is', '', $html, 1);
 
         return is_string($stripped) ? $stripped : $html;
+    }
+
+    private function normalizeRichHtml(string $html): string
+    {
+        return $this->normalizeQuillCodeBlocks($html);
+    }
+
+    private function normalizeQuillCodeBlocks(string $html): string
+    {
+        $previous = libxml_use_internal_errors(true);
+        $document = new \DOMDocument('1.0', 'UTF-8');
+        $wrappedHtml = '<!DOCTYPE html><html><body>'.$html.'</body></html>';
+
+        if (! $document->loadHTML($wrappedHtml, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD)) {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previous);
+
+            return $html;
+        }
+
+        $xpath = new \DOMXPath($document);
+        $containers = $xpath->query('//div[contains(concat(" ", normalize-space(@class), " "), " ql-code-block-container ")]');
+
+        if ($containers === false || $containers->length === 0) {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previous);
+
+            return $html;
+        }
+
+        /** @var \DOMElement $container */
+        foreach ($containers as $container) {
+            $lines = $xpath->query('.//div[contains(concat(" ", normalize-space(@class), " "), " ql-code-block ")]', $container);
+
+            if ($lines === false || $lines->length === 0) {
+                continue;
+            }
+
+            $codeLines = [];
+
+            /** @var \DOMElement $line */
+            foreach ($lines as $line) {
+                $codeLines[] = trim($line->textContent);
+            }
+
+            $pre = $document->createElement('pre');
+            $code = $document->createElement('code');
+            $code->appendChild($document->createTextNode(implode("\n", $codeLines)));
+            $pre->appendChild($code);
+
+            $container->parentNode?->replaceChild($pre, $container);
+        }
+
+        $body = $document->getElementsByTagName('body')->item(0);
+
+        if (! $body instanceof \DOMElement) {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previous);
+
+            return $html;
+        }
+
+        $result = '';
+
+        foreach ($body->childNodes as $child) {
+            $result .= $document->saveHTML($child);
+        }
+
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+
+        return $result !== '' ? $result : $html;
     }
 }
