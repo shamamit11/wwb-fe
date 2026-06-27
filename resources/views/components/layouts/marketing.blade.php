@@ -29,7 +29,7 @@
         @livewireStyles
     </head>
     <body class="min-h-screen bg-white font-sans text-[var(--brand-ink)] antialiased selection:bg-[var(--brand-accent-soft)] selection:text-[var(--brand-ink)]">
-        <div class="min-h-screen bg-[radial-gradient(circle_at_top_right,_rgba(255,106,26,0.16),_transparent_30%),linear-gradient(180deg,_#ffffff_0%,_#fff7f2_48%,_#ffffff_100%)]">
+        <div class="site-shell min-h-screen">
             <x-site.header :active="$activeNav" />
             {{ $slot }}
             <x-site.footer />

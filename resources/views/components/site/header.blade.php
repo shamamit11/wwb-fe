@@ -3,8 +3,8 @@
     'active' => 'home',
 ])
 
-<header data-site-header class="sticky top-0 z-50 border-b border-slate-200/70 bg-white/80 backdrop-blur-md transition-all duration-300">
-    <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-5 lg:px-8">
+<header data-site-header class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/88 backdrop-blur-xl transition-all duration-300">
+    <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-4 lg:px-8">
         <x-site.brand compact />
 
         <nav class="hidden items-center gap-6 xl:flex" aria-label="Primary">
@@ -20,11 +20,11 @@
             @endforeach
         </nav>
 
-        <div class="flex items-center gap-3">
-            <button type="button" data-search-open aria-label="Search" class="rounded-full p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-[var(--brand-accent)]">
+        <div class="flex items-center gap-2 sm:gap-3">
+            <button type="button" data-search-open aria-label="Search" class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200/80 bg-white text-slate-600 shadow-sm transition-colors hover:border-orange-200 hover:bg-orange-50 hover:text-[var(--brand-accent)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-100">
                 <x-site.icon name="search" class="align-middle" />
             </button>
-            <a href="{{ route('home') }}#newsletter" class="hidden rounded-xl bg-[var(--brand-ink)] px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-[var(--brand-accent)] md:inline-flex">
+            <a href="{{ route('home') }}#newsletter" class="hidden min-h-11 items-center rounded-2xl bg-[var(--brand-ink)] px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-slate-900/10 transition-all hover:-translate-y-0.5 hover:bg-[var(--brand-accent)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-100 md:inline-flex">
                 Subscribe
             </a>
             <button
@@ -32,7 +32,7 @@
                 data-mobile-toggle
                 aria-controls="mobile-primary-nav"
                 aria-expanded="false"
-                class="rounded-full p-2 text-slate-700 xl:hidden">
+                class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200/80 bg-white text-slate-700 shadow-sm xl:hidden">
                 <x-site.icon name="menu" class="align-middle" />
             </button>
         </div>

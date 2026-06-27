@@ -22,9 +22,11 @@ const setupMobileNav = () => {
     const toggle = document.querySelector('[data-mobile-toggle]');
     const nav = document.querySelector('[data-mobile-nav]');
 
-    if (!toggle || !nav) {
+    if (!toggle || !nav || toggle.dataset.mobileNavBound === 'true') {
         return;
     }
+
+    toggle.dataset.mobileNavBound = 'true';
 
     toggle.addEventListener('click', () => {
         const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
@@ -58,13 +60,28 @@ const setupSearchDialog = () => {
     };
 
     openButtons.forEach((button) => {
+        if (button.dataset.searchOpenBound === 'true') {
+            return;
+        }
+
+        button.dataset.searchOpenBound = 'true';
         button.addEventListener('click', open);
     });
 
     closeButtons.forEach((button) => {
+        if (button.dataset.searchCloseBound === 'true') {
+            return;
+        }
+
+        button.dataset.searchCloseBound = 'true';
         button.addEventListener('click', close);
     });
 
+    if (document.body.dataset.searchEscapeBound === 'true') {
+        return;
+    }
+
+    document.body.dataset.searchEscapeBound = 'true';
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
             close();
@@ -72,12 +89,19 @@ const setupSearchDialog = () => {
     });
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+const initializeSiteChrome = () => {
     syncStickyHeader();
     setupMobileNav();
     setupSearchDialog();
+};
 
+document.addEventListener('DOMContentLoaded', () => {
+    initializeSiteChrome();
     window.addEventListener('scroll', syncStickyHeader, { passive: true });
+});
+
+document.addEventListener('livewire:navigated', () => {
+    initializeSiteChrome();
 });
 
 Livewire.start();
