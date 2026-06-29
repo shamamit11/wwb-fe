@@ -1,10 +1,10 @@
-# Task: Polish current homepage article archive
+# Task: Improve AI/search discoverability surfaces
 
 ## Scope
-Refine the styling and visual polish of the current homepage/article archive only. Keep the existing structure, content, and backend behavior intact while improving spacing, hierarchy, card consistency, button polish, newsletter layout, and footer/header balance.
+Implement the agreed technical discoverability improvements only: expose a sitemap, advertise it from robots.txt, fix the broken homepage archive link, and guarantee fallback article JSON-LD when the upstream SEO/schema payload is incomplete.
 
 ## Spec Reference
-- Spec Path: None required for this styling-only refinement
+- Spec Path: None required for this focused SEO/discoverability implementation
 - Requirement IDs: N/A
 - Acceptance Criteria IDs: N/A
 
@@ -14,14 +14,18 @@ Refine the styling and visual polish of the current homepage/article archive onl
 - [x] Record implementation plan
 - [x] Implement focused changes
 - [x] Run verification
-- [ ] Update docs or manifest if stable conventions changed
+- [x] Update docs or manifest if stable conventions changed
 
 ## Plan
-- Treat the active `/` route article archive as the homepage target because it matches the requested structure.
-- Refine shared header and footer styling for stronger alignment, spacing, and interaction polish.
-- Introduce reusable archive page/card/button/form classes in the shared stylesheet and apply them to the article archive Blade view.
-- Run a frontend build and inspect the rendered page output for structural regressions.
+- Add a dedicated sitemap controller and `/sitemap.xml` route that covers static pages, category archives, and article URLs.
+- Update `public/robots.txt` to advertise the sitemap while keeping the site crawlable.
+- Replace the homepage `/articles` hard-coded link with the real archive route.
+- Add a fallback article schema builder so each article still emits valid `Article` JSON-LD when upstream schema data is missing.
+- Run targeted verification for routing, rendering, and XML/schema output.
 
 ## Verification Evidence
-- `npm run build` completed successfully on June 27, 2026 and produced updated Vite assets.
-- Vite emitted a Node version warning for local Node `22.1.0` versus the recommended `22.12+`, but the production bundle still completed without build errors.
+- `php -l app/Http/Controllers/SitemapController.php` completed successfully on June 29, 2026.
+- `php -l app/Support/ArticleSchema.php` completed successfully on June 29, 2026.
+- `php artisan route:list --name=sitemap` confirms the new `GET|HEAD sitemap.xml` route is registered.
+- `php artisan tinker --execute='echo app()->call(app(\App\Http\Controllers\SitemapController::class))->getContent();'` returned valid sitemap XML with static and category URLs in the local environment.
+- `php artisan tinker --execute='dump(\App\Support\ArticleSchema::hasPrimaryArticle([])); dump(\App\Support\ArticleSchema::fallback(...));'` confirmed the fallback helper detects a missing primary article schema and emits an `Article` JSON-LD graph.

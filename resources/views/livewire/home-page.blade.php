@@ -142,7 +142,7 @@
                         {{ $guideSection['title'] }}</h2>
                     <p class="mt-4 text-base leading-7 text-slate-600">{{ $guideSection['description'] }}</p>
                 </div>
-                <a href="/articles" class="group inline-flex items-center gap-2 text-sm font-semibold text-[var(--brand-accent)]">
+                <a href="{{ route('home') }}" class="group inline-flex items-center gap-2 text-sm font-semibold text-[var(--brand-accent)]">
                     Browse all articles
                     <x-site.icon name="arrow_forward" class="transition-transform group-hover:translate-x-1" />
                 </a>

@@ -26,3 +26,5 @@ Only record stable, verified facts here.
 - The homepage route resolves service content through `BlogContentService`, with `WIDEWEB_BLOG_API_HOMEPAGE_PATH` defaulting to `public/home` and the page falling back to embedded defaults when upstream homepage data is unavailable.
 - Shared head SEO metadata can include a Google site verification meta tag sourced from `GOOGLE_SITE_VERIFICATION` through `config/site.php`.
 - Homepage and resources newsletter forms post to the public `public/newsletter/subscribe` endpoint through `BlogContentService`, using validated email input plus route-specific source metadata and auto-dismissing toast feedback.
+- The frontend publishes a crawlable sitemap at `/sitemap.xml` through `SitemapController`, covering static pages plus category and article URLs from `BlogContentService`, and `public/robots.txt` advertises that sitemap.
+- Article pages append a frontend-generated fallback JSON-LD graph from `App\Support\ArticleSchema` whenever upstream schema payloads do not include a primary `Article`/`BlogPosting` entity.

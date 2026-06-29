@@ -35,6 +35,15 @@
         );
     }
     $schema = is_array($schemaPayload) && array_is_list($schemaPayload) ? $schemaPayload : (is_array($schemaPayload) && $schemaPayload !== [] ? [$schemaPayload] : []);
+
+    if (! \App\Support\ArticleSchema::hasPrimaryArticle($schema)) {
+        $schema = array_merge($schema, \App\Support\ArticleSchema::fallback(
+            $postPayload,
+            $canonical,
+            $description,
+            $image,
+        ));
+    }
 @endphp
 
 <x-layouts.marketing
