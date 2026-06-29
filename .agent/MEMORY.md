@@ -28,5 +28,5 @@ Only record stable, verified facts here.
 - Homepage and resources newsletter forms post to the public `public/newsletter/subscribe` endpoint through `BlogContentService`, using validated email input plus route-specific source metadata and auto-dismissing toast feedback.
 - The frontend publishes a crawlable sitemap at `/sitemap.xml` through `SitemapController`, covering static pages plus category and article URLs from `BlogContentService`, and `public/robots.txt` advertises that sitemap.
 - Article pages append a frontend-generated fallback JSON-LD graph from `App\Support\ArticleSchema` whenever upstream schema payloads do not include a primary `Article`/`BlogPosting` entity.
-- The frontend serves `/robots.txt` through `RobotsController` so the sitemap reference is emitted as an absolute URL derived from Laravel routing instead of a static file.
+- The frontend serves `public/robots.txt` as a static file, and it must contain an absolute sitemap URL for crawler compatibility.
 - The frontend sitemap article entries are sourced from the service application's `public/sitemap` endpoint through `BlogContentService::sitemapEntries()`, not rebuilt from the generic `public/posts` listing.
