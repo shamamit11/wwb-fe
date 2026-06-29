@@ -29,3 +29,7 @@ Implement the agreed technical discoverability improvements only: expose a sitem
 - `php artisan route:list --name=sitemap` confirms the new `GET|HEAD sitemap.xml` route is registered.
 - `php artisan tinker --execute='echo app()->call(app(\App\Http\Controllers\SitemapController::class))->getContent();'` returned valid sitemap XML with static and category URLs in the local environment.
 - `php artisan tinker --execute='dump(\App\Support\ArticleSchema::hasPrimaryArticle([])); dump(\App\Support\ArticleSchema::fallback(...));'` confirmed the fallback helper detects a missing primary article schema and emits an `Article` JSON-LD graph.
+- `php -l app/Http/Controllers/RobotsController.php` completed successfully on June 29, 2026.
+- `php artisan tinker --execute='echo app()->call(app(\App\Http\Controllers\RobotsController::class))->getContent();'` returned a plain-text robots file with an absolute sitemap URL.
+- `php -l app/Services/BlogContentService.php` completed successfully on June 29, 2026 after adding a dedicated public sitemap client method.
+- The frontend sitemap source was corrected to use the service application's `public/sitemap` endpoint instead of reconstructing article URLs from the paginated `public/posts` feed.

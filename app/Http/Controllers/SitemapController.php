@@ -75,44 +75,30 @@ class SitemapController extends Controller
      */
     private function articleUrls(BlogContentService $content): array
     {
-        $page = 1;
-        $urls = [];
+        try {
+            $items = $content->sitemapEntries();
+        } catch (\Throwable) {
+            return [];
+        }
 
-        do {
-            try {
-                $payload = $content->posts(page: $page, perPage: 100);
-            } catch (\Throwable) {
-                break;
+        return array_values(array_filter(array_map(function (array $item): ?array {
+            $loc = trim((string) (data_get($item, 'canonical_url') ?: PublicSiteUrl::articleUrl((string) data_get($item, 'slug', ''))));
+
+            if ($loc === '') {
+                return null;
             }
 
-            foreach (($payload['items'] ?? []) as $item) {
-                if (! is_array($item)) {
-                    continue;
-                }
-
-                $slug = trim((string) data_get($item, 'slug', ''));
-
-                if ($slug === '') {
-                    continue;
-                }
-
-                $urls[] = array_filter([
-                    'loc' => PublicSiteUrl::articleUrl($slug),
-                    'lastmod' => $this->normalizeDate(
-                        (string) (data_get($item, 'updated_at')
-                            ?: data_get($item, 'last_modified_at')
-                            ?: data_get($item, 'published_at')
-                            ?: data_get($item, 'created_at')
-                            ?: '')
-                    ),
-                ]);
-            }
-
-            $page++;
-            $hasMore = (bool) ($payload['has_more'] ?? false);
-        } while ($hasMore);
-
-        return $urls;
+            return array_filter([
+                'loc' => $loc,
+                'lastmod' => $this->normalizeDate(
+                    (string) (data_get($item, 'last_modified_at')
+                        ?: data_get($item, 'updated_at')
+                        ?: data_get($item, 'published_at')
+                        ?: data_get($item, 'created_at')
+                        ?: '')
+                ),
+            ]);
+        }, $items)));
     }
 
     /**

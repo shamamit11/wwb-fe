@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\RssFeedController;
+use App\Http\Controllers\RobotsController;
 use App\Http\Controllers\SitemapController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,7 @@ foreach (config('legacy-redirects.paths', []) as $oldPath => $newPath) {
 */
 
 Route::get('/rss.xml', RssFeedController::class)->name('rss.feed');
+Route::get('/robots.txt', RobotsController::class)->name('robots');
 Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 
 Route::view('/articles/category/{category}', 'articles.index')->name('articles.category');

@@ -323,6 +323,27 @@ class BlogContentService
     }
 
     /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function sitemapEntries(): array
+    {
+        $ttl = (int) config('services.wideweb_blog.cache_ttl', 900);
+        $path = (string) config('services.wideweb_blog.sitemap_path', 'public/sitemap');
+
+        /** @var array<string, mixed> $payload */
+        $payload = $this->cache->remember(
+            'wideweb-blog.sitemap',
+            now()->addSeconds($ttl),
+            fn (): array => $this->client->get($path),
+        );
+
+        /** @var array<int, array<string, mixed>> $items */
+        $items = data_get($payload, 'data', []);
+
+        return array_values(array_filter($items, static fn (mixed $item): bool => is_array($item)));
+    }
+
+    /**
      * @param  array<int, int|string>  $ids
      * @return array<int, array<string, mixed>>
      */
